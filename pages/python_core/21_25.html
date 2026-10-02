@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Core — Interview Questions 21–25</title>
+<style>
+:root{--bg:#f6f8fb;--card:#fff;--text:#172033;--muted:#5d687a;--border:#dfe5ee;--accent:#2563eb;--soft:#eff6ff;--code:#111827}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Bengali","Noto Sans",Arial,sans-serif;line-height:1.7}
+.container{width:min(100% - 32px,1000px);margin:auto}header{padding:52px 0 30px}.eyebrow{color:var(--accent);font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:.85rem}
+h1{margin:8px 0 10px;font-size:clamp(2rem,5vw,3rem);line-height:1.15}.intro{color:var(--muted);max-width:760px}
+.tips{margin:24px 0 30px;padding:16px 18px;background:var(--soft);border:1px solid #bfdbfe;border-radius:12px}.tips strong{color:#1d4ed8}
+.question{background:var(--card);border:1px solid var(--border);border-radius:14px;margin:14px 0;box-shadow:0 8px 24px rgba(15,23,42,.06);overflow:hidden}
+summary{cursor:pointer;list-style:none;padding:19px 22px;font-weight:700;display:flex;align-items:center;gap:14px}summary::-webkit-details-marker{display:none}
+summary:after{content:"+";margin-left:auto;font-size:1.5rem;color:var(--muted);font-weight:400}.question[open] summary:after{content:"−"}
+.number{min-width:34px;height:34px;display:grid;place-items:center;border-radius:9px;background:var(--soft);color:var(--accent);font-size:.9rem}
+.answer{border-top:1px solid var(--border);padding:22px}h2,h3{line-height:1.3}h3{font-size:1.05rem;margin-top:22px}ul{padding-left:22px}
+.interview{margin-top:18px;padding:15px 17px;background:#f8fafc;border-left:4px solid var(--accent);border-radius:8px}.interview strong{display:block;margin-bottom:5px}
+pre{overflow-x:auto;background:var(--code);color:#e5e7eb;padding:15px 17px;border-radius:10px}code{font-family:"SFMono-Regular",Consolas,monospace}:not(pre)>code{background:#eef2f7;padding:2px 5px;border-radius:5px;color:#334155}
+.note{color:var(--muted);font-size:.95rem}.flow{padding:14px 16px;background:#f8fafc;border:1px solid var(--border);border-radius:10px;font-family:monospace;white-space:pre-wrap}
+footer{text-align:center;color:var(--muted);padding:35px 0 50px}@media(max-width:600px){.container{width:min(100% - 20px,1000px)}header{padding-top:32px}summary{padding:16px}.answer{padding:17px}}
+</style>
+</head>
+<body>
+<header class="container">
+<div class="eyebrow">Python Core • Interview Preparation</div>
+<h1>Python Core — Questions 21–25</h1>
+<p class="intro">প্রতিটি question-এ click করলে answer খুলবে। Definition, mechanics, example, important notes এবং short interview answer এক জায়গায় রাখা হয়েছে।</p>
+<div class="tips"><strong>Interview strategy:</strong> প্রথমে concept-এর definition → কীভাবে কাজ করে → ছোট example → key difference বা practical use.</div>
+</header>
+<main class="container">
+
+<details class="question"><summary><span class="number">21</span><span><code>global</code> vs <code>nonlocal</code></span></summary><div class="answer">
+<h2><code>global</code> এবং <code>nonlocal</code>-এর পার্থক্য কী?</h2>
+<p>দুটিই function-এর ভিতর থেকে outer scope-এর variable-এ assignment করার জন্য ব্যবহৃত হয়, কিন্তু target scope আলাদা।</p>
+<ul><li><strong><code>global</code>:</strong> current module-এর global variable-কে refer করে।</li><li><strong><code>nonlocal</code>:</strong> nested function-এর nearest enclosing function scope-এর existing variable-কে refer করে।</li></ul>
+<h3><code>global</code> example</h3>
+<pre><code>count = 10
+
+def update():
+    global count
+    count = 20
+
+update()
+print(count)  # 20</code></pre>
+<p><code>global count</code> এর কারণে <code>update()</code>-এর ভিতরের assignment module-level <code>count</code>-কে target করে।</p>
+<h3><code>nonlocal</code> example</h3>
+<pre><code>def outer():
+    count = 0
+
+    def inner():
+        nonlocal count
+        count += 1
+
+    inner()
+    inner()
+    return count
+
+print(outer())  # 2</code></pre>
+<p>এখানে <code>count</code> global নয়; এটি <code>outer()</code>-এর local variable। <code>inner()</code> থেকে <code>nonlocal</code> দিয়ে সেটি modify করা হয়েছে।</p>
+<div class="flow">global   → module/global scope
+nonlocal → enclosing function scope</div>
+<p class="note"><code>nonlocal</code> ব্যবহার করলে enclosing function scope-এ matching existing binding থাকতে হবে।</p>
+<div class="interview"><strong>Interview Answer</strong><code>global</code> function-এর ভিতর থেকে module-level global variable-কে refer বা modify করতে ব্যবহৃত হয়। <code>nonlocal</code> nested function-এর ভিতর থেকে nearest enclosing function-এর variable modify করতে ব্যবহৃত হয়।</div>
+</div></details>
+
+<details class="question"><summary><span class="number">22</span><span>Comprehensions</span></summary><div class="answer">
+<h2>Comprehension কী?</h2>
+<p>Comprehension হলো Python-এর concise syntax, যার মাধ্যমে existing iterable থেকে নতুন collection তৈরি করা যায়। Common forms হলো list, set, dictionary comprehension এবং generator expression.</p>
+<h3>List comprehension</h3>
+<pre><code>numbers = [1, 2, 3, 4, 5]
+squares = [x * x for x in numbers]
+print(squares)
+# [1, 4, 9, 16, 25]</code></pre>
+<h3>Condition সহ</h3>
+<pre><code>numbers = [1, 2, 3, 4, 5, 6]
+even_numbers = [x for x in numbers if x % 2 == 0]
+print(even_numbers)
+# [2, 4, 6]</code></pre>
+<h3>Set comprehension</h3>
+<pre><code>numbers = [1, 2, 2, 3, 3, 4]
+unique_squares = {x * x for x in numbers}
+print(unique_squares)
+# {1, 4, 9, 16}</code></pre>
+<h3>Dictionary comprehension</h3>
+<pre><code>numbers = [1, 2, 3]
+squares = {x: x * x for x in numbers}
+print(squares)
+# {1: 1, 2: 4, 3: 9}</code></pre>
+<h3>Generator expression</h3>
+<pre><code>numbers = [1, 2, 3]
+squares = (x * x for x in numbers)</code></pre>
+<p>Generator expression result পুরো collection হিসেবে একসাথে materialize না করে values প্রয়োজন অনুযায়ী produce করতে পারে।</p>
+<p class="note">Logic খুব complex হলে comprehension-এর বদলে normal <code>for</code> loop বেশি readable হতে পারে।</p>
+<div class="interview"><strong>Interview Answer</strong>Comprehension হলো Python-এর concise syntax যার মাধ্যমে iterable থেকে নতুন collection তৈরি করা যায়। List, set ও dictionary comprehension আছে; generator expression lazyভাবে values produce করতে পারে।</div>
+</div></details>
+
+<details class="question"><summary><span class="number">23</span><span>Iterables vs iterators</span></summary><div class="answer">
+<h2>Iterable এবং iterator-এর পার্থক্য কী?</h2>
+<p><strong>Iterable</strong> হলো এমন object যার elements-এর ওপর iterate করা যায়। সাধারণত <code>iter()</code> দিয়ে iterable থেকে iterator পাওয়া যায়।</p>
+<p><strong>Iterator</strong> iteration-এর current state ধরে রাখে এবং <code>next()</code> দিয়ে একবারে পরবর্তী value দেয়। শেষ হলে <code>StopIteration</code> raise করে।</p>
+<pre><code>numbers = [10, 20, 30]
+
+iterator = iter(numbers)
+
+print(next(iterator))  # 10
+print(next(iterator))  # 20
+print(next(iterator))  # 30</code></pre>
+<h3>Iterator protocol</h3>
+<p>Iterator object সাধারণত <code>__iter__()</code> এবং <code>__next__()</code> implement করে। Iterator-এর <code>__iter__()</code> সাধারণত নিজেকেই return করে।</p>
+<div class="flow">Iterable
+   ↓ iter()
+Iterator
+   ↓ next()
+Next value
+   ↓
+next()
+Next value
+   ↓
+StopIteration</div>
+<p class="note">List, tuple, set ইত্যাদি iterable container নিজে iterator নয়। তবে iterator নিজেও iterable, কারণ iterator protocol-এ <code>__iter__()</code> থাকে।</p>
+<div class="interview"><strong>Interview Answer</strong>Iterable হলো এমন object যেটা থেকে <code>iter()</code> দিয়ে iterator পাওয়া যায়। Iterator iteration state ধরে রাখে এবং <code>next()</code> দিয়ে পরবর্তী value দেয়; শেষ হলে <code>StopIteration</code> raise করে।</div>
+</div></details>
+
+<details class="question"><summary><span class="number">24</span><span>Generators</span></summary><div class="answer">
+<h2>Generator কী?</h2>
+<p>Generator হলো এমন একটি mechanism, যার মাধ্যমে function বা expression values একসাথে materialize না করে একটি করে produce করতে পারে। Generator সাধারণত lazy evaluation ব্যবহার করে।</p>
+<h3>Generator function</h3>
+<pre><code>def numbers():
+    yield 1
+    yield 2
+    yield 3
+
+gen = numbers()
+
+print(next(gen))  # 1
+print(next(gen))  # 2
+print(next(gen))  # 3</code></pre>
+<p>Generator function call করলে একটি generator object পাওয়া যায়। <code>next()</code> call করলে execution শুরু/resume হয় এবং পরবর্তী <code>yield</code>-এ পৌঁছালে value produce করে।</p>
+<h3>কেন useful?</h3>
+<ul><li>বড় data item-by-item process করা যায়।</li><li>পুরো sequence একসাথে memory-তে materialize না করেও কাজ করা যায়।</li><li>File processing, streaming এবং large sequences-এর মতো use case-এ useful।</li></ul>
+<pre><code>def read_numbers():
+    for number in range(1_000_000):
+        yield number
+
+for number in read_numbers():
+    if number == 3:
+        break</code></pre>
+<p class="note">Generator “সবসময় কম memory ব্যবহার করবে”—এমন absolute claim ঠিক নয়। এটি lazyভাবে values produce করার সুযোগ দেয়; actual memory usage পুরো computation-এর ওপর নির্ভর করে।</p>
+<div class="interview"><strong>Interview Answer</strong>Generator এমন একটি iterator-producing mechanism যা values lazyভাবে একবারে একটি করে produce করে। সাধারণত <code>yield</code> ব্যবহার করে generator function তৈরি করা হয়।</div>
+</div></details>
+
+<details class="question"><summary><span class="number">25</span><span><code>yield</code></span></summary><div class="answer">
+<h2><code>yield</code> কী?</h2>
+<p><code>yield</code> একটি function-কে generator function বানায়। এটি value produce করে এবং function-এর current execution state suspend করে। পরে generator resume হলে execution পরবর্তী statement থেকে চলতে থাকে।</p>
+<pre><code>def demo():
+    print("Start")
+    yield 10
+
+    print("Middle")
+    yield 20
+
+    print("End")
+
+gen = demo()
+
+print(next(gen))
+print(next(gen))</code></pre>
+<p>Flow:</p>
+<div class="flow">demo()
+  ↓
+generator object তৈরি
+  ↓
+next(gen)
+  ↓
+"Start"
+  ↓
+yield 10
+  ↓
+pause
+  ↓
+next(gen)
+  ↓
+resume
+  ↓
+"Middle"
+  ↓
+yield 20
+  ↓
+pause</div>
+<h3><code>return</code> বনাম <code>yield</code></h3>
+<pre><code>def normal():
+    return 10
+
+def generator():
+    yield 10</code></pre>
+<ul><li><code>return</code> function-এর execution শেষ করে এবং result return করে।</li><li><code>yield</code> value produce করে এবং generator-এর execution suspend করে; পরে resume করা যায়।</li></ul>
+<h3>Generator শেষ হলে</h3>
+<p>আর কোনো value না থাকলে iteration শেষ হয় এবং <code>StopIteration</code> signal করা হয়। Generator function-এ <code>return value</code> থাকলে সেটি <code>StopIteration.value</code>-এর মাধ্যমে পাওয়া যেতে পারে।</p>
+<pre><code>def example():
+    yield 1
+    return "done"
+
+gen = example()
+print(next(gen))  # 1
+
+try:
+    next(gen)
+except StopIteration as exc:
+    print(exc.value)  # done</code></pre>
+<p class="note"><code>yield</code> শুধু “return-এর মতো” নয়। মূল পার্থক্য হলো yield execution state suspend করে এবং generator পরে সেই state থেকে resume করতে পারে।</p>
+<div class="interview"><strong>Interview Answer</strong><code>yield</code> generator function-এ value produce করে এবং current execution state suspend করে। পরবর্তী <code>next()</code> call-এ generator সেই অবস্থান থেকে resume করে এবং পরবর্তী <code>yield</code> পর্যন্ত execute করে।</div>
+</div></details>
+
+</main>
+<footer class="container">Python Core Interview Preparation • Questions 21–25</footer>
+</body>
+</html>

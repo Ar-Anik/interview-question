@@ -1,0 +1,122 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header Styling */
+header {
+    text-align: center;
+    color: white;
+    margin-bottom: 50px;
+    padding: 40px 20px;
+}
+
+header h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+
+/* Course Section */
+.course-section {
+    margin-bottom: 50px;
+}
+
+.course-section h2 {
+    color: white;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Card Container */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+/* Card Styling */
+.card {
+    text-decoration: none;
+    color: inherit;
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 16px 32px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.card-content {
+    text-align: center;
+}
+
+.card-content h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.card-content p {
+    font-size: 1em;
+    opacity: 0.7;
+}
+
+.card:hover .card-content p {
+    opacity: 1;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    color: white;
+    padding: 30px;
+    margin-top: 50px;
+    opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2em;
+    }
+
+    .course-section h2 {
+        font-size: 1.8em;
+    }
+
+    .card-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+}

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Core — Interview Questions 11–20</title>
+  <meta name="description" content="Python Core interview preparation in Bangla: list vs tuple, sets, dictionaries, hashing, copying, args, kwargs, mutable defaults and LEGB scope.">
+  <style>
+    :root {
+      --bg: #f6f8fb; --card: #fff; --text: #172033; --muted: #5d687a;
+      --border: #dfe5ee; --accent: #2563eb; --accent-soft: #eff6ff;
+      --code: #111827; --code-text: #e5e7eb;
+      --shadow: 0 8px 24px rgba(15,23,42,.06);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Bengali",
+                   "Noto Sans",Arial,sans-serif; line-height: 1.7;
+    }
+    .container { width: min(100% - 32px,1000px); margin: 0 auto; }
+    header { padding: 52px 0 30px; }
+    .eyebrow { color: var(--accent); font-weight: 700; letter-spacing: .04em;
+      text-transform: uppercase; font-size: .85rem; }
+    h1 { margin: 8px 0 10px; font-size: clamp(2rem,5vw,3rem); line-height: 1.15; }
+    .intro { color: var(--muted); max-width: 760px; margin: 0; }
+    .tips { margin: 24px 0 30px; padding: 16px 18px; background: var(--accent-soft);
+      border: 1px solid #bfdbfe; border-radius: 12px; }
+    .tips strong { color: #1d4ed8; }
+    .question { background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; margin: 14px 0; box-shadow: var(--shadow); overflow: hidden; }
+    .question summary { cursor: pointer; list-style: none; padding: 19px 22px;
+      font-weight: 700; display: flex; align-items: center; gap: 14px; }
+    .question summary::-webkit-details-marker { display: none; }
+    .question summary::after { content: "+"; margin-left: auto; font-size: 1.5rem;
+      color: var(--muted); font-weight: 400; }
+    .question[open] summary::after { content: "−"; }
+    .number { min-width: 34px; height: 34px; display: grid; place-items: center;
+      border-radius: 9px; background: var(--accent-soft); color: var(--accent); font-size: .9rem; }
+    .answer { border-top: 1px solid var(--border); padding: 22px; }
+    h2,h3 { line-height: 1.3; margin-top: 0; }
+    h3 { font-size: 1.05rem; margin-top: 22px; }
+    p { margin: 9px 0; }
+    ul { padding-left: 22px; }
+    .interview { margin-top: 18px; padding: 15px 17px; background: #f8fafc;
+      border-left: 4px solid var(--accent); border-radius: 8px; }
+    .interview strong { display: block; margin-bottom: 5px; }
+    pre { overflow-x: auto; background: var(--code); color: var(--code-text);
+      padding: 15px 17px; border-radius: 10px; margin: 12px 0; }
+    code { font-family: "SFMono-Regular",Consolas,"Liberation Mono",monospace; }
+    :not(pre)>code { background: #eef2f7; padding: 2px 5px; border-radius: 5px; color: #334155; }
+    .note { color: var(--muted); font-size: .95rem; }
+    footer { color: var(--muted); text-align: center; padding: 35px 0 50px; font-size: .9rem; }
+    @media (max-width:600px) {
+      .container { width: min(100% - 20px,1000px); }
+      header { padding-top: 32px; }
+      .question summary { padding: 16px; }
+      .answer { padding: 17px; }
+    }
+  </style>
+</head>
+<body>
+<header class="container">
+  <div class="eyebrow">Python Core • Interview Preparation</div>
+  <h1>Python Core — Questions 11–20</h1>
+  <p class="intro">
+    প্রতিটি question-এ click করলে answer খুলবে। Concept, mechanics, example এবং short
+    interview answer—সব এক জায়গায় রাখা হয়েছে।
+  </p>
+  <div class="tips">
+    <strong>Interview strategy:</strong>
+    প্রথমে definition → তারপর কীভাবে কাজ করে → ছোট example → শেষে interview answer।
+    Implementation-specific বিষয়কে language-level rule হিসেবে বলা এড়িয়ে চলুন।
+  </div>
+</header>
+
+<main class="container">
+
+<details class="question">
+<summary><span class="number">11</span> List vs tuple</summary>
+<div class="answer">
+<h2>List এবং tuple-এর পার্থক্য কী?</h2>
+<p>
+  দুটিই ordered sequence এবং index দিয়ে element access করা যায়। প্রধান পার্থক্য হলো
+  <strong>list mutable</strong>, আর <strong>tuple immutable</strong>।
+</p>
+<pre><code># List
+items = [10, 20, 30]
+items[0] = 100
+items.append(40)
+
+# Tuple
+point = (10, 20, 30)
+# point[0] = 100  # TypeError</code></pre>
+
+<h3>কখন কোনটি?</h3>
+<ul>
+  <li><strong>List:</strong> collection-এর content পরিবর্তন করতে হলে।</li>
+  <li><strong>Tuple:</strong> fixed/immutable sequence represent করতে হলে।</li>
+  <li>Tuple-এর element-গুলো hashable হলে tuple-কে dictionary key বা set element হিসেবে ব্যবহার করা যেতে পারে।</li>
+</ul>
+
+<p>
+  Tuple সাধারণত list-এর তুলনায় “বেশি immutable” ধরনের semantic দেয়, কিন্তু শুধু tuple হওয়াই
+  সবসময় faster বা memory-efficient হবে—এমন blanket claim করা উচিত নয়; use case এবং data-এর
+  ওপর performance নির্ভর করে।
+</p>
+
+<div class="interview">
+<strong>Interview Answer</strong>
+List এবং tuple দুটিই ordered sequence। List mutable, তাই এর elements পরিবর্তন, add বা remove করা যায়।
+Tuple immutable, তাই tuple-এর existing elements পরিবর্তন করা যায় না। Fixed collection-এর জন্য
+tuple এবং পরিবর্তনশীল collection-এর জন্য list ব্যবহার করা যায়।
+</div>
+</div>
+</details>
+
+<details class="question">
+<summary><span class="number">12</span> Set vs list</summary>
+<div class="answer">
+<h2>Set এবং list-এর পার্থক্য কী?</h2>
+<p>
+  <strong>List</strong> ordered sequence এবং duplicate element রাখতে পারে। <strong>Set</strong>
+  হলো unique elements-এর collection এবং set-এর elements hashable হতে হয়।
+</p>
+<pre><code>items = [1, 2, 2, 3, 1]
+print(items)       # [1, 2, 2, 3, 1]
+
+numbers = {1, 2, 2, 3, 1}
+print(numbers)     # {1, 2, 3}</code></pre>
+
+<h3>মূল পার্থক্য</h3>
+<ul>
+  <li>List duplicate রাখে; set duplicate রাখে না।</li>
+  <li>List indexing/slicing support করে; set indexing বা slicing support করে না।</li>
+  <li>Set membership testing-এর জন্য hash-based implementation ব্যবহার করে; average-case lookup সাধারণত O(1)।</li>
+  <li>List membership search সাধারণত O(n)।</li>
+</ul>
+
+<p class="note">
+  “Set unordered” বলা পুরোনো interview shorthand হিসেবে শোনা যায়। গুরুত্বপূর্ণ rule হলো set
+  indexing-এর মাধ্যমে positional order access করার জন্য designed নয়; set-এর iteration order-এর
+  ওপর application logic নির্ভর করা উচিত নয়। Python-এর <code>dict</code>-এর মতো set-এর insertion-order
+  guarantee ধরে নেওয়া উচিত নয়।
+</p>
+
+<div class="interview">
+<strong>Interview Answer</strong>
+List একটি ordered sequence এবং duplicate রাখতে পারে, আর set unique hashable elements রাখে।
+List indexing support করে, set করে না। Membership checking-এর জন্য set সাধারণত বেশি efficient,
+কারণ এটি hash-based lookup ব্যবহার করে।
+</div>
+</div>
+</details>
+
+<details class="question">
+<summary><span class="number">13</span> Dictionary internals</summary>
+<div class="answer">
+<h2>Python dictionary internally কীভাবে কাজ করে?</h2>
+<p>
+  Python dictionary হলো <strong>mapping</strong> type। CPython-এ dictionary একটি hash table-based
+  data structure। Key থেকে hash value বের করে key/value entry locate করার জন্য hash table ব্যবহার করা হয়।
+</p>
+
+<pre><code>key
+ ↓
+hash(key)
+ ↓
+hash-table lookup
+ ↓
+matching key
+ ↓
+value</code></pre>
+
+<h3>Example</h3>
+<pre><code>user = {
+    "id": 101,
+    "name": "Anik"
+}
+
+print(user["name"])</code></pre>
+
+<p>
+  <code>"name"</code> key-এর hash ব্যবহার করে dictionary lookup করে। Hash collision হলে implementation
+  এমনভাবে collision handle করে যাতে equality check-এর মাধ্যমে correct key নির্ধারণ করা যায়।
+</p>
+
+<p>
+  Python 3.7+ language specification অনুযায়ী normal <code>dict</code> insertion order preserve করে।
+  তবে dictionary-কে শুধু “ordered array” হিসেবে ভাবা ভুল; এটি mapping এবং hash-table-based implementation
+  ব্যবহার করে।
+</p>
+
+<p class="note">
+  Dictionary internals-এর exact memory layout এবং implementation details CPython version অনুযায়ী
+  পরিবর্তিত হতে পারে। Interview-এ “hash table based” এবং key hashability/equality—এই core concept-এ
+  focus করা নিরাপদ।
+</p>
+
+<div class="interview">
+<strong>Interview Answer</strong>
+Python dict একটি mapping type এবং CPython-এ hash table-based। Dictionary key-এর hash ব্যবহার করে
+lookup করে এবং collision হলে equality check-এর মাধ্যমে correct key identify করে। Dictionary
+insertion order preserve করে, কিন্তু এর core purpose হলো key থেকে value mapping করা।
+</div>
+</div>
+</details>
+
+<details class="question">
+<summary><span class="number">14</span> Hashing</summary>
+<div class="answer">
+<h2>Hashing কী?</h2>
+<p>
+  Hashing হলো একটি object থেকে একটি integer hash value তৈরি করার process। Python-এ
+  <code>hash(obj)</code> function দিয়ে কোনো hashable object-এর hash value পাওয়া যায়।
+</p>
+
+<pre><code>print(hash("python"))
+print(hash(100))</code></pre>
+
+<p>
+  Hash-based data structures যেমন <code>dict</code> এবং <code>set</code> lookup efficiently করার
+  জন্য hash ব্যবহার করে।
+</p>
+
+<h3>সব object কি hashable?</h3>
+<p>
+  না। সাধারণভাবে hashable object-এর hash value তার lifetime-এ পরিবর্তন করা উচিত নয় এবং
+  object equality-এর সাথে hash-এর একটি গুরুত্বপূর্ণ contract আছে:
+</p>
+
+<pre><code>a == b  →  hash(a) == hash(b)</code></pre>
+
+<p>
+  উল্টোটা সত্য নয়: দুইটি object-এর hash একই হলেই তারা equal—এমন নয়। এটাকেই hash collision-এর
+  context-এ বোঝা যায়।
+</p>
+
+<p>
+  Mutable object সাধারণত hashable নয়, যদি mutation-এর কারণে hash/equality পরিবর্তিত হতে পারে।
+  List যেমন hashable নয়; immutable এবং appropriate equality semantics থাকা কিছু object যেমন
+  <code>str</code> এবং <code>int</code> hashable।
+</p>
+
+<div class="interview">
+<strong>Interview Answer</strong>
+Hashing হলো object থেকে integer hash value তৈরি করা। Dict এবং set-এর মতো hash-based data structure
+এই hash ব্যবহার করে lookup efficiently করে। Hashable object-এর ক্ষেত্রে equal objects-এর hash
+একই হতে হবে, কিন্তু একই hash মানেই objects equal—এমন নয়।
+</div>
+</div>
+</details>
+
+<details class="question">
+<summary><span class="number">15</span> <code>__hash__</code></summary>
+<div class="answer">
+<h2><code>__hash__</code> কী?</h2>
+<p>
+  <code>__hash__</code> হলো special method, যা কোনো object-এর hash value নির্ধারণে ব্যবহৃত হয়।
+  <code>hash(obj)</code> call করলে Python object-এর hashing protocol ব্যবহার করে।
+</p>
+
+<pre><code>class User:
+    def __init__(self, user_id):
+        self.user_id = user_id
+
+    def __eq__(self, other):
+        if not isinstance(other, User):
+            return NotImplemented
+        return self.user_id == other.user_id
+
+    def __hash__(self):
+        return hash(self.user_id)</code></pre>
+
+<p>
+  এখানে একই <code>user_id</code> থাকা User objects equality অনুযায়ী equal হবে এবং তাদের hash-ও
+  একই হবে।
+</p>
+
+<h3>সবচেয়ে গুরুত্বপূর্ণ rule</h3>
+<p>
+  যদি <code>a == b</code> হয়, তাহলে <code>hash(a) == hash(b)</code> হতে হবে। কিন্তু
+  <code>hash(a) == hash(b)</code> হলে <code>a == b</code> হওয়া বাধ্যতামূলক নয়।
+</p>
+
+<p>
+  কোনো object dictionary key বা set element হিসেবে ব্যবহার করা হলে তার equality-relevant state
+  object-এর lifetime-এ পরিবর্তন না হওয়া গুরুত্বপূর্ণ। নইলে object hash table-এ insert করার পর
+  lookup behavior problematic হতে পারে।
+</p>
+
+<p class="note">
+  Python 3-এ কোনো class <code>__eq__</code> define করে কিন্তু appropriate <code>__hash__</code>
+  না দেয়, সাধারণত সেই class unhashable হয়ে যায়। এটি mutable/equality semantics নিরাপদ রাখার
+  একটি গুরুত্বপূর্ণ behavior।
+</p>
+
+<div class="interview">
+<strong>Interview Answer</strong>
+<code>__hash__</code> special method object-এর hash value define করে। Dict key বা set element হিসেবে
+ব্যবহারের জন্য object hashable হতে হয়। Equality অনুযায়ী equal objects-এর hash অবশ্যই equal হতে হবে।
+</div>
+</div>
+</details>
+
+<details class="question">
+<summary><span class="number">16</span> Shallow copy vs deep copy</summary>
+<div class="answer">
+<h2>Shallow copy এবং deep copy কী?</h2>
+<p>
+  <strong>Shallow copy</strong> নতুন outer/container object তৈরি করে, কিন্তু nested objects-এর
+  references copy করে। <strong>Deep copy</strong> recursively nested objects-ও copy করার চেষ্টা করে,
+  তাই copied structure সাধারণত original-এর nested mutable objects share করে না।
+</p>
+
+<pre><code>original = [[1, 2], [3, 4]]
+
+shallow = original.copy()
+
+shallow[0].append(99)
+
+print(original)  # [[1, 2, 99], [3, 4]]
+print(shallow)   # [[1, 2, 99], [3, 4]]</code></pre>
+
+<p>
+  এখানে outer list আলাদা হলেও inner list একই object। তাই inner list mutate করলে দুই জায়গাতেই
+  পরিবর্তন দেখা যায়।
+</p>
+
+<pre><code>import copy
+
+original = [[1, 2], [3, 4]]
+deep = copy.deepcopy(original)
+
+deep[0].append(99)
+
+print(original)  # [[1, 2], [3, 4]]
+print(deep)      # [[1, 2, 99], [3, 4]]</code></pre>
+
+<p class="note">
+  Deep copy মানে “প্রতিটি object সবসময় byte-for-byte নতুন করে তৈরি” নয়। Python-এর
+  <code>copy</code> module-এর rules অনুযায়ী objects copy করা হয়; কিছু object-এর copying
+  আলাদা behavior দিতে পারে।
+</p>
+
+<div class="interview">
+<strong>Interview Answer</strong>
+Shallow copy নতুন outer object তৈরি করে কিন্তু nested object-এর references share করতে পারে।
+Deep copy recursively nested objects copy করে, তাই nested mutable data সাধারণত independent হয়।
+</div>
+</div>
+</details>
+
+<details class="question">
+<summary><span class="number">17</span> <code>copy.copy()</code> vs <code>copy.deepcopy()</code></summary>
+<div class="answer">
+<h2><code>copy.copy()</code> এবং <code>copy.deepcopy()</code>-এর পার্থক্য</h2>
+<p>
+  দুটিই Python-এর <code>copy</code> module-এর function।
+</p>
+
+<pre><code>import copy
+
+a = [[1, 2], [3, 4]]
+
+b = copy.copy(a)       # shallow copy
+c = copy.deepcopy(a)   # deep copy</code></pre>
+
+<h3><code>copy.copy()</code></h3>
+<p>
+  Top-level/outer object-এর shallow copy তৈরি করে। Nested objects-এর references সাধারণত
+  original-এর সাথেই shared থাকে।
+</p>
+
+<h3><code>copy.deepcopy()</code></h3>
+<p>
+  Object graph recursively copy করার চেষ্টা করে। একই object graph-এর repeated references
+  preserve করার জন্য deep-copy process একটি memoization mechanism ব্যবহার করে, যাতে একই
+  original object অপ্রয়োজনে বারবার copy না হয় এবং recursive structures handle করা যায়।
+</p>
+
+<pre><code>import copy
+
+original = [[1, 2], [3, 4]]
+
+a = copy.copy(original)
+b = copy.deepcopy(original)
+
+print(a is original)       # False
+print(a[0] is original[0]) # True
+
+print(b is original)       # False
+print(b[0] is original[0]) # False</code></pre>
+
+<div class="interview">
+<strong>Interview Answer</strong>
+<code>copy.copy()</code> shallow copy করে—outer object নতুন হলেও nested references share হতে পারে।
+<code>copy.deepcopy()</code> nested object graph recursively copy করার চেষ্টা করে, তাই nested
+mutable objects সাধারণত independent হয়।
+</div>
+</div>
+</details>
+
+<details class="question">
+<summary><span class="number">18</span> <code>*args</code> and <code>**kwargs</code></summary>
+<div class="answer">
+<h2><code>*args</code> এবং <code>**kwargs</code> কী?</h2>
+<p>
+  Function definition-এ <code>*args</code> অতিরিক্ত positional arguments collect করে tuple হিসেবে,
+  আর <code>**kwargs</code> অতিরিক্ত keyword arguments collect করে dictionary হিসেবে।
+</p>
+
+<pre><code>def example(*args, **kwargs):
+    print(args)
+    print(kwargs)
+
+example(10, 20, name="Anik", role="Engineer")
+
+# args   -> (10, 20)
+# kwargs -> {"name": "Anik", "role": "Engineer"}</code></pre>
+
+<h3>Unpacking-ও <code>*</code> এবং <code>**</code> দিয়ে করা যায়</h3>
+<pre><code>numbers = [10, 20, 30]
+data = {"name": "Anik", "role": "Engineer"}
+
+print(*numbers)
+
+def greet(name, role):
+    print(name, role)
+
+greet(**data)</code></pre>
+
+<p>
+  তাই <code>*</code> এবং <code>**</code>-এর অর্থ context-এর ওপর নির্ভর করে:
+  function definition-এ এগুলো arguments collect করতে পারে, আর function call-এ
+  iterable/mapping unpack করতে পারে।
+</p>
+
+<div class="interview">
+<strong>Interview Answer</strong>
+<code>*args</code> function-এর extra positional arguments tuple হিসেবে collect করে এবং
+<code>**kwargs</code> extra keyword arguments dictionary হিসেবে collect করে। Function call-এর
+সময় <code>*</code> iterable unpack এবং <code>**</code> mapping unpack করতেও ব্যবহার করা যায়।
+</div>
+</div>
+</details>
+
+<details class="question">
+<summary><span class="number">19</span> Default mutable arguments</summary>
+<div class="answer">
+<h2>Default mutable argument problem কী?</h2>
+<p>
+  Python-এ function definition-এর সময় default argument value evaluate করা হয় এবং function
+  object-এর সাথে সংরক্ষিত থাকে। তাই default value যদি mutable object হয়, multiple function call
+  একই object share করতে পারে।
+</p>
+
+<pre><code>def add_item(item, items=[]):
+    items.append(item)
+    return items
+
+print(add_item("A"))  # ['A']
+print(add_item("B"))  # ['A', 'B']
+print(add_item("C"))  # ['A', 'B', 'C']</code></pre>
+
+<p>
+  এখানে <code>[]</code> প্রতিবার function call-এ নতুন list তৈরি করছে না। একই default list
+  successive calls-এ reuse হচ্ছে।
+</p>
+
+<h3>Recommended solution</h3>
+<pre><code>def add_item(item, items=None):
+    if items is None:
+        items = []
+
+    items.append(item)
+    return items
+
+print(add_item("A"))  # ['A']
+print(add_item("B"))  # ['B']</code></pre>
+
+<p>
+  <code>None</code> একটি immutable/sentinel-like default value হিসেবে ব্যবহার করে function-এর
+  ভিতরে প্রয়োজন অনুযায়ী নতুন list তৈরি করা যায়।
+</p>
+
+<p class="note">
+  Default argument-এর behavior বোঝার সবচেয়ে গুরুত্বপূর্ণ point হলো: default expressions
+  function call-এর সময় নয়, function definition-এর সময় evaluate হয়।
+</p>
+
+<div class="interview">
+<strong>Interview Answer</strong>
+Python function-এর default arguments definition time-এ evaluate হয়। তাই mutable default যেমন
+<code>[]</code> ব্যবহার করলে multiple calls একই object share করতে পারে। সাধারণ solution হলো
+<code>None</code> default দিয়ে function-এর ভিতরে নতুন mutable object তৈরি করা।
+</div>
+</div>
+</details>
+
+<details class="question">
+<summary><span class="number">20</span> LEGB scope</summary>
+<div class="answer">
+<h2>LEGB rule কী?</h2>
+<p>
+  Python কোনো name lookup করার সময় সাধারণভাবে <strong>LEGB</strong> order অনুসরণ করে:
+</p>
+
+<ul>
+  <li><strong>L — Local:</strong> current function-এর local scope</li>
+  <li><strong>E — Enclosing:</strong> nested function-এর outer function scope</li>
+  <li><strong>G — Global:</strong> current module/global scope</li>
+  <li><strong>B — Built-in:</strong> Python-এর built-in names</li>
+</ul>
+
+<pre><code>x = "global"
+
+def outer():
+    x = "enclosing"
+
+    def inner():
+        x = "local"
+        print(x)
+
+    inner()
+
+outer()</code></pre>
+
+<p>
+  <code>inner()</code>-এর ভিতরে <code>x</code> খোঁজা হলে প্রথমে Local scope-এ পাওয়া যায়,
+  তাই output হবে <code>local</code>। Local-এ না থাকলে Enclosing, তারপর Global, তারপর Built-in
+  scope-এ lookup হয়।
+</p>
+
+<h3><code>global</code> এবং <code>nonlocal</code></h3>
+<pre><code>x = 10
+
+def update_global():
+    global x
+    x = 20
+
+def outer():
+    count = 0
+
+    def inner():
+        nonlocal count
+        count += 1
+
+    inner()
+    return count</code></pre>
+
+<p>
+  <code>global</code> module-level global name-কে refer/assign করার জন্য এবং
+  <code>nonlocal</code> nearest enclosing function scope-এর existing name-কে refer/assign
+  করার জন্য ব্যবহৃত হয়।
+</p>
+
+<div class="interview">
+<strong>Interview Answer</strong>
+LEGB হলো Python name lookup rule: Local → Enclosing → Global → Built-in। Python এই order-এ
+name খোঁজে। <code>nonlocal</code> enclosing function-এর variable modify করতে এবং
+<code>global</code> module-level global variable-এর সাথে কাজ করতে ব্যবহার করা হয়।
+</div>
+</div>
+</details>
+
+</main>
+
+<footer class="container">
+  Python Core Interview Preparation • Questions 11–20
+</footer>
+</body>
+</html>
