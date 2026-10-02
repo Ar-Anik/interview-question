@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Core — Interview Questions 1–10</title>
+  <meta name="description" content="Python Core interview preparation in Bangla: execution model, CPython, bytecode, references, mutability, identity, equality and data types.">
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5d687a;
+      --border: #dfe5ee;
+      --accent: #2563eb;
+      --accent-soft: #eff6ff;
+      --code: #111827;
+      --code-text: #e5e7eb;
+      --shadow: 0 8px 24px rgba(15, 23, 42, .06);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Bengali",
+                   "Noto Sans", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .container {
+      width: min(100% - 32px, 1000px);
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 52px 0 30px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-size: .85rem;
+    }
+
+    h1 {
+      margin: 8px 0 10px;
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1.15;
+    }
+
+    .intro {
+      color: var(--muted);
+      max-width: 760px;
+      margin: 0;
+    }
+
+    .tips {
+      margin: 24px 0 30px;
+      padding: 16px 18px;
+      background: var(--accent-soft);
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+    }
+
+    .tips strong { color: #1d4ed8; }
+
+    .question {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin: 14px 0;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .question summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 19px 22px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .question summary::-webkit-details-marker { display: none; }
+
+    .question summary::after {
+      content: "+";
+      margin-left: auto;
+      font-size: 1.5rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .question[open] summary::after { content: "−"; }
+
+    .number {
+      min-width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: .9rem;
+    }
+
+    .answer {
+      border-top: 1px solid var(--border);
+      padding: 22px;
+    }
+
+    h2, h3 {
+      line-height: 1.3;
+      margin-top: 0;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      margin-top: 22px;
+    }
+
+    p { margin: 9px 0; }
+
+    ul {
+      padding-left: 22px;
+    }
+
+    .interview {
+      margin-top: 18px;
+      padding: 15px 17px;
+      background: #f8fafc;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+    }
+
+    .interview strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    pre {
+      overflow-x: auto;
+      background: var(--code);
+      color: var(--code-text);
+      padding: 15px 17px;
+      border-radius: 10px;
+      margin: 12px 0;
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    :not(pre) > code {
+      background: #eef2f7;
+      padding: 2px 5px;
+      border-radius: 5px;
+      color: #334155;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    footer {
+      color: var(--muted);
+      text-align: center;
+      padding: 35px 0 50px;
+      font-size: .9rem;
+    }
+
+    @media (max-width: 600px) {
+      .container { width: min(100% - 20px, 1000px); }
+      header { padding-top: 32px; }
+      .question summary { padding: 16px; }
+      .answer { padding: 17px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="container">
+    <div class="eyebrow">Python Core • Interview Preparation</div>
+    <h1>Python Core — Questions 1–10</h1>
+    <p class="intro">
+      প্রতিটি question-এ click করলে answer খুলবে। Explanation-গুলো interview-এর জন্য
+      concise রাখা হয়েছে, তবে concept পরিষ্কার করার জন্য প্রয়োজনীয় description ও example যোগ করা হয়েছে।
+    </p>
+
+    <div class="tips">
+      <strong>Interview strategy:</strong>
+      প্রথমে নিজের ভাষায় concept বলুন → তারপর mechanism বলুন → শেষে ছোট example দিন।
+      “Interview Answer” অংশটি short spoken answer হিসেবে ব্যবহার করা যাবে।
+    </div>
+  </header>
+
+  <main class="container">
+
+    <details class="question">
+      <summary><span class="number">1</span> Python interpreted vs compiled</summary>
+      <div class="answer">
+        <h2>Python interpreted নাকি compiled?</h2>
+        <p>
+          Python-কে শুধু “interpreted language” বলা technically incomplete। Python source code
+          সাধারণত প্রথমে <strong>bytecode</strong>-এ compile হয়, তারপর Python runtime
+          সেই bytecode execute করে।
+        </p>
+
+        <h3>Flow</h3>
+        <pre><code>.py source code
+      ↓
+Python compiler
+      ↓
+bytecode
+      ↓
+Python Virtual Machine (PVM)
+      ↓
+execution</code></pre>
+
+        <p>
+          CPython-এর ক্ষেত্রে source code থেকে bytecode তৈরি করার compilation step আছে।
+          এরপর CPython-এর virtual machine bytecode execute করে। তাই “Python is interpreted”
+          কথাটি সাধারণত runtime execution-এর nature বোঝাতে ব্যবহৃত হয়; এটি Python-এর পুরো
+          execution process-এর সম্পূর্ণ description নয়।
+        </p>
+
+        <div class="interview">
+          <strong>Interview Answer</strong>
+          Python-কে সাধারণভাবে interpreted language বলা হয়, কিন্তু CPython-এ source code
+          প্রথমে bytecode-এ compile হয় এবং পরে Python Virtual Machine সেই bytecode execute করে।
+          তাই Python-এর execution model-এ compilation এবং interpretation/execution—দুইটি ধাপ আছে।
+        </div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">2</span> Python execution model</summary>
+      <div class="answer">
+        <h2>Python execution model কী?</h2>
+        <p>
+          Python execution model বলতে source code কীভাবে runtime-এ execute হয় সেই process বোঝায়।
+          CPython ধরে সহজ flow:
+        </p>
+
+        <pre><code>Python source (.py)
+        ↓
+Parsing / compilation
+        ↓
+Code object containing bytecode
+        ↓
+CPython runtime / bytecode evaluation
+        ↓
+Result</code></pre>
+
+        <p>
+          Python source থেকে code object তৈরি হয়। Code object-এর মধ্যে bytecode থাকে এবং
+          CPython runtime সেটি execute করে। Imports-এর ক্ষেত্রে compiled bytecode cache
+          করা হতে পারে, সাধারণত <code>__pycache__</code>-এর মধ্যে।
+        </p>
+
+        <p class="note">
+          গুরুত্বপূর্ণ: এই flow CPython-এর জন্য বলা হচ্ছে। “Python language” এবং
+          “CPython implementation” এক জিনিস নয়; Python-এর অন্য implementation থাকতে পারে।
+        </p>
+
+        <div class="interview">
+          <strong>Interview Answer</strong>
+          CPython-এ Python source code compile হয়ে code object এবং bytecode তৈরি করে।
+          তারপর CPython runtime সেই bytecode execute করে এবং program-এর result তৈরি করে।
+        </div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">3</span> CPython</summary>
+      <div class="answer">
+        <h2>CPython কী?</h2>
+        <p>
+          <strong>CPython হলো Python programming language-এর একটি implementation</strong>,
+          এবং এটি সবচেয়ে প্রচলিত implementation। CPython মূলত C দিয়ে implement করা।
+        </p>
+
+        <p>
+          যখন Python install করা হয় এবং <code>python</code> command ব্যবহার করা হয়, সাধারণত
+          CPython interpreter-ই ব্যবহার করা হচ্ছে—যদি অন্য implementation আলাদাভাবে install
+          না করা হয়ে থাকে।
+        </p>
+
+        <h3>CPython কী করে?</h3>
+        <ul>
+          <li>Python source code parse ও compile করে code object/bytecode তৈরি করে।</li>
+          <li>Python bytecode execute করে।</li>
+          <li>Python objects, memory management এবং runtime-এর অনেক core behavior পরিচালনা করে।</li>
+        </ul>
+
+        <p>
+          CPython-এর reference counting এবং cyclic garbage collector-এর মাধ্যমে memory
+          management হয়। Python language-এর সব implementation একই internal mechanism ব্যবহার
+          করবে—এমন ধরে নেওয়া ঠিক নয়।
+        </p>
+
+        <div class="interview">
+          <strong>Interview Answer</strong>
+          CPython হলো Python-এর একটি implementation, যা C দিয়ে লেখা এবং সবচেয়ে বেশি ব্যবহৃত।
+          এটি Python source code-কে bytecode-এ compile করে এবং runtime-এ সেই bytecode execute করে।
+        </div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">4</span> Python bytecode</summary>
+      <div class="answer">
+        <h2>Python bytecode কী?</h2>
+        <p>
+          Bytecode হলো Python source code-এর একটি <strong>intermediate representation</strong>,
+          যা Python virtual machine/runtime execute করতে পারে।
+        </p>
+
+        <pre><code>def add(a, b):
+    return a + b</code></pre>
+
+        <p>
+          এই function compile হওয়ার পর CPython-এর code object-এর মধ্যে bytecode instructions
+          থাকে। এগুলো CPU-এর native machine instructions-এর সমান নয়। CPython runtime এগুলো
+          execute করে।
+        </p>
+
+        <h3>Bytecode দেখা</h3>
+        <pre><code>import dis
+
+def add(a, b):
+    return a + b
+
+dis.dis(add)</code></pre>
+
+        <p class="note">
+          Python version অনুযায়ী bytecode instruction-এর নাম ও structure পরিবর্তিত হতে পারে।
+          তাই একটি নির্দিষ্ট instruction list সব Python version-এর জন্য একই ধরে নেওয়া ঠিক নয়।
+        </p>
+
+        <div class="interview">
+          <strong>Interview Answer</strong>
+          Python bytecode হলো source code থেকে তৈরি intermediate instructions, যা CPython
+          runtime execute করে। এটি CPU-এর native machine code নয় এবং Python version অনুযায়ী
+          bytecode instructions পরিবর্তিত হতে পারে।
+        </div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">5</span> .pyc files</summary>
+      <div class="answer">
+        <h2><code>.pyc</code> file কী?</h2>
+        <p>
+          <code>.pyc</code> হলো Python source module-এর compiled bytecode cache file।
+          CPython সাধারণত imported modules-এর bytecode <code>__pycache__</code> directory-তে
+          cache করতে পারে।
+        </p>
+
+        <pre><code>project/
+├── app.py
+└── __pycache__/
+    └── app.cpython-XXX.pyc</code></pre>
+
+        <p>
+          এর উদ্দেশ্য হলো একই source module আবার import করার সময় bytecode compilation-এর
+          প্রয়োজন হলে তা কমানো। তবে <code>.pyc</code> থাকলেই Python source compile করা
+          সম্পূর্ণভাবে এড়িয়ে যাবে—এমন নয়; CPython cache validity যাচাই করে।
+        </p>
+
+        <p class="note">
+          <code>.pyc</code> সাধারণত source code-এর replacement নয়। Source code পরিবর্তন হলে
+          cached bytecode invalid হতে পারে এবং নতুন bytecode তৈরি হতে পারে।
+        </p>
+
+        <div class="interview">
+          <strong>Interview Answer</strong>
+          <code>.pyc</code> হলো compiled bytecode-এর cache file। CPython সাধারণত
+          <code>__pycache__</code>-এ এটি রাখে, যাতে compatible cached bytecode reuse করা যায়
+          এবং import-এর সময় অপ্রয়োজনীয় recompilation কমে।
+        </div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">6</span> Variables and object references</summary>
+      <div class="answer">
+        <h2>Python variable কীভাবে কাজ করে?</h2>
+        <p>
+          Python-এ variable-কে সাধারণভাবে object-এর <strong>name/reference</strong> হিসেবে
+          ভাবা সবচেয়ে accurate। Variable নিজে আলাদা box-এর মধ্যে value store করে—এভাবে
+          Python-কে বোঝা ঠিক নয়।
+        </p>
+
+        <pre><code>x = [10, 20]
+y = x
+
+y.append(30)
+
+print(x)  # [10, 20, 30]
+print(y)  # [10, 20, 30]</code></pre>
+
+        <p>
+          এখানে <code>x</code> এবং <code>y</code> একই list object-কে reference করছে।
+          তাই <code>y.append(30)</code> করলে একই object পরিবর্তিত হওয়ায় <code>x</code>-এর
+          মাধ্যমে দেখলেও পরিবর্তন দেখা যায়।
+        </p>
+
+        <h3>Assignment-এর অর্থ</h3>
+        <pre><code>a = 10
+b = a
+
+b = 20</code></pre>
+
+        <p>
+          এখানে <code>b = 20</code> করার সময় <code>b</code> নতুন integer object-এর দিকে
+          reference করে। <code>a</code> আগের object-এর reference হিসেবেই থাকে।
+        </p>
+
+        <div class="interview">
+          <strong>Interview Answer</strong>
+          Python variable মূলত একটি name/reference, যা একটি object-এর দিকে নির্দেশ করে।
+          Assignment সাধারণত object copy করে না; name-কে object-এর সাথে bind করে।
+          তাই একই mutable object-এর একাধিক reference থাকলে mutation সব reference থেকে দেখা যায়।
+        </div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">7</span> Mutable vs immutable objects</summary>
+      <div class="answer">
+        <h2>Mutable vs Immutable কী?</h2>
+        <p>
+          <strong>Mutable object</strong> তৈরি হওয়ার পরে তার content/state পরিবর্তন করা যায়।
+          <strong>Immutable object</strong>-এর existing object-এর value/state পরিবর্তন করা যায় না;
+          পরিবর্তনের মতো operation করলে সাধারণত নতুন object তৈরি হয়।
+        </p>
+
+        <h3>Common examples</h3>
+        <ul>
+          <li>Mutable: <code>list</code>, <code>dict</code>, <code>set</code></li>
+          <li>Immutable: <code>int</code>, <code>float</code>, <code>bool</code>, <code>str</code>, <code>tuple</code>, <code>frozenset</code></li>
+        </ul>
+
+        <pre><code># Mutable
+items = [1, 2]
+items.append(3)
+
+# Immutable
+name = "Anik"
+name = name + " Rob"</code></pre>
+
+        <p>
+          দ্বিতীয় উদাহরণে পুরোনো string object-এর content পরিবর্তন হয়নি। নতুন string value
+          তৈরি হয়েছে এবং <code>name</code> নতুন object-এর দিকে bind হয়েছে।
+        </p>
+
+        <p class="note">
+          “Immutable variable” বলা ঠিক নয়; mutability একটি object-এর property।
+          একইভাবে <code>tuple</code> immutable হলেও tuple-এর ভিতরে mutable object থাকলে
+          সেই nested object পরিবর্তিত হতে পারে।
+        </p>
+
+        <div class="interview">
+          <strong>Interview Answer</strong>
+          Mutable object-এর state পরিবর্তন করা যায়, যেমন list বা dict। Immutable object-এর
+          existing state পরিবর্তন করা যায় না, যেমন int বা str। Immutable object-এর
+          পরিবর্তনের মতো operation করলে সাধারণত নতুন object তৈরি হয়।
+        </div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">8</span> <code>is</code> vs <code>==</code></summary>
+      <div class="answer">
+        <h2><code>is</code> এবং <code>==</code>-এর পার্থক্য</h2>
+        <p>
+          <code>==</code> দুই object-এর <strong>value/equality</strong> compare করে।
+          <code>is</code> দুই reference একই <strong>object</strong>-কে refer করছে কি না
+          তা check করে।
+        </p>
+
+        <pre><code>a = [1, 2, 3]
+b = [1, 2, 3]
+
+print(a == b)  # True
+print(a is b)  # False</code></pre>
+
+        <p>
+          দুই list-এর content একই, তাই <code>==</code> True। কিন্তু দুইটি আলাদা list object,
+          তাই <code>is</code> False।
+        </p>
+
+        <h3><code>is</code> কোথায় ব্যবহার করবেন?</h3>
+        <pre><code>value = None
+
+if value is None:
+    print("No value")</code></pre>
+
+        <p>
+          <code>None</code> check করার জন্য <code>is None</code> ব্যবহার করা standard
+          practice। সাধারণ value comparison-এর জন্য <code>==</code> ব্যবহার করা উচিত।
+        </p>
+
+        <div class="interview">
+          <strong>Interview Answer</strong>
+          <code>==</code> equality বা value comparison করে, আর <code>is</code> object identity
+          comparison করে—অর্থাৎ দুই reference একই object-কে refer করছে কি না। তাই
+          <code>None</code> check করতে সাধারণত <code>is None</code> ব্যবহার করি।
+        </div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">9</span> <code>id()</code></summary>
+      <div class="answer">
+        <h2><code>id()</code> কী?</h2>
+        <p>
+          <code>id(obj)</code> একটি object-এর identity-এর জন্য একটি integer return করে।
+          Object যতক্ষণ জীবিত থাকে, সেই object-এর identity unique থাকে।
+        </p>
+
+        <pre><code>a = []
+b = a
+
+print(id(a) == id(b))  # True</code></pre>
+
+        <p>
+          এখানে <code>a</code> এবং <code>b</code> একই object-কে reference করছে, তাই তাদের
+          <code>id()</code> একই।
+        </p>
+
+        <p>
+          CPython-এ <code>id()</code> সাধারণত object-এর memory address-এর সাথে সম্পর্কিত
+          implementation detail হিসেবে দেখা যায়। কিন্তু Python language level-এ
+          <code>id()</code>-কে সরাসরি “memory address” বলা উচিত নয়, কারণ অন্য Python
+          implementations একইভাবে implement করতেই হবে এমন নয়।
+        </p>
+
+        <div class="interview">
+          <strong>Interview Answer</strong>
+          <code>id()</code> একটি object-এর identity-এর জন্য integer দেয়। একই সময়ে জীবিত
+          থাকা দুইটি আলাদা object-এর identity আলাদা হবে। CPython-এ এটি সাধারণত memory
+          address-এর সাথে সম্পর্কিত হলেও Python-এর general rule হিসেবে একে memory address
+          বলা ঠিক নয়।
+        </div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">10</span> Python data types</summary>
+      <div class="answer">
+        <h2>Python-এর প্রধান data types কী?</h2>
+        <p>
+          Python dynamically typed language। একটি variable-এর আলাদা করে type declaration
+          লিখতে হয় না; object-এর type runtime-এ নির্ধারিত হয়।
+        </p>
+
+        <h3>Common built-in types</h3>
+        <ul>
+          <li><strong>Numeric:</strong> <code>int</code>, <code>float</code>, <code>complex</code></li>
+          <li><strong>Boolean:</strong> <code>bool</code></li>
+          <li><strong>Text:</strong> <code>str</code></li>
+          <li><strong>Sequence:</strong> <code>list</code>, <code>tuple</code>, <code>range</code></li>
+          <li><strong>Mapping:</strong> <code>dict</code></li>
+          <li><strong>Set types:</strong> <code>set</code>, <code>frozenset</code></li>
+          <li><strong>Binary:</strong> <code>bytes</code>, <code>bytearray</code>, <code>memoryview</code></li>
+          <li><strong>Null value:</strong> <code>NoneType</code> (যার একমাত্র সাধারণ value হলো <code>None</code>)</li>
+        </ul>
+
+        <pre><code>age = 25                  # int
+price = 99.5              # float
+name = "Anik"              # str
+skills = ["Python", "SQL"] # list
+point = (10, 20)           # tuple
+user = {"id": 1}           # dict
+tags = {"python", "api"}   # set
+active = True              # bool
+value = None               # NoneType</code></pre>
+
+        <p>
+          Python-এ সবকিছুই object হিসেবে model করা হয়। <code>type()</code> দিয়ে কোনো
+          object-এর type দেখা যায়:
+        </p>
+
+        <pre><code>print(type(25))       # &lt;class 'int'&gt;
+print(type("hello"))  # &lt;class 'str'&gt;
+print(type(None))     # &lt;class 'NoneType'&gt;</code></pre>
+
+        <div class="interview">
+          <strong>Interview Answer</strong>
+          Python dynamically typed এবং এর common built-in types-এর মধ্যে int, float,
+          complex, bool, str, list, tuple, range, dict, set, frozenset, bytes,
+          bytearray, memoryview এবং NoneType আছে। Variable-এর type আলাদা করে declare
+          করতে হয় না; runtime-এ object-এর type নির্ধারিত থাকে।
+        </div>
+      </div>
+    </details>
+
+  </main>
+
+  <footer class="container">
+    Python Core Interview Preparation • Questions 1–10
+  </footer>
+</body>
+</html>
