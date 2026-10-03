@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Concurrency & GIL — Interview Questions</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background: #f6f8fb;
+      color: #1f2937;
+      line-height: 1.7;
+    }
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 36px 18px 60px;
+    }
+    header {
+      background: #111827;
+      color: white;
+      padding: 34px 28px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+    }
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+    header p {
+      margin: 0;
+      color: #d1d5db;
+    }
+    .question {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      margin: 12px 0;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    }
+    .question button {
+      width: 100%;
+      border: 0;
+      background: white;
+      padding: 18px 20px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 17px;
+      font-weight: 700;
+      color: #111827;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+    .question button:hover { background: #f9fafb; }
+    .icon {
+      font-size: 22px;
+      color: #6b7280;
+      flex-shrink: 0;
+    }
+    .answer {
+      display: none;
+      padding: 0 22px 22px;
+      border-top: 1px solid #eef0f3;
+    }
+    .answer.open { display: block; }
+    .answer h3 {
+      margin: 20px 0 8px;
+      font-size: 17px;
+      color: #111827;
+    }
+    .answer p { margin: 8px 0; }
+    .answer ul, .answer ol { padding-left: 24px; }
+    .highlight {
+      background: #f3f4f6;
+      border-left: 4px solid #6b7280;
+      padding: 10px 14px;
+      margin: 12px 0;
+      border-radius: 4px;
+    }
+    code {
+      background: #f3f4f6;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+    }
+    pre {
+      background: lightblue;
+      color: black;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    .tag {
+      display: inline-block;
+      background: #eef2ff;
+      color: #3730a3;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 13px;
+      margin: 2px 4px 2px 0;
+    }
+    .footer {
+      text-align: center;
+      color: #6b7280;
+      margin-top: 30px;
+      font-size: 14px;
+    }
+    strong { color: #111827; }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <header>
+    <h1>Python Concurrency & GIL — Interview Questions</h1>
+    <p>Process, Thread, Concurrency, Parallelism, CPU/I/O Bound, GIL, Threading & Thread Lifecycle</p>
+  </header>
+
+  <div class="question">
+    <button onclick="toggleAnswer(1)">
+      <span>1. Process vs Thread — Process এবং Thread-এর মধ্যে পার্থক্য কী?</span>
+      <span class="icon" id="icon-1">+</span>
+    </button>
+    <div class="answer" id="answer-1">
+      <h3>সংক্ষিপ্ত উত্তর</h3>
+      <p>
+        <strong>Process</strong> হলো operating system-এর একটি independent execution unit যার
+        নিজস্ব virtual address space থাকে। <strong>Thread</strong> হলো একটি process-এর ভিতরের
+        execution path; একই process-এর threads সাধারণত একই memory space share করে।
+      </p>
+
+      <h3>মূল পার্থক্য</h3>
+      <ul>
+        <li><strong>Memory:</strong> আলাদা process-এর memory space আলাদা। একই process-এর threads memory space share করে।</li>
+        <li><strong>Communication:</strong> Process-এর মধ্যে communication-এর জন্য IPC যেমন Pipe, Queue, Socket বা shared memory দরকার। Threads shared memory ব্যবহার করে তুলনামূলক সহজে data share করতে পারে।</li>
+        <li><strong>Isolation:</strong> Process বেশি isolated; একটি process crash করলে সাধারণত অন্য process সরাসরি একই address space-এর corruption-এর শিকার হয় না।</li>
+        <li><strong>Creation/Context switching:</strong> সাধারণভাবে process-এর overhead thread-এর চেয়ে বেশি।</li>
+        <li><strong>CPU parallelism in CPython:</strong> GIL থাকা CPython-এ সাধারণ Python bytecode-এর CPU-bound execution-এর জন্য multiple threads একই সময়ে একাধিক CPU core-এ execute করতে পারে না। Multiple processes আলাদা interpreter process হওয়ায় CPU-bound work parallelভাবে চালানো যায়।</li>
+      </ul>
+
+      <div class="highlight">
+        <strong>Interview line:</strong> Process provides isolation with a separate address space; threads are lighter execution units inside a process and normally share that process's memory.
+      </div>
+    </div>
+  </div>
+
+  <div class="question">
+    <button onclick="toggleAnswer(2)">
+      <span>2. Concurrency vs Parallelism — পার্থক্য কী?</span>
+      <span class="icon" id="icon-2">+</span>
+    </button>
+    <div class="answer" id="answer-2">
+      <h3>সংক্ষিপ্ত উত্তর</h3>
+      <p>
+        <strong>Concurrency</strong> হলো একাধিক task-এর progress একই সময়ে manage করা।
+        <strong>Parallelism</strong> হলো একাধিক task সত্যিই একই সময়ে multiple execution resource-এ execute হওয়া।
+      </p>
+
+      <h3>সহজভাবে</h3>
+      <ul>
+        <li><strong>Concurrency:</strong> “একাধিক কাজের মধ্যে execution এগিয়ে নেওয়া।”</li>
+        <li><strong>Parallelism:</strong> “একাধিক কাজ একই মুহূর্তে execute করা।”</li>
+      </ul>
+
+      <h3>উদাহরণ</h3>
+      <p>
+        একটি CPU যদি task A কিছু সময় execute করে, তারপর task B-তে switch করে, আবার A-তে ফিরে আসে,
+        তাহলে concurrency আছে; কিন্তু একই সময়ে A এবং B execute হচ্ছে না।
+      </p>
+      <p>
+        দুইটি CPU core-এ task A এবং task B একই সময়ে execute হলে সেটি parallelism।
+      </p>
+
+      <div class="highlight">
+        <strong>Important:</strong> Concurrency does not necessarily mean parallel execution.
+        Parallelism is one way concurrency can be achieved when multiple execution resources are available.
+      </div>
+    </div>
+  </div>
+
+  <div class="question">
+    <button onclick="toggleAnswer(3)">
+      <span>3. CPU-bound vs I/O-bound — কী এবং পার্থক্য কী?</span>
+      <span class="icon" id="icon-3">+</span>
+    </button>
+    <div class="answer" id="answer-3">
+      <h3>CPU-bound</h3>
+      <p>
+        যে কাজের execution time-এর বড় অংশ CPU computation-এর জন্য ব্যয় হয়, সেটি
+        <strong>CPU-bound</strong>।
+      </p>
+      <p>উদাহরণ: বড় numerical calculation, image processing, compression, complex data processing।</p>
+
+      <h3>I/O-bound</h3>
+      <p>
+        যে কাজের execution time-এর বড় অংশ input/output operation-এর জন্য অপেক্ষায় ব্যয় হয়,
+        সেটি <strong>I/O-bound</strong>।
+      </p>
+      <p>উদাহরণ: network request, database query, file read/write, external API call।</p>
+
+      <h3>Python-এ কেন গুরুত্বপূর্ণ?</h3>
+      <ul>
+        <li><strong>CPU-bound:</strong> GIL থাকা CPython-এ CPU-bound Python code-এর জন্য threads সাধারণত CPU parallelism দেয় না; multiprocessing বেশি উপযোগী।</li>
+        <li><strong>I/O-bound:</strong> একটি thread I/O-এর জন্য অপেক্ষা করার সময় অন্য thread Python code execute করতে পারে; তাই threading I/O-bound workload-এ উপকারী হতে পারে।</li>
+      </ul>
+
+      <div class="highlight">
+        <strong>Shortcut:</strong> CPU-bound → computation-heavy → multiprocessing often helps.
+        I/O-bound → waiting-heavy → threading or async I/O can help.
+      </div>
+    </div>
+  </div>
+
+  <div class="question">
+    <button onclick="toggleAnswer(4)">
+      <span>4. GIL কী?</span>
+      <span class="icon" id="icon-4">+</span>
+    </button>
+    <div class="answer" id="answer-4">
+      <h3>সংক্ষিপ্ত উত্তর</h3>
+      <p>
+        <strong>GIL (Global Interpreter Lock)</strong> হলো CPython interpreter-এর একটি synchronization
+        mechanism, যা সাধারণ Python bytecode execution-এর ক্ষেত্রে একই process-এ একই সময়ে
+        একাধিক thread-কে Python interpreter state-এ একসাথে execute করতে বাধা দেয়।
+      </p>
+
+      <p>
+        তাই GIL থাকা CPython-এ CPU-bound pure-Python code-এর ক্ষেত্রে একাধিক thread সাধারণত
+        একাধিক CPU core-এর full parallel execution পায় না।
+      </p>
+
+      <h3>গুরুত্বপূর্ণ nuance</h3>
+      <p>
+        GIL মানে “এক সময়ে পুরো application-এ শুধু একটি thread exist করতে পারে” নয়।
+        অনেক thread একই process-এ exist করতে পারে; কিন্তু GIL থাকা অবস্থায় সাধারণ Python
+        bytecode execution-এর relevant অংশে এক সময়ে একটি thread GIL ধরে এগোয়।
+      </p>
+
+      <div class="highlight">
+        <strong>Modern Python note:</strong> CPython 3.13 থেকে free-threaded CPython build-এর
+        experimental support এসেছে, যেখানে GIL disable করা যায়। পরবর্তী Python releases-এ
+        এই capability আরও উন্নত হয়েছে। তবে standard/default CPython build-কে ধরে সাধারণ
+        interview discussion-এ GIL-এর traditional behavior ব্যাখ্যা করা হয়।
+      </div>
+    </div>
+  </div>
+
+  <div class="question">
+    <button onclick="toggleAnswer(5)">
+      <span>5. Why does the GIL exist? — GIL কেন আছে?</span>
+      <span class="icon" id="icon-5">+</span>
+    </button>
+    <div class="answer" id="answer-5">
+      <h3>মূল কারণ</h3>
+      <p>
+        CPython-এর মূল implementation-এর design-এ memory management এবং interpreter internals
+        thread-safe রাখা সহজ করার জন্য GIL গুরুত্বপূর্ণ ভূমিকা পালন করেছে।
+      </p>
+
+      <h3>Reference counting-এর সঙ্গে সম্পর্ক</h3>
+      <p>
+        CPython ঐতিহাসিকভাবে reference counting ব্যবহার করে object-এর lifetime manage করে।
+        একাধিক thread একই object-এর reference count একই সময়ে পরিবর্তন করলে race condition-এর
+        ঝুঁকি তৈরি হয়।
+      </p>
+
+      <p>
+        GIL interpreter-level synchronization-এর একটি বড় অংশ সহজ করে, ফলে CPython-এর
+        object model ও C extension ecosystem-এর অনেক অংশ তুলনামূলকভাবে সহজ design-এ
+        পরিচালিত হয়েছে।
+      </p>
+
+      <h3>Interview answer</h3>
+      <div class="highlight">
+        GIL was introduced in CPython primarily to simplify thread safety of the interpreter
+        and its memory-management model, especially around reference counting. The trade-off
+        is that threads cannot execute Python bytecode in true parallelism under the traditional GIL.
+      </div>
+
+      <p>
+        <strong>Important:</strong> GIL শুধু “reference counting-এর জন্য” নয়। CPython-এর
+        interpreter implementation, C API এবং historical extension ecosystem-এর design-এর
+        সঙ্গেও এর সম্পর্ক আছে।
+      </p>
+    </div>
+  </div>
+
+  <div class="question">
+    <button onclick="toggleAnswer(6)">
+      <span>6. When does the GIL matter? — GIL কখন গুরুত্বপূর্ণ?</span>
+      <span class="icon" id="icon-6">+</span>
+    </button>
+    <div class="answer" id="answer-6">
+      <h3>GIL সবচেয়ে বেশি গুরুত্বপূর্ণ</h3>
+      <ul>
+        <li>CPython-এর traditional GIL-enabled build ব্যবহার করা হচ্ছে।</li>
+        <li>একাধিক threads আছে।</li>
+        <li>Threads CPU-bound Python bytecode execute করছে।</li>
+        <li>Application multiple CPU cores ব্যবহার করে CPU-bound Python work parallel করতে চায়।</li>
+      </ul>
+
+      <h3>GIL কম গুরুত্বপূর্ণ বা অন্যভাবে প্রভাব ফেলে</h3>
+      <ul>
+        <li>I/O-bound workload-এ thread I/O-এর জন্য অপেক্ষা করার সময় অন্য thread এগোতে পারে।</li>
+        <li>কিছু native extension GIL release করে expensive native computation চালাতে পারে।</li>
+        <li>Multiprocessing-এ প্রতিটি process-এর আলাদা Python interpreter থাকে, তাই একটি process-এর GIL অন্য process-কে একইভাবে block করে না।</li>
+        <li>Free-threaded CPython build-এ GIL disabled থাকতে পারে, তাই traditional GIL limitation প্রযোজ্য নয়।</li>
+      </ul>
+
+      <div class="highlight">
+        <strong>Interview shortcut:</strong> GIL matters most when multiple threads are trying to
+        execute CPU-bound Python code in a traditional GIL-enabled CPython build.
+      </div>
+    </div>
+  </div>
+
+  <div class="question">
+    <button onclick="toggleAnswer(7)">
+      <span>7. When does threading help in Python?</span>
+      <span class="icon" id="icon-7">+</span>
+    </button>
+    <div class="answer" id="answer-7">
+      <h3>Threading I/O-bound workload-এ বেশি উপকারী</h3>
+      <p>
+        Threading ব্যবহার করে একাধিক I/O operation overlap করা যায়। একটি thread যখন network,
+        database, file বা অন্য blocking I/O-এর জন্য অপেক্ষা করছে, তখন অন্য thread কাজ করতে পারে।
+      </p>
+
+      <h3>উদাহরণ</h3>
+      <ul>
+        <li>একাধিক HTTP API request</li>
+        <li>একাধিক file operation</li>
+        <li>Database/network I/O</li>
+        <li>Blocking third-party library ব্যবহার করা</li>
+      </ul>
+
+      <h3>কখন threading ideal নয়?</h3>
+      <p>
+        Traditional GIL-enabled CPython-এ pure-Python CPU-bound task parallel করার জন্য
+        threading সাধারণত উপযুক্ত নয়। সেই ক্ষেত্রে multiprocessing বা workload অনুযায়ী
+        অন্য concurrency approach বিবেচনা করা হয়।
+      </p>
+
+      <div class="highlight">
+        <strong>Example:</strong> 100টি independent HTTP request sequentially করার বদলে
+        একাধিক thread দিয়ে request-গুলো overlap করলে waiting time কমানো যায়।
+      </div>
+    </div>
+  </div>
+
+  <div class="question">
+    <button onclick="toggleAnswer(8)">
+      <span>8. When does multiprocessing help in Python?</span>
+      <span class="icon" id="icon-8">+</span>
+    </button>
+    <div class="answer" id="answer-8">
+      <h3>CPU-bound workload-এ multiprocessing গুরুত্বপূর্ণ</h3>
+      <p>
+        Multiprocessing একাধিক independent process তৈরি করে। প্রতিটি process-এর নিজস্ব
+        Python interpreter এবং memory space থাকে। Traditional GIL-enabled CPython-এ
+        এটি multiple CPU cores-এ CPU-bound Python computation parallelভাবে চালাতে সাহায্য করে।
+      </p>
+
+      <h3>উদাহরণ</h3>
+      <ul>
+        <li>Large numerical computation</li>
+        <li>CPU-heavy data transformation</li>
+        <li>CPU-heavy image processing</li>
+        <li>Independent batch processing</li>
+      </ul>
+
+      <h3>Trade-off</h3>
+      <ul>
+        <li>Process creation এবং management-এর overhead বেশি।</li>
+        <li>Processes সাধারণত memory share করে না।</li>
+        <li>Data exchange-এর জন্য IPC বা serialization দরকার হতে পারে।</li>
+        <li>একটি shared mutable state design করা threads-এর তুলনায় জটিল হতে পারে।</li>
+      </ul>
+
+      <div class="highlight">
+        <strong>Interview line:</strong> For CPU-bound Python work under traditional CPython,
+        multiprocessing can achieve real CPU parallelism because each process has its own interpreter and GIL.
+      </div>
+    </div>
+  </div>
+
+  <div class="question">
+    <button onclick="toggleAnswer(9)">
+      <span>9. threading কী? Python-এ কীভাবে ব্যবহার করা হয়?</span>
+      <span class="icon" id="icon-9">+</span>
+    </button>
+    <div class="answer" id="answer-9">
+      <h3>সংক্ষিপ্ত উত্তর</h3>
+      <p>
+        Python-এর <code>threading</code> module একই process-এর মধ্যে multiple threads তৈরি
+        এবং manage করার standard API দেয়।
+      </p>
+
+      <h3>Basic example</h3>
+      <pre><code>import threading
+
+def worker():
+    print("Worker is running")
+
+thread = threading.Thread(target=worker)
+
+thread.start()
+thread.join()
+
+print("Done")</code></pre>
+
+      <h3>এখানে কী হচ্ছে?</h3>
+      <ol>
+        <li><code>Thread(...)</code> একটি thread object তৈরি করে।</li>
+        <li><code>start()</code> thread-এর execution শুরু করার জন্য OS/Python runtime-এর কাছে scheduling শুরু করে।</li>
+        <li>Thread-এর target function হিসেবে <code>worker()</code> নির্ধারিত।</li>
+        <li><code>join()</code> calling thread-কে অপেক্ষা করায় যতক্ষণ target thread শেষ না হয়।</li>
+      </ol>
+
+      <h3>Shared memory-এর সতর্কতা</h3>
+      <p>
+        একই process-এর threads shared objects access করতে পারে। তাই shared mutable state-এ
+        race condition হতে পারে। প্রয়োজন অনুযায়ী <code>Lock</code>, <code>RLock</code>,
+        <code>Semaphore</code>, <code>Event</code> বা <code>Condition</code> ব্যবহার করা হয়।
+      </p>
+
+      <div class="highlight">
+        <strong>Important:</strong> threading concurrency দিতে পারে, কিন্তু traditional
+        GIL-enabled CPython-এ CPU-bound Python bytecode-এর জন্য এটি সাধারণত multi-core
+        CPU parallelism দেয় না।
+      </div>
+    </div>
+  </div>
+
+  <div class="question">
+    <button onclick="toggleAnswer(10)">
+      <span>10. Thread lifecycle — একটি Thread-এর lifecycle কী?</span>
+      <span class="icon" id="icon-10">+</span>
+    </button>
+    <div class="answer" id="answer-10">
+      <h3>Conceptual lifecycle</h3>
+      <ol>
+        <li><strong>New / Created:</strong> <code>Thread</code> object তৈরি হয়েছে, কিন্তু <code>start()</code> এখনও call হয়নি।</li>
+        <li><strong>Runnable / Ready:</strong> <code>start()</code> call হয়েছে এবং thread execution-এর জন্য eligible।</li>
+        <li><strong>Running:</strong> scheduler thread-টিকে CPU execution দিচ্ছে।</li>
+        <li><strong>Waiting / Blocked:</strong> thread lock, I/O, event, condition বা অন্য synchronization/resource-এর জন্য অপেক্ষা করতে পারে।</li>
+        <li><strong>Terminated:</strong> target function শেষ হয়েছে; thread-এর execution শেষ।</li>
+      </ol>
+
+      <h3>Python example</h3>
+      <pre><code>import threading
+import time
+
+def worker():
+    time.sleep(1)
+    print("Worker finished")
+
+t = threading.Thread(target=worker)
+
+# New / Created
+t.start()
+
+# Started; worker may be running or waiting
+t.join()
+
+# Terminated
+print("Thread finished")</code></pre>
+
+      <h3>একটি গুরুত্বপূর্ণ correction</h3>
+      <p>
+        এগুলো <strong>conceptual lifecycle states</strong>। Python-এর
+        <code>threading.Thread</code> API Java-এর মতো formal public state enum দেয় না।
+        Python-এ <code>is_alive()</code>, <code>start()</code>, <code>join()</code> ইত্যাদি
+        API দিয়ে thread-এর lifecycle manage করা হয়।
+      </p>
+
+      <h3>আরও গুরুত্বপূর্ণ</h3>
+      <ul>
+        <li><code>start()</code> একটি Thread object-এর জন্য একবারই call করা যায়।</li>
+        <li>Thread শেষ হয়ে গেলে একই Thread object আবার <code>start()</code> করা যায় না।</li>
+        <li><code>join()</code> calling thread-কে target thread শেষ হওয়া পর্যন্ত অপেক্ষা করায়।</li>
+        <li><code>daemon=True</code> হলে process-এর non-daemon threads শেষ হয়ে গেলে daemon thread process shutdown-এর সময় চলতে থাকা অবস্থায় থাকতে পারে এবং program shutdown-এ অপেক্ষা করে না।</li>
+      </ul>
+
+      <div class="highlight">
+        <strong>Interview line:</strong> A thread is created, started, becomes eligible for execution,
+        may run or wait/block, and eventually terminates when its target function finishes.
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Python Concurrency & GIL — Interview Preparation
+  </div>
+
+</div>
+
+<script>
+function toggleAnswer(id) {
+  const answer = document.getElementById("answer-" + id);
+  const icon = document.getElementById("icon-" + id);
+
+  const isOpen = answer.classList.contains("open");
+
+  answer.classList.toggle("open");
+  icon.textContent = isOpen ? "+" : "−";
+}
+</script>
+
+</body>
+</html>

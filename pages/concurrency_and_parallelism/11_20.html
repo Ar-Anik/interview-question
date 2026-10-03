@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Concurrency — Interview Questions 11-20</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#f5f7fb;
+  color:#1f2937;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  line-height:1.75;
+}
+.container{max-width:1000px;margin:auto;padding:35px 18px 60px}
+header{
+  background:#111827;color:#fff;border-radius:16px;padding:32px 28px;
+  margin-bottom:24px;
+}
+header h1{margin:0 0 8px;font-size:30px}
+header p{margin:0;color:#d1d5db}
+.question{
+  background:#fff;border:1px solid #e5e7eb;border-radius:12px;
+  margin:13px 0;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04)
+}
+.question button{
+  width:100%;border:0;background:#fff;padding:19px 21px;text-align:left;
+  cursor:pointer;font-size:17px;font-weight:700;color:#111827;
+  display:flex;justify-content:space-between;align-items:center;gap:15px
+}
+.question button:hover{background:#f9fafb}
+.icon{font-size:23px;color:#6b7280;min-width:20px;text-align:center}
+.answer{display:none;padding:0 23px 25px;border-top:1px solid #eef0f3}
+.answer.open{display:block}
+.answer h3{margin:21px 0 8px;font-size:18px;color:#111827}
+.answer p{margin:9px 0}
+.answer ul,.answer ol{padding-left:25px}
+.answer li{margin:5px 0}
+.highlight{
+  background:#f3f4f6;border-left:4px solid #6b7280;
+  padding:12px 15px;margin:15px 0;border-radius:5px
+}
+.warning{
+  background:#fff7ed;border-left:4px solid #f97316;
+  padding:12px 15px;margin:15px 0;border-radius:5px
+}
+.compare{
+  background:#f8fafc;border:1px solid #e5e7eb;
+  padding:14px 16px;border-radius:8px;margin:14px 0
+}
+code{
+  background:#eef2f7;padding:2px 6px;border-radius:4px;
+  font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace
+}
+pre{
+  background:#0b1220 !important;
+  color:#e5e7eb !important;
+  padding:18px !important;
+  border-radius:9px;
+  overflow-x:auto;
+  margin:14px 0;
+  border:1px solid #1f2937;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
+}
+pre code{
+  background:transparent !important;
+  color:#e5e7eb !important;
+  padding:0 !important;
+  border-radius:0;
+  font-size:14px;
+  line-height:1.65;
+}
+.footer{text-align:center;color:#6b7280;margin-top:30px;font-size:14px}
+strong{color:#111827}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+<h1>Python Concurrency — Interview Questions 11–20</h1>
+<p>ThreadPoolExecutor, Race Conditions, Locks, Synchronization, Deadlock, Starvation & asyncio</p>
+</header>
+
+<!-- 11 -->
+<div class="question">
+<button onclick="toggleAnswer(11)">
+<span>11. ThreadPoolExecutor কী? কেন ব্যবহার করা হয়?</span>
+<span class="icon" id="icon-11">+</span>
+</button>
+<div class="answer" id="answer-11">
+
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p>
+<code>ThreadPoolExecutor</code> হলো Python-এর <code>concurrent.futures</code> module-এর
+একটি high-level API, যা একটি pool of worker threads তৈরি করে এবং submitted task-গুলো
+সেই threads-এর মাধ্যমে execute করে।
+</p>
+
+<h3>কেন দরকার?</h3>
+<p>
+প্রতিটি কাজের জন্য manually <code>Thread()</code> তৈরি করলে thread creation, lifecycle
+এবং cleanup manage করতে হয়। <code>ThreadPoolExecutor</code> এই management-এর বড় অংশ
+নিজে handle করে।
+</p>
+
+<h3>Basic example</h3>
+
+<pre><code>from concurrent.futures import ThreadPoolExecutor
+
+def fetch_data(item):
+    return f"Processed {item}"
+
+with ThreadPoolExecutor(max_workers=4) as executor:
+    results = list(executor.map(fetch_data, [1, 2, 3, 4, 5]))
+
+print(results)</code></pre>
+
+<h3>এখানে কী হচ্ছে?</h3>
+<ol>
+<li><code>ThreadPoolExecutor(max_workers=4)</code> সর্বোচ্চ ৪টি worker thread-এর pool তৈরি করে।</li>
+<li><code>executor.map()</code> task-গুলো submit করে এবং result iterator দেয়।</li>
+<li>Available worker threads task-গুলো execute করে।</li>
+<li><code>with</code> block শেষ হলে executor shutdown করে এবং worker threads-এর cleanup করে।</li>
+</ol>
+
+<h3><code>submit()</code> এবং <code>Future</code></h3>
+
+<pre><code>from concurrent.futures import ThreadPoolExecutor
+
+def add(a, b):
+    return a + b
+
+with ThreadPoolExecutor(max_workers=2) as executor:
+    future = executor.submit(add, 10, 20)
+
+    result = future.result()
+
+print(result)  # 30</code></pre>
+
+<p>
+<code>submit()</code> একটি <code>Future</code> object return করে। Future-এর মাধ্যমে
+asynchronous task-এর result পরে পাওয়া যায়।
+</p>
+
+<ul>
+<li><code>future.result()</code> result ready না হলে অপেক্ষা করে।</li>
+<li><code>future.done()</code> task শেষ হয়েছে কি না জানায়।</li>
+<li><code>future.cancel()</code> task এখনও শুরু না হলে cancel করার চেষ্টা করে।</li>
+</ul>
+
+<div class="highlight">
+<strong>Interview line:</strong> ThreadPoolExecutor is a high-level abstraction for running
+multiple tasks using a reusable pool of worker threads. It is particularly useful for
+I/O-bound workloads.
+</div>
+
+<div class="warning">
+<strong>Important:</strong> Traditional GIL-enabled CPython-এ ThreadPoolExecutor
+CPU-bound pure-Python work-এর জন্য সাধারণত multi-core parallelism দেয় না।
+</div>
+
+</div>
+</div>
+
+<!-- 12 -->
+<div class="question">
+<button onclick="toggleAnswer(12)">
+<span>12. Race Condition কী?</span>
+<span class="icon" id="icon-12">+</span>
+</button>
+<div class="answer" id="answer-12">
+
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p>
+<strong>Race condition</strong> হলো এমন একটি concurrency bug যেখানে program-এর
+correctness বা result execution-এর timing/interleaving-এর উপর নির্ভর করে।
+অর্থাৎ multiple threads একই shared state নিয়ে কাজ করার সময় কোন thread আগে
+কোন operation করছে তার উপর result বদলে যেতে পারে।
+</p>
+
+<h3>সহজ উদাহরণ</h3>
+
+<pre><code>counter = 0
+
+def increment():
+    global counter
+    counter += 1</code></pre>
+
+<p>
+দেখতে <code>counter += 1</code> একটি single operation মনে হলেও shared mutable
+state-এর ক্ষেত্রে এটি conceptually read → calculate → write ধরনের একাধিক step
+জড়িত operation।
+</p>
+
+<p>
+যদি দুইটি thread একই সময়ে একই value read করে এবং পরে দুটিই updated value write করে,
+তাহলে একটি increment হারিয়ে যেতে পারে।
+</p>
+
+<h3>সমস্যাটি কী?</h3>
+
+<div class="compare">
+<p><strong>Expected:</strong> 2 threads × 1000 increments = 2000</p>
+<p><strong>Possible problem:</strong> synchronization না থাকলে actual result নির্ভর করতে পারে thread interleaving-এর উপর।</p>
+</div>
+
+<h3>Solution</h3>
+<p>
+Shared critical section-এর access synchronize করতে <code>Lock</code> ব্যবহার করা যায়।
+</p>
+
+<pre><code>import threading
+
+counter = 0
+lock = threading.Lock()
+
+def increment():
+    global counter
+
+    for _ in range(1000):
+        with lock:
+            counter += 1</code></pre>
+
+<div class="highlight">
+<strong>Interview line:</strong> A race condition occurs when multiple concurrent execution
+paths access shared state and the final result depends on their timing or ordering.
+</div>
+
+</div>
+</div>
+
+<!-- 13 -->
+<div class="question">
+<button onclick="toggleAnswer(13)">
+<span>13. Lock কী? কেন ব্যবহার করা হয়?</span>
+<span class="icon" id="icon-13">+</span>
+</button>
+<div class="answer" id="answer-13">
+
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p>
+<code>threading.Lock</code> হলো একটি mutual exclusion synchronization primitive।
+এক সময়ে একটি thread lock acquire করে critical section-এ ঢুকতে পারে।
+অন্য thread-গুলোকে lock release হওয়া পর্যন্ত অপেক্ষা করতে হয়।
+</p>
+
+<h3>Critical Section কী?</h3>
+<p>
+যে code অংশ shared resource/state access বা modify করে এবং concurrent execution-এর
+সময় synchronization দরকার, সেটিকে <strong>critical section</strong> বলা হয়।
+</p>
+
+<pre><code>import threading
+
+lock = threading.Lock()
+counter = 0
+
+def increment():
+    global counter
+
+    with lock:
+        counter += 1</code></pre>
+
+<h3><code>with lock</code> কেন ভালো?</h3>
+<p>
+<code>with lock:</code> ব্যবহার করলে block-এর শেষে lock automatically release হয়,
+এমনকি block-এর ভিতরে exception হলেও। ফলে manual <code>acquire()</code>/<code>release()</code>
+ব্যবহারের তুলনায় resource cleanup safer হয়।
+</p>
+
+<h3>Manual version</h3>
+
+<pre><code>lock.acquire()
+try:
+    # critical section
+    counter += 1
+finally:
+    lock.release()</code></pre>
+
+<h3>Lock কী solve করে?</h3>
+<ul>
+<li>Shared mutable state-এর concurrent access synchronize করে।</li>
+<li>Critical section-এ mutual exclusion দেয়।</li>
+<li>Race condition prevent করতে সাহায্য করে।</li>
+</ul>
+
+<div class="warning">
+<strong>Important:</strong> Lock ব্যবহার করলেই সব concurrency problem solve হয় না।
+ভুল lock ordering বা lock ধরে রেখে অন্য resource-এর জন্য অপেক্ষা করলে deadlock তৈরি হতে পারে।
+</div>
+
+<div class="highlight">
+<strong>Interview line:</strong> A Lock provides mutual exclusion so that only one thread
+at a time can execute a protected critical section.
+</div>
+
+</div>
+</div>
+
+<!-- 14 -->
+<div class="question">
+<button onclick="toggleAnswer(14)">
+<span>14. RLock কী? Lock থেকে কীভাবে আলাদা?</span>
+<span class="icon" id="icon-14">+</span>
+</button>
+<div class="answer" id="answer-14">
+
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p>
+<code>RLock</code> বা <strong>Reentrant Lock</strong> এমন একটি lock যা একই thread
+একাধিকবার acquire করতে পারে, যতক্ষণ সেই thread প্রতিটি acquisition-এর জন্য
+corresponding release করে।
+</p>
+
+<h3>Normal Lock-এর সমস্যা</h3>
+
+<pre><code>import threading
+
+lock = threading.Lock()
+
+def outer():
+    with lock:
+        inner()
+
+def inner():
+    with lock:
+        print("Hello")</code></pre>
+
+<p>
+যদি একই thread <code>outer()</code>-এ lock acquire করার পর <code>inner()</code>-এ
+আবার একই non-reentrant Lock acquire করতে যায়, সেই thread নিজেই নিজের lock-এর জন্য
+অপেক্ষা করতে পারে।
+</p>
+
+<h3>RLock দিয়ে</h3>
+
+<pre><code>import threading
+
+lock = threading.RLock()
+
+def outer():
+    with lock:
+        inner()
+
+def inner():
+    with lock:
+        print("Hello")</code></pre>
+
+<p>
+এখানে একই thread দ্বিতীয়বার lock acquire করতে পারে। RLock internally ownership
+এবং recursion/acquisition count track করে।
+</p>
+
+<h3>মূল পার্থক্য</h3>
+<ul>
+<li><strong>Lock:</strong> সাধারণ mutual exclusion lock; একই thread পুনরায় acquire করলে সমস্যা হতে পারে।</li>
+<li><strong>RLock:</strong> owning thread পুনরায় acquire করতে পারে।</li>
+<li><strong>RLock:</strong> যতবার acquire করা হয়েছে, matching number of release দরকার।</li>
+</ul>
+
+<div class="highlight">
+<strong>Interview line:</strong> RLock is useful when the same thread may need to acquire
+the same lock recursively, such as nested method calls that use the same synchronization lock.
+</div>
+
+</div>
+</div>
+
+<!-- 15 -->
+<div class="question">
+<button onclick="toggleAnswer(15)">
+<span>15. Semaphore কী?</span>
+<span class="icon" id="icon-15">+</span>
+</button>
+<div class="answer" id="answer-15">
+
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p>
+<code>Semaphore</code> হলো এমন একটি synchronization primitive যা একই সময়ে
+একটি resource বা critical operation কতগুলো thread ব্যবহার করতে পারবে তার limit
+নির্ধারণ করে।
+</p>
+
+<h3>Lock বনাম Semaphore</h3>
+<div class="compare">
+<p><strong>Lock:</strong> সাধারণভাবে এক সময়ে ১টি thread critical section-এ প্রবেশ করে।</p>
+<p><strong>Semaphore:</strong> এক সময়ে নির্দিষ্ট সংখ্যক thread প্রবেশ করতে পারে।</p>
+</div>
+
+<h3>Example</h3>
+
+<pre><code>import threading
+import time
+
+semaphore = threading.Semaphore(2)
+
+def worker(name):
+    with semaphore:
+        print(name, "entered")
+        time.sleep(2)
+        print(name, "leaving")</code></pre>
+
+<p>
+এখানে semaphore value <code>2</code>, তাই একই সময়ে সর্বোচ্চ দুইটি thread
+protected section-এ থাকতে পারে।
+</p>
+
+<h3>কোথায় ব্যবহার করা যায়?</h3>
+<ul>
+<li>Limited number of concurrent network operations</li>
+<li>Connection/resource pool-এর concurrency limit</li>
+<li>External service-এর উপর request limit রাখা</li>
+<li>Limited capacity resource protect করা</li>
+</ul>
+
+<div class="highlight">
+<strong>Interview line:</strong> A semaphore controls the number of threads that can
+simultaneously access a resource or enter a protected section.
+</div>
+
+</div>
+</div>
+
+<!-- 16 -->
+<div class="question">
+<button onclick="toggleAnswer(16)">
+<span>16. Event কী?</span>
+<span class="icon" id="icon-16">+</span>
+</button>
+<div class="answer" id="answer-16">
+
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p>
+<code>threading.Event</code> হলো thread synchronization-এর একটি signaling mechanism।
+একটি thread event set করে অন্য thread-গুলোকে signal দিতে পারে যে কোনো condition
+বা event ঘটেছে।
+</p>
+
+<h3>মূল methods</h3>
+<ul>
+<li><code>set()</code> → event flag set করে।</li>
+<li><code>clear()</code> → event flag unset করে।</li>
+<li><code>is_set()</code> → event set আছে কি না check করে।</li>
+<li><code>wait()</code> → event set হওয়া পর্যন্ত অপেক্ষা করে।</li>
+</ul>
+
+<h3>Example</h3>
+
+<pre><code>import threading
+import time
+
+event = threading.Event()
+
+def worker():
+    print("Waiting for signal...")
+    event.wait()
+    print("Signal received. Continuing.")
+
+thread = threading.Thread(target=worker)
+thread.start()
+
+time.sleep(2)
+
+print("Sending signal...")
+event.set()
+
+thread.join()</code></pre>
+
+<h3>এখানে কী হচ্ছে?</h3>
+<ol>
+<li>Worker thread <code>event.wait()</code>-এ অপেক্ষা করে।</li>
+<li>Main thread পরে <code>event.set()</code> call করে।</li>
+<li>Event set হওয়ায় waiting thread continue করতে পারে।</li>
+</ol>
+
+<div class="highlight">
+<strong>Interview line:</strong> Event is used when one or more threads need to wait
+for a signal from another thread.
+</div>
+
+</div>
+</div>
+
+<!-- 17 -->
+<div class="question">
+<button onclick="toggleAnswer(17)">
+<span>17. Condition কী?</span>
+<span class="icon" id="icon-17">+</span>
+</button>
+<div class="answer" id="answer-17">
+
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p>
+<code>threading.Condition</code> হলো এমন synchronization primitive যা thread-কে
+কোনো shared state-এর একটি নির্দিষ্ট condition পূরণ না হওয়া পর্যন্ত wait করতে এবং
+condition পরিবর্তন হলে অন্য thread-কে notify করতে দেয়।
+</p>
+
+<h3>Event-এর সঙ্গে সম্পর্ক</h3>
+<p>
+Condition সাধারণত একটি lock-এর সঙ্গে কাজ করে এবং shared state-এর condition
+নিয়ে synchronization করার জন্য বেশি উপযোগী।
+</p>
+
+<h3>Producer-Consumer example</h3>
+
+<pre><code>import threading
+
+condition = threading.Condition()
+items = []
+
+def consumer():
+    with condition:
+        while not items:
+            condition.wait()
+
+        item = items.pop(0)
+        print("Consumed:", item)
+
+def producer():
+    with condition:
+        items.append("data")
+        condition.notify()</code></pre>
+
+<h3>এখানে কী হচ্ছে?</h3>
+<ol>
+<li>Consumer condition-এর lock acquire করে।</li>
+<li>যদি <code>items</code> empty হয়, consumer <code>wait()</code> করে।</li>
+<li><code>wait()</code> করার সময় Condition-এর associated lock release হয়।</li>
+<li>Producer item add করে এবং <code>notify()</code> call করে।</li>
+<li>Waiting consumer wake up হয়ে lock পুনরায় acquire করার চেষ্টা করে।</li>
+<li>তারপর condition আবার check করে এবং কাজ continue করে।</li>
+</ol>
+
+<h3><code>while</code> কেন, <code>if</code> নয়?</h3>
+<p>
+Condition wait থেকে ফিরে আসার পর condition সত্যিই পূরণ হয়েছে কি না আবার check করা
+best practice। কারণ wake-up-এর পর অন্য thread state পরিবর্তন করে দিতে পারে।
+</p>
+
+<div class="highlight">
+<strong>Interview line:</strong> Condition allows threads to wait for a shared-state
+condition and allows another thread to notify waiting threads when the state changes.
+</div>
+
+</div>
+</div>
+
+<!-- 18 -->
+<div class="question">
+<button onclick="toggleAnswer(18)">
+<span>18. Deadlock কী? কীভাবে হয়?</span>
+<span class="icon" id="icon-18">+</span>
+</button>
+<div class="answer" id="answer-18">
+
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p>
+<strong>Deadlock</strong> হলো এমন অবস্থা যেখানে দুই বা ততোধিক thread/process
+একে অপরের held resource release করার জন্য অপেক্ষা করতে থাকে এবং ফলে কেউই
+আর progress করতে পারে না।
+</p>
+
+<h3>Classic example</h3>
+
+<pre><code>import threading
+
+lock_a = threading.Lock()
+lock_b = threading.Lock()
+
+def thread_one():
+    with lock_a:
+        with lock_b:
+            print("Thread one")
+
+def thread_two():
+    with lock_b:
+        with lock_a:
+            print("Thread two")</code></pre>
+
+<p>
+একটি execution scenario-তে Thread One যদি <code>lock_a</code> ধরে
+<code>lock_b</code>-এর জন্য অপেক্ষা করে এবং Thread Two যদি <code>lock_b</code> ধরে
+<code>lock_a</code>-এর জন্য অপেক্ষা করে, তাহলে দুই thread একে অপরের জন্য অপেক্ষা
+করতে পারে।
+</p>
+
+<h3>Deadlock-এর চারটি classic necessary conditions</h3>
+<ol>
+<li><strong>Mutual Exclusion:</strong> Resource একই সময়ে সীমিতভাবে একটি holder-এর জন্য available।</li>
+<li><strong>Hold and Wait:</strong> একটি thread resource ধরে রেখে অন্য resource-এর জন্য অপেক্ষা করছে।</li>
+<li><strong>No Preemption:</strong> Resource জোর করে holder-এর কাছ থেকে নেওয়া হচ্ছে না।</li>
+<li><strong>Circular Wait:</strong> Thread/resource dependency-এর একটি cycle তৈরি হয়েছে।</li>
+</ol>
+
+<h3>Deadlock prevent করার উপায়</h3>
+<ul>
+<li>সব জায়গায় locks একই order-এ acquire করা।</li>
+<li>একসাথে প্রয়োজনীয় locks acquire করার design ব্যবহার করা।</li>
+<li>Lock ধরে রেখে দীর্ঘ blocking operation না করা।</li>
+<li>প্রয়োজনে timeout-based acquisition ব্যবহার করা।</li>
+<li>Lock hierarchy/design স্পষ্ট রাখা।</li>
+</ul>
+
+<pre><code>if lock_a.acquire(timeout=1):
+    try:
+        if lock_b.acquire(timeout=1):
+            try:
+                # work
+                pass
+            finally:
+                lock_b.release()
+    finally:
+        lock_a.release()</code></pre>
+
+<div class="highlight">
+<strong>Interview line:</strong> Deadlock occurs when threads are permanently blocked
+because each is waiting for a resource held by another.
+</div>
+
+</div>
+</div>
+
+<!-- 19 -->
+<div class="question">
+<button onclick="toggleAnswer(19)">
+<span>19. Thread Starvation কী?</span>
+<span class="icon" id="icon-19">+</span>
+</button>
+<div class="answer" id="answer-19">
+
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p>
+<strong>Thread starvation</strong> হলো এমন অবস্থা যেখানে একটি thread দীর্ঘ সময়
+প্রয়োজনীয় CPU time, lock বা অন্য resource access পায় না, কারণ অন্য thread-গুলো
+বারবার সেই resource ব্যবহার করে বা scheduling-এর কারণে সেটি পিছিয়ে থাকে।
+</p>
+
+<h3>Deadlock থেকে পার্থক্য</h3>
+<div class="compare">
+<p><strong>Deadlock:</strong> Threads একে অপরের resource-এর জন্য এমনভাবে অপেক্ষা করে যে progress বন্ধ হয়ে যায়।</p>
+<p><strong>Starvation:</strong> একটি thread দীর্ঘ সময় resource বা execution opportunity না পেলেও অন্য threads progress করতে থাকে।</p>
+</div>
+
+<h3>Lock-related starvation</h3>
+<p>
+ধরা যাক একটি shared lock নিয়ে অনেক threads প্রতিযোগিতা করছে। একটি thread বারবার
+lock পাওয়ার সুযোগ হারালে সেটি দীর্ঘ সময় অপেক্ষা করতে পারে।
+</p>
+
+<h3>Starvation-এর কারণ</h3>
+<ul>
+<li>Unfair resource allocation</li>
+<li>একটি thread বারবার resource দখল করা</li>
+<li>অতিরিক্ত contention</li>
+<li>Priority/scheduling imbalance</li>
+<li>Long-running critical sections</li>
+</ul>
+
+<h3>কীভাবে কমানো যায়?</h3>
+<ul>
+<li>Critical section ছোট রাখা।</li>
+<li>Lock ধরে রেখে unnecessary I/O না করা।</li>
+<li>Fairness-sensitive design ব্যবহার করা।</li>
+<li>Resource acquisition-এর timeout এবং retry strategy carefully design করা।</li>
+<li>অতিরিক্ত contention কমানো।</li>
+</ul>
+
+<div class="highlight">
+<strong>Interview line:</strong> Starvation means a thread is repeatedly or indefinitely
+denied the CPU or a needed resource while other threads continue making progress.
+</div>
+
+</div>
+</div>
+
+<!-- 20 -->
+<div class="question">
+<button onclick="toggleAnswer(20)">
+<span>20. asyncio কী? Threading-এর সঙ্গে কী পার্থক্য?</span>
+<span class="icon" id="icon-20">+</span>
+</button>
+<div class="answer" id="answer-20">
+
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p>
+<code>asyncio</code> হলো Python-এর asynchronous programming framework, যা
+<code>async</code>/<code>await</code> এবং event loop ব্যবহার করে cooperative
+concurrency support করে।
+</p>
+
+<p>
+এটি বিশেষভাবে অনেক I/O-bound operation efficiently manage করার জন্য উপযোগী।
+</p>
+
+<h3>Basic example</h3>
+
+<pre><code>import asyncio
+
+async def fetch_data(name):
+    print(f"Starting {name}")
+    await asyncio.sleep(1)
+    print(f"Finished {name}")
+    return name
+
+async def main():
+    results = await asyncio.gather(
+        fetch_data("A"),
+        fetch_data("B"),
+        fetch_data("C"),
+    )
+
+    print(results)
+
+asyncio.run(main())</code></pre>
+
+<h3>এখানে কী হচ্ছে?</h3>
+<ol>
+<li><code>async def</code> একটি coroutine function তৈরি করে।</li>
+<li><code>await</code> asynchronous operation-এর জন্য অপেক্ষা করার সময় event loop-কে অন্য ready task চালানোর সুযোগ দেয়।</li>
+<li><code>asyncio.gather()</code> একাধিক awaitable-এর concurrent execution coordinate করে।</li>
+<li><code>asyncio.run()</code> event loop-এর মাধ্যমে <code>main()</code> coroutine চালায়।</li>
+</ol>
+
+<h3>Threading বনাম asyncio</h3>
+
+<div class="compare">
+<p><strong>Threading:</strong> Multiple OS-level threads ব্যবহার করে; blocking I/O API-এর সঙ্গে কাজ করার সময় সুবিধাজনক হতে পারে।</p>
+<p><strong>asyncio:</strong> সাধারণত একটি event loop-এর মধ্যে cooperative concurrency ব্যবহার করে; async-compatible I/O library প্রয়োজন।</p>
+</div>
+
+<h3>asyncio কি parallelism?</h3>
+<p>
+না, <code>asyncio</code> নিজে CPU-bound Python code-কে multiple CPU core-এ
+parallelভাবে execute করে না। এটি primarily concurrency model।
+</p>
+
+<p>
+একটি coroutine যখন <code>await</code> করে এবং control event loop-এ ফেরত দেয়,
+তখন event loop অন্য ready coroutine চালাতে পারে।
+</p>
+
+<h3>CPU-bound কাজ asyncio-তে?</h3>
+<p>
+CPU-bound কাজ event loop-কে block করলে অন্য async tasks-ও progress করতে পারে না।
+CPU-heavy কাজের জন্য multiprocessing বা appropriate executor/worker strategy
+ব্যবহার করা হয়।
+</p>
+
+<h3>asyncio বনাম ThreadPoolExecutor</h3>
+<ul>
+<li><strong>asyncio:</strong> async-native I/O workload-এর জন্য efficient concurrency model।</li>
+<li><strong>ThreadPoolExecutor:</strong> blocking/synchronous function-কে worker thread-এ চালানোর জন্য useful।</li>
+<li>Async application-এ blocking function event loop-এ সরাসরি চালালে event loop block হতে পারে। সেই ক্ষেত্রে thread executor ব্যবহার করা যায়।</li>
+</ul>
+
+<pre><code>import asyncio
+from concurrent.futures import ThreadPoolExecutor
+
+def blocking_work():
+    # blocking synchronous operation
+    return "done"
+
+async def main():
+    loop = asyncio.get_running_loop()
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        result = await loop.run_in_executor(
+            executor,
+            blocking_work
+        )
+
+    print(result)
+
+asyncio.run(main())</code></pre>
+
+<div class="highlight">
+<strong>Interview line:</strong> asyncio provides cooperative concurrency using an event
+loop and async/await, making it well suited to high-concurrency I/O-bound applications.
+It does not by itself provide CPU parallelism.
+</div>
+
+<div class="warning">
+<strong>Important:</strong> Asyncio works best when the operations being awaited are
+actually asynchronous/non-blocking. A blocking synchronous call inside an async function
+can block the event loop.
+</div>
+
+</div>
+</div>
+
+<div class="footer">
+Python Concurrency — Interview Preparation · Questions 11–20
+</div>
+
+</div>
+
+<script>
+function toggleAnswer(id){
+  const answer=document.getElementById("answer-"+id);
+  const icon=document.getElementById("icon-"+id);
+  const isOpen=answer.classList.contains("open");
+  answer.classList.toggle("open");
+  icon.textContent=isOpen?"+":"−";
+}
+</script>
+
+</body>
+</html>
