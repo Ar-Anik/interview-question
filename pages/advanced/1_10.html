@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Python Advanced Interview Questions</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Noto Sans Bengali", "Noto Sans", Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+            line-height: 1.75;
+        }
+
+        .container {
+            width: min(1000px, 92%);
+            margin: 40px auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #111827, #1f2937);
+            color: white;
+            padding: 35px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .header p {
+            margin: 0;
+            color: #d1d5db;
+            font-size: 16px;
+        }
+
+        .question {
+            background: white;
+            margin-bottom: 14px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .question-header {
+            width: 100%;
+            border: none;
+            background: white;
+            padding: 20px 24px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .question-header:hover {
+            background: #f9fafb;
+        }
+
+        .number {
+            color: #2563eb;
+            margin-right: 8px;
+        }
+
+        .arrow {
+            font-size: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .question.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        .answer {
+            display: none;
+            padding: 0 24px 28px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .question.active .answer {
+            display: block;
+        }
+
+        .answer h3 {
+            margin-top: 24px;
+            margin-bottom: 8px;
+            color: #111827;
+            font-size: 19px;
+        }
+
+        .answer h4 {
+            margin-top: 20px;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .answer p {
+            margin: 8px 0;
+        }
+
+        .answer ul {
+            margin-top: 8px;
+        }
+
+        .answer li {
+            margin-bottom: 6px;
+        }
+
+        /*
+         * Code blocks intentionally use a dark/black background.
+         * This keeps code visually separate from the explanation.
+         */
+        pre {
+            background: #111827;
+            color: #e5e7eb;
+            padding: 18px;
+            border-radius: 9px;
+            overflow-x: auto;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 14px 0;
+        }
+
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono",
+                         Menlo, monospace;
+        }
+
+        .inline-code {
+            background: #eef2ff;
+            color: #3730a3;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .interview {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 14px 16px;
+            margin-top: 18px;
+            border-radius: 6px;
+        }
+
+        .important {
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            padding: 14px 16px;
+            margin-top: 15px;
+            border-radius: 6px;
+        }
+
+        .summary {
+            background: #ecfdf5;
+            border-left: 4px solid #10b981;
+            padding: 14px 16px;
+            margin-top: 15px;
+            border-radius: 6px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #6b7280;
+            margin: 30px 0;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                margin: 20px auto;
+            }
+
+            .header {
+                padding: 25px 20px;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+            .question-header {
+                padding: 17px;
+                font-size: 16px;
+            }
+
+            .answer {
+                padding: 0 17px 22px;
+            }
+
+            pre {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Python Advanced Interview Questions</h1>
+        <p>
+            Decorators, Closures, Functions, Context Managers,
+            Generators & Iterators
+        </p>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- Question 1 -->
+    <!-- ========================================================= -->
+
+    <div class="question">
+
+        <button class="question-header">
+            <span>
+                <span class="number">01.</span>
+                What is a Decorator in Python?
+            </span>
+            <span class="arrow">▼</span>
+        </button>
+
+        <div class="answer">
+
+            <h3>সংজ্ঞা</h3>
+
+            <p>
+                <span class="inline-code">Decorator</span> হলো এমন একটি
+                function যা অন্য একটি function বা callable-কে input হিসেবে
+                নিয়ে তার behavior পরিবর্তন বা extend করে এবং সাধারণত
+                একটি নতুন callable return করে।
+            </p>
+
+            <p>
+                মূল function-এর source code পরিবর্তন না করেই তার execution-এর
+                আগে বা পরে additional behavior যোগ করা যায়।
+            </p>
+
+            <h3>সহজ ধারণা</h3>
+
+            <p>
+                ধরা যাক একটি function-এর কাজ হলো শুধু data process করা।
+                কিন্তু function call করার আগে logging এবং function শেষ হওয়ার
+                পরে execution time measure করা দরকার।
+            </p>
+
+            <p>
+                মূল function-এর ভিতরে logging code না লিখে decorator ব্যবহার
+                করে সেই behavior যোগ করা যায়।
+            </p>
+
+            <h3>Basic Example</h3>
+
+<pre><code>def my_decorator(func):
+
+    def wrapper():
+        print("Before function")
+        func()
+        print("After function")
+
+    return wrapper
+
+
+def hello():
+    print("Hello")
+
+
+hello = my_decorator(hello)
+
+hello()</code></pre>
+
+            <p>Output:</p>
+
+<pre><code>Before function
+Hello
+After function</code></pre>
+
+            <h3><span class="inline-code">@</span> Syntax</h3>
+
+            <p>
+                Python decorator-এর জন্য সাধারণত <span class="inline-code">@</span>
+                syntax ব্যবহার করা হয়।
+            </p>
+
+<pre><code>def my_decorator(func):
+
+    def wrapper():
+        print("Before function")
+        func()
+        print("After function")
+
+    return wrapper
+
+
+@my_decorator
+def hello():
+    print("Hello")</code></pre>
+
+            <p>
+                এই syntax-এর অর্থ কার্যত:
+            </p>
+
+<pre><code>hello = my_decorator(hello)</code></pre>
+
+            <div class="important">
+                <strong>Important:</strong>
+                Decorator নিজে function call করে না।
+                Decorator একটি function গ্রহণ করে এবং সাধারণত একটি নতুন
+                wrapper function return করে।
+            </div>
+
+            <div class="interview">
+                <strong>Interview Answer:</strong><br>
+                Decorator is a callable that takes another callable and
+                extends or modifies its behavior without changing the
+                original callable's source code.
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- Question 2 -->
+    <!-- ========================================================= -->
+
+    <div class="question">
+
+        <button class="question-header">
+            <span>
+                <span class="number">02.</span>
+                How do decorators work internally and how are they implemented?
+            </span>
+            <span class="arrow">▼</span>
+        </button>
+
+        <div class="answer">
+
+            <h3>Decorator-এর internal flow</h3>
+
+            <p>
+                Decorator বুঝতে প্রথমে function-এর একটি গুরুত্বপূর্ণ property
+                বুঝতে হবে: Python-এ function একটি object।
+            </p>
+
+            <p>
+                তাই একটি function অন্য function-এর argument হতে পারে এবং
+                একটি function অন্য function return করতে পারে।
+            </p>
+
+<pre><code>def decorator(func):
+
+    def wrapper(*args, **kwargs):
+        print("Before")
+        result = func(*args, **kwargs)
+        print("After")
+        return result
+
+    return wrapper
+
+
+@decorator
+def add(a, b):
+    return a + b</code></pre>
+
+            <p>
+                Python যখন <span class="inline-code">@decorator</span> দেখে,
+                function definition-এর পরে কার্যত:
+            </p>
+
+<pre><code>add = decorator(add)</code></pre>
+
+            <p>
+                ফলে <span class="inline-code">add</span>-এ original function
+                সরাসরি থাকে না; decorator থেকে return হওয়া wrapper callable
+                থাকে।
+            </p>
+
+            <h3>Arguments কীভাবে handle হয়?</h3>
+
+            <p>
+                Decorator যেন বিভিন্ন signature-এর function handle করতে পারে,
+                তাই সাধারণত:
+            </p>
+
+<pre><code>def wrapper(*args, **kwargs):
+    return func(*args, **kwargs)</code></pre>
+
+            <p>
+                এখানে <span class="inline-code">*args</span> positional
+                arguments এবং <span class="inline-code">**kwargs</span>
+                keyword arguments capture করে।
+            </p>
+
+            <h3>Return value গুরুত্বপূর্ণ কেন?</h3>
+
+            <p>
+                Wrapper-এর ভিতরে original function call করার পর result return
+                না করলে original function-এর return value হারিয়ে যাবে।
+            </p>
+
+<pre><code>def decorator(func):
+
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        return result
+
+    return wrapper</code></pre>
+
+            <h3><span class="inline-code">functools.wraps</span></h3>
+
+            <p>
+                Decorator ব্যবহার করলে wrapper function-এর metadata
+                original function-এর metadata-কে replace করতে পারে।
+                যেমন <span class="inline-code">__name__</span> এবং
+                <span class="inline-code">__doc__</span>।
+            </p>
+
+<pre><code>from functools import wraps
+
+
+def decorator(func):
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+
+    return wrapper</code></pre>
+
+            <div class="summary">
+                <strong>Flow:</strong><br>
+                Original function
+                → decorator receives it
+                → decorator creates wrapper
+                → wrapper is returned
+                → original name points to wrapper
+            </div>
+
+            <div class="interview">
+                <strong>Interview Answer:</strong><br>
+                A decorator works by receiving a callable, creating or
+                returning another callable that adds behavior, and replacing
+                the original function reference with that returned callable.
+                The <span class="inline-code">@decorator</span> syntax is
+                equivalent to <span class="inline-code">func = decorator(func)</span>.
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- Question 3 -->
+    <!-- ========================================================= -->
+
+    <div class="question">
+
+        <button class="question-header">
+            <span>
+                <span class="number">03.</span>
+                What is a Closure in Python?
+            </span>
+            <span class="arrow">▼</span>
+        </button>
+
+        <div class="answer">
+
+            <h3>সংজ্ঞা</h3>
+
+            <p>
+                <span class="inline-code">Closure</span> হলো এমন একটি
+                inner function যা তার enclosing scope-এর variable-কে
+                reference করে এবং enclosing function execution শেষ হওয়ার
+                পরেও সেই variable-এর access ধরে রাখে।
+            </p>
+
+            <h3>Example</h3>
+
+<pre><code>def outer():
+
+    message = "Hello"
+
+    def inner():
+        print(message)
+
+    return inner
+
+
+func = outer()
+
+func()</code></pre>
+
+            <p>
+                এখানে <span class="inline-code">outer()</span> execution
+                শেষ হয়ে গেছে। তারপরও <span class="inline-code">inner()</span>
+                যখন call হচ্ছে, তখন <span class="inline-code">message</span>
+                access করতে পারছে।
+            </p>
+
+            <h3>কেন সম্ভব?</h3>
+
+            <p>
+                কারণ <span class="inline-code">inner</span> function তার
+                enclosing scope-এর variable-এর reference ধরে রাখে।
+            </p>
+
+            <p>
+                সেই captured variable-কে closure-এর
+                <span class="inline-code">__closure__</span> attribute-এর
+                মাধ্যমে inspect করা যায়।
+            </p>
+
+<pre><code>def outer():
+    x = 10
+
+    def inner():
+        return x
+
+    return inner
+
+
+func = outer()
+
+print(func())
+print(func.__closure__)</code></pre>
+
+            <h3>Closure-এর practical example</h3>
+
+<pre><code>def multiplier(n):
+
+    def multiply(value):
+        return value * n
+
+    return multiply
+
+
+double = multiplier(2)
+triple = multiplier(3)
+
+print(double(10))
+print(triple(10))</code></pre>
+
+            <p>
+                এখানে <span class="inline-code">double</span> function
+                <span class="inline-code">n = 2</span> এবং
+                <span class="inline-code">triple</span> function
+                <span class="inline-code">n = 3</span> capture করে রেখেছে।
+            </p>
+
+            <div class="important">
+                Closure-এর জন্য তিনটি বিষয় গুরুত্বপূর্ণ:
+                <br><br>
+                1. একটি nested function থাকতে হবে।<br>
+                2. Inner function enclosing scope-এর variable ব্যবহার করবে।<br>
+                3. Inner function enclosing function-এর বাইরে survive করবে।
+            </div>
+
+            <div class="interview">
+                <strong>Interview Answer:</strong><br>
+                A closure is a function that remembers and retains access to
+                variables from its enclosing lexical scope even after the
+                enclosing function has finished execution.
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- Question 4 -->
+    <!-- ========================================================= -->
+
+    <div class="question">
+
+        <button class="question-header">
+            <span>
+                <span class="number">04.</span>
+                What are First-Class Functions in Python?
+            </span>
+            <span class="arrow">▼</span>
+        </button>
+
+        <div class="answer">
+
+            <h3>সংজ্ঞা</h3>
+
+            <p>
+                Python-এ function হলো <strong>first-class object</strong>।
+                অর্থাৎ function-কে সাধারণ object-এর মতো ব্যবহার করা যায়।
+            </p>
+
+            <h3>Function কী কী করতে পারে?</h3>
+
+            <ul>
+                <li>Variable-এ assign করা যায়।</li>
+                <li>অন্য function-এ argument হিসেবে পাঠানো যায়।</li>
+                <li>Function থেকে return করা যায়।</li>
+                <li>List, dictionary বা অন্য data structure-এ রাখা যায়।</li>
+            </ul>
+
+            <h3>Variable-এ function রাখা</h3>
+
+<pre><code>def greet():
+    return "Hello"
+
+
+message = greet
+
+print(message())</code></pre>
+
+            <p>
+                এখানে <span class="inline-code">message</span> এবং
+                <span class="inline-code">greet</span> একই function object
+                reference করছে।
+            </p>
+
+            <h3>Function হিসেবে argument</h3>
+
+<pre><code>def greet():
+    return "Hello"
+
+
+def execute(func):
+    return func()
+
+
+print(execute(greet))</code></pre>
+
+            <h3>Function return করা</h3>
+
+<pre><code>def outer():
+
+    def inner():
+        return "Hello"
+
+    return inner
+
+
+func = outer()
+
+print(func())</code></pre>
+
+            <h3>First-class function বনাম Higher-order function</h3>
+
+            <p>
+                এই দুইটি concept related কিন্তু একই নয়।
+            </p>
+
+            <p>
+                <strong>First-class function</strong> হলো language-এর
+                capability—function object হিসেবে ব্যবহারযোগ্য।
+            </p>
+
+            <p>
+                <strong>Higher-order function</strong> হলো এমন function
+                যা function গ্রহণ করে অথবা function return করে।
+            </p>
+
+            <div class="interview">
+                <strong>Interview Answer:</strong><br>
+                Python treats functions as first-class objects, meaning
+                functions can be assigned to variables, passed as arguments,
+                returned from other functions, and stored in data structures.
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- Question 5 -->
+    <!-- ========================================================= -->
+
+    <div class="question">
+
+        <button class="question-header">
+            <span>
+                <span class="number">05.</span>
+                What is a Higher-Order Function?
+            </span>
+            <span class="arrow">▼</span>
+        </button>
+
+        <div class="answer">
+
+            <h3>সংজ্ঞা</h3>
+
+            <p>
+                <span class="inline-code">Higher-order function</span>
+                হলো এমন function যা অন্তত একটি function-কে argument হিসেবে
+                গ্রহণ করে অথবা একটি function return করে।
+            </p>
+
+            <h3>Example 1 — Function গ্রহণ করা</h3>
+
+<pre><code>def square(x):
+    return x * x
+
+
+def apply_operation(func, value):
+    return func(value)
+
+
+result = apply_operation(square, 5)
+
+print(result)</code></pre>
+
+            <p>
+                এখানে <span class="inline-code">apply_operation</span> একটি
+                function argument গ্রহণ করছে। তাই এটি higher-order function।
+            </p>
+
+            <h3>Example 2 — Function return করা</h3>
+
+<pre><code>def create_multiplier(n):
+
+    def multiply(x):
+        return x * n
+
+    return multiply
+
+
+double = create_multiplier(2)
+
+print(double(5))</code></pre>
+
+            <p>
+                <span class="inline-code">create_multiplier</span> একটি
+                function return করছে, তাই এটিও higher-order function।
+            </p>
+
+            <h3>Built-in Example</h3>
+
+            <p>
+                Python-এর <span class="inline-code">map()</span>,
+                <span class="inline-code">filter()</span> ইত্যাদি
+                higher-order function-এর উদাহরণ।
+            </p>
+
+<pre><code>numbers = [1, 2, 3, 4]
+
+result = map(lambda x: x * 2, numbers)
+
+print(list(result))</code></pre>
+
+            <h3>Decorator-এর সাথে সম্পর্ক</h3>
+
+            <p>
+                Decorator সাধারণত higher-order function-এর একটি practical
+                use case, কারণ decorator একটি function গ্রহণ করে এবং
+                একটি callable return করে।
+            </p>
+
+            <div class="summary">
+                <strong>মনে রাখার সহজ নিয়ম:</strong><br>
+                Function → argument হিসেবে নেয় অথবা function → return করে
+                = Higher-order function.
+            </div>
+
+            <div class="interview">
+                <strong>Interview Answer:</strong><br>
+                A higher-order function is a function that takes one or more
+                functions as arguments or returns a function as its result.
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- Question 6 -->
+    <!-- ========================================================= -->
+
+    <div class="question">
+
+        <button class="question-header">
+            <span>
+                <span class="number">06.</span>
+                What is a Context Manager in Python?
+            </span>
+            <span class="arrow">▼</span>
+        </button>
+
+        <div class="answer">
+
+            <h3>সংজ্ঞা</h3>
+
+            <p>
+                <span class="inline-code">Context Manager</span> হলো এমন
+                mechanism যা কোনো resource ব্যবহারের আগে setup এবং ব্যবহারের
+                পরে cleanup operation-এর lifecycle manage করে।
+            </p>
+
+            <h3>কেন দরকার?</h3>
+
+            <p>
+                File, database transaction, lock ইত্যাদি resource ব্যবহারের
+                সময় cleanup নিশ্চিত করা গুরুত্বপূর্ণ।
+            </p>
+
+            <p>
+                উদাহরণ হিসেবে file open করার পর file close করা দরকার।
+                কোনো exception হলেও cleanup হওয়া উচিত।
+            </p>
+
+            <h3>Without Context Manager</h3>
+
+<pre><code>file = open("data.txt", "r")
+
+try:
+    data = file.read()
+finally:
+    file.close()</code></pre>
+
+            <h3>With Context Manager</h3>
+
+<pre><code>with open("data.txt", "r") as file:
+    data = file.read()</code></pre>
+
+            <p>
+                <span class="inline-code">with</span> block শেষ হলে
+                file automatically close হয়—even if block-এর ভিতরে exception
+                ঘটে।
+            </p>
+
+            <h3>Context Manager কোথায় ব্যবহৃত হয়?</h3>
+
+            <ul>
+                <li>File handling</li>
+                <li>Database connection বা transaction management</li>
+                <li>Thread Lock</li>
+                <li>Temporary resource management</li>
+                <li>Custom resource lifecycle management</li>
+            </ul>
+
+            <div class="important">
+                Context Manager-এর মূল উদ্দেশ্য শুধু file close করা নয়।
+                মূল উদ্দেশ্য হলো resource-এর setup এবং cleanup-এর lifecycle
+                নির্ভরযোগ্যভাবে manage করা।
+            </div>
+
+            <div class="interview">
+                <strong>Interview Answer:</strong><br>
+                A context manager manages the setup and cleanup of a resource
+                around a block of code, usually through the
+                <span class="inline-code">with</span> statement.
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- Question 7 -->
+    <!-- ========================================================= -->
+
+    <div class="question">
+
+        <button class="question-header">
+            <span>
+                <span class="number">07.</span>
+                What is the purpose of the <code>with</code> statement?
+            </span>
+            <span class="arrow">▼</span>
+        </button>
+
+        <div class="answer">
+
+            <h3><span class="inline-code">with</span> কী?</h3>
+
+            <p>
+                <span class="inline-code">with</span> statement একটি
+                context manager-এর lifecycle manage করার জন্য ব্যবহৃত হয়।
+            </p>
+
+            <p>
+                এটি context-এর শুরুতে setup এবং context-এর শেষে cleanup
+                করার standard structure প্রদান করে।
+            </p>
+
+            <h3>File Example</h3>
+
+<pre><code>with open("example.txt", "r") as file:
+    content = file.read()</code></pre>
+
+            <p>
+                এখানে <span class="inline-code">open()</span> একটি file
+                object return করে, যা context manager protocol support করে।
+            </p>
+
+            <p>
+                <span class="inline-code">with</span> block শেষ হলে file
+                close করার cleanup operation automatically execute হয়।
+            </p>
+
+            <h3>Exception হলেও cleanup</h3>
+
+<pre><code>with open("example.txt", "r") as file:
+
+    data = file.read()
+
+    raise ValueError("Something went wrong")</code></pre>
+
+            <p>
+                Exception ঘটলেও context manager-এর exit operation execute
+                হয়, তাই resource cleanup করার সুযোগ থাকে।
+            </p>
+
+            <h3>Conceptual Flow</h3>
+
+<pre><code>Enter context
+      ↓
+Run with-block
+      ↓
+Exception হয়েছে?
+   ↙        ↘
+ Yes         No
+  ↓           ↓
+Exit       Exit
+  ↓           ↓
+Cleanup     Cleanup</code></pre>
+
+            <p>
+                এখানে <span class="inline-code">__enter__()</span> context
+                শুরু করে এবং <span class="inline-code">__exit__()</span>
+                context শেষ করে।
+            </p>
+
+            <div class="interview">
+                <strong>Interview Answer:</strong><br>
+                The <code>with</code> statement is used to work with context
+                managers and ensures that setup and cleanup operations are
+                handled automatically around a block of code.
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- Question 8 -->
+    <!-- ========================================================= -->
+
+    <div class="question">
+
+        <button class="question-header">
+            <span>
+                <span class="number">08.</span>
+                What are __enter__() and __exit__()?
+            </span>
+            <span class="arrow">▼</span>
+        </button>
+
+        <div class="answer">
+
+            <h3>Context Manager Protocol</h3>
+
+            <p>
+                একটি class-কে context manager হিসেবে ব্যবহার করতে হলে
+                synchronous context manager-এর ক্ষেত্রে সাধারণত
+                <span class="inline-code">__enter__()</span> এবং
+                <span class="inline-code">__exit__()</span> implement করা হয়।
+            </p>
+
+            <h3><span class="inline-code">__enter__()</span></h3>
+
+            <p>
+                <span class="inline-code">with</span> block শুরু হওয়ার সময়
+                <span class="inline-code">__enter__()</span> call হয়।
+            </p>
+
+            <p>
+                এই method-এর return value
+                <span class="inline-code">as</span> variable-এ assign হয়।
+            </p>
+
+<pre><code>class MyContext:
+
+    def __enter__(self):
+        print("Entering context")
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        print("Exiting context")
+
+
+with MyContext() as obj:
+    print("Inside context")</code></pre>
+
+            <h3><span class="inline-code">__exit__()</span></h3>
+
+            <p>
+                <span class="inline-code">with</span> block শেষ হওয়ার সময়
+                <span class="inline-code">__exit__()</span> call হয়।
+            </p>
+
+            <p>
+                এর তিনটি গুরুত্বপূর্ণ exception-related parameter থাকে:
+            </p>
+
+            <ul>
+                <li><span class="inline-code">exc_type</span></li>
+                <li><span class="inline-code">exc_value</span></li>
+                <li><span class="inline-code">traceback</span></li>
+            </ul>
+
+            <p>
+                কোনো exception না হলে এগুলো <span class="inline-code">None</span>
+                হয়।
+            </p>
+
+            <h3>Exception handling</h3>
+
+<pre><code>class MyContext:
+
+    def __enter__(self):
+        print("Start")
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+
+        if exc_type:
+            print("Exception:", exc_value)
+
+        print("Cleanup")
+
+        return False</code></pre>
+
+            <p>
+                <span class="inline-code">__exit__()</span> থেকে
+                <span class="inline-code">True</span> return করলে exception
+                suppress করা হয়।
+            </p>
+
+            <p>
+                <span class="inline-code">False</span> অথবা
+                <span class="inline-code">None</span> return করলে exception
+                সাধারণভাবে propagate করে।
+            </p>
+
+            <div class="important">
+                <strong>Important:</strong>
+                <span class="inline-code">__exit__()</span> থেকে
+                <span class="inline-code">True</span> return করার অর্থ
+                exception-কে suppress করা। তাই এটি ইচ্ছাকৃতভাবে ব্যবহার করা
+                উচিত।
+            </div>
+
+            <div class="interview">
+                <strong>Interview Answer:</strong><br>
+                <code>__enter__()</code> runs when entering a context and
+                returns the value bound to the <code>as</code> target.
+                <code>__exit__()</code> runs when leaving the context and
+                handles cleanup and possible exceptions.
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- Question 9 -->
+    <!-- ========================================================= -->
+
+    <div class="question">
+
+        <button class="question-header">
+            <span>
+                <span class="number">09.</span>
+                What is contextlib and how is it used?
+            </span>
+            <span class="arrow">▼</span>
+        </button>
+
+        <div class="answer">
+
+            <h3>সংজ্ঞা</h3>
+
+            <p>
+                <span class="inline-code">contextlib</span> হলো Python-এর
+                standard library module, যা context manager তৈরি ও ব্যবহারের
+                জন্য utility প্রদান করে।
+            </p>
+
+            <p>
+                বিশেষ করে ছোট বা straightforward context manager-এর জন্য
+                class লিখে <span class="inline-code">__enter__()</span> এবং
+                <span class="inline-code">__exit__()</span> implement করার
+                পরিবর্তে <span class="inline-code">@contextmanager</span>
+                ব্যবহার করা যায়।
+            </p>
+
+            <h3><span class="inline-code">@contextmanager</span></h3>
+
+<pre><code>from contextlib import contextmanager
+
+
+@contextmanager
+def my_context():
+
+    print("Start")
+
+    try:
+        yield
+    finally:
+        print("Cleanup")
+
+
+with my_context():
+    print("Inside context")</code></pre>
+
+            <h3><span class="inline-code">yield</span>-এর ভূমিকা</h3>
+
+            <p>
+                এখানে <span class="inline-code">yield</span> context-এর
+                boundary নির্দেশ করে।
+            </p>
+
+            <p>
+                সাধারণভাবে flow:
+            </p>
+
+<pre><code>Code before yield
+       ↓
+with block
+       ↓
+Code after yield
+       ↓
+Cleanup</code></pre>
+
+            <p>
+                <span class="inline-code">finally</span> ব্যবহার করায়
+                context block-এর ভিতরে exception হলেও cleanup code execute
+                হওয়ার সুযোগ থাকে।
+            </p>
+
+            <h3>Value provide করা</h3>
+
+<pre><code>from contextlib import contextmanager
+
+
+@contextmanager
+def database_connection():
+
+    connection = create_connection()
+
+    try:
+        yield connection
+    finally:
+        connection.close()
+
+
+with database_connection() as connection:
+    connection.execute("SELECT ...")</code></pre>
+
+            <p>
+                বাস্তব application-এ resource creation এবং cleanup logic
+                encapsulate করতে এই pattern ব্যবহার করা যায়।
+            </p>
+
+            <h3>contextlib-এর আরও কিছু utility</h3>
+
+            <ul>
+                <li><span class="inline-code">contextmanager</span></li>
+                <li><span class="inline-code">closing</span></li>
+                <li><span class="inline-code">suppress</span></li>
+                <li><span class="inline-code">ExitStack</span></li>
+            </ul>
+
+            <div class="important">
+                <strong>Important:</strong>
+                <span class="inline-code">@contextmanager</span> function
+                অবশ্যই generator-based context manager pattern অনুসরণ করে;
+                context-এর আগে setup, <span class="inline-code">yield</span>,
+                এবং পরে cleanup সাধারণত <span class="inline-code">try/finally</span>
+                দিয়ে লেখা হয়।
+            </div>
+
+            <div class="interview">
+                <strong>Interview Answer:</strong><br>
+                <code>contextlib</code> is a standard-library module that
+                provides utilities for creating and working with context
+                managers. <code>@contextmanager</code> allows a generator
+                function to define context setup, the context body boundary,
+                and cleanup without explicitly writing a context-manager class.
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- Question 10 -->
+    <!-- ========================================================= -->
+
+    <div class="question">
+
+        <button class="question-header">
+            <span>
+                <span class="number">10.</span>
+                What is the difference between Generators and Iterators?
+            </span>
+            <span class="arrow">▼</span>
+        </button>
+
+        <div class="answer">
+
+            <h3>Iterator কী?</h3>
+
+            <p>
+                <span class="inline-code">Iterator</span> হলো এমন object
+                যার উপর <span class="inline-code">next()</span> call করে
+                একবারে পরবর্তী value পাওয়া যায়।
+            </p>
+
+            <p>
+                একটি iterator সাধারণত
+                <span class="inline-code">__iter__()</span> এবং
+                <span class="inline-code">__next__()</span> implement করে।
+            </p>
+
+<pre><code>numbers = [10, 20, 30]
+
+iterator = iter(numbers)
+
+print(next(iterator))
+print(next(iterator))
+print(next(iterator))</code></pre>
+
+            <p>
+                শেষ value-এর পরে <span class="inline-code">next()</span>
+                call করলে <span class="inline-code">StopIteration</span>
+                exception হয়।
+            </p>
+
+            <h3>Custom Iterator</h3>
+
+<pre><code>class Counter:
+
+    def __init__(self, limit):
+        self.current = 0
+        self.limit = limit
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+
+        if self.current >= self.limit:
+            raise StopIteration
+
+        value = self.current
+        self.current += 1
+
+        return value
+
+
+counter = Counter(3)
+
+for value in counter:
+    print(value)</code></pre>
+
+            <h3>Generator কী?</h3>
+
+            <p>
+                <span class="inline-code">Generator</span> হলো generator
+                function বা generator expression থেকে তৈরি হওয়া iterator,
+                যা সাধারণত <span class="inline-code">yield</span> ব্যবহার
+                করে value produce করে।
+            </p>
+
+<pre><code>def numbers():
+
+    yield 1
+    yield 2
+    yield 3
+
+
+gen = numbers()
+
+print(next(gen))
+print(next(gen))
+print(next(gen))</code></pre>
+
+            <h3>Generator-এর গুরুত্বপূর্ণ বৈশিষ্ট্য</h3>
+
+            <ul>
+                <li>
+                    Generator value একসাথে তৈরি করে না; প্রয়োজন অনুযায়ী
+                    produce করে।
+                </li>
+                <li>
+                    <span class="inline-code">yield</span> function-এর
+                    execution state ধরে রাখে।
+                </li>
+                <li>
+                    Large data process করার সময় memory efficient হতে পারে।
+                </li>
+                <li>
+                    Generator object iterator protocol follow করে।
+                </li>
+            </ul>
+
+            <h3>Generator বনাম Iterator</h3>
+
+<pre><code>Generator
+    ↓
+Iterator protocol follow করে
+    ↓
+next() দিয়ে value পাওয়া যায়</code></pre>
+
+            <p>
+                তাই সবচেয়ে গুরুত্বপূর্ণ relationship হলো:
+            </p>
+
+            <div class="summary">
+                <strong>Every generator is an iterator, but every iterator
+                is not a generator.</strong>
+            </div>
+
+            <h3>Memory Difference</h3>
+
+            <p>
+                ধরা যাক 1 থেকে 1,000,000 পর্যন্ত value process করতে হবে।
+            </p>
+
+<pre><code>numbers = [x for x in range(1_000_001)]</code></pre>
+
+            <p>
+                List comprehension পুরো list memory-তে তৈরি করে।
+            </p>
+
+<pre><code>numbers = (x for x in range(1_000_001))</code></pre>
+
+            <p>
+                Generator expression value প্রয়োজন অনুযায়ী produce করে।
+                তাই পুরো sequence একসাথে memory-তে materialize করতে হয় না।
+            </p>
+
+            <h3>মূল পার্থক্য</h3>
+
+            <ul>
+                <li>
+                    Iterator হলো protocol/behavior-এর concept।
+                </li>
+                <li>
+                    Generator হলো iterator তৈরি করার একটি সহজ Python
+                    mechanism।
+                </li>
+                <li>
+                    Custom iterator-এ সাধারণত
+                    <span class="inline-code">__iter__()</span> এবং
+                    <span class="inline-code">__next__()</span> implement
+                    করতে হয়।
+                </li>
+                <li>
+                    Generator function-এ সাধারণত
+                    <span class="inline-code">yield</span> ব্যবহার করলেই
+                    Python iterator behavior তৈরি করে।
+                </li>
+            </ul>
+
+            <div class="interview">
+                <strong>Interview Answer:</strong><br>
+                An iterator is an object that follows the iterator protocol
+                and produces values through <code>__next__()</code>.
+                A generator is a convenient way to create an iterator using
+                <code>yield</code>. Therefore, every generator is an iterator,
+                but not every iterator is a generator.
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="footer">
+        Python Advanced Interview Preparation
+    </div>
+
+</div>
+
+
+<script>
+
+    /*
+     * Click any question to show/hide its answer.
+     */
+
+    const questions = document.querySelectorAll(".question");
+
+    questions.forEach(question => {
+
+        const header = question.querySelector(".question-header");
+
+        header.addEventListener("click", () => {
+            question.classList.toggle("active");
+        });
+
+    });
+
+</script>
+
+</body>
+</html>
+

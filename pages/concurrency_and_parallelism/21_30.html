@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Asyncio — Interview Questions 21-30</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f7fb;color:#1f2937;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;line-height:1.75}
+.container{max-width:1000px;margin:auto;padding:35px 18px 60px}
+header{background:#111827;color:#fff;border-radius:16px;padding:32px 28px;margin-bottom:24px}
+header h1{margin:0 0 8px;font-size:30px} header p{margin:0;color:#d1d5db}
+.question{background:#fff;border:1px solid #e5e7eb;border-radius:12px;margin:13px 0;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.question button{width:100%;border:0;background:#fff;padding:19px 21px;text-align:left;cursor:pointer;font-size:17px;font-weight:700;color:#111827;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.question button:hover{background:#f9fafb}
+.icon{font-size:23px;color:#6b7280;min-width:20px;text-align:center}
+.answer{display:none;padding:0 23px 25px;border-top:1px solid #eef0f3} .answer.open{display:block}
+.answer h3{margin:21px 0 8px;font-size:18px;color:#111827} .answer p{margin:9px 0}
+.answer ul,.answer ol{padding-left:25px} .answer li{margin:5px 0}
+.highlight{background:#f3f4f6;border-left:4px solid #6b7280;padding:12px 15px;margin:15px 0;border-radius:5px}
+.warning{background:#fff7ed;border-left:4px solid #f97316;padding:12px 15px;margin:15px 0;border-radius:5px}
+.compare{background:#f8fafc;border:1px solid #e5e7eb;padding:14px 16px;border-radius:8px;margin:14px 0}
+.flow{background:#f8fafc;border:1px solid #e5e7eb;padding:15px 18px;border-radius:8px;margin:14px 0;font-family:"SFMono-Regular",Consolas,monospace}
+code{background:#eef2f7;padding:2px 6px;border-radius:4px;font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+pre{background:#0b1220!important;color:#e5e7eb!important;padding:18px!important;border-radius:9px;overflow-x:auto;margin:14px 0;border:1px solid #1f2937;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
+pre code{background:transparent!important;color:#e5e7eb!important;padding:0!important;border-radius:0;font-size:14px;line-height:1.65}
+.footer{text-align:center;color:#6b7280;margin-top:30px;font-size:14px} strong{color:#111827}
+</style>
+</head>
+<body><div class="container">
+<header><h1>Python Asyncio — Interview Questions 21–30</h1><p>Event Loop, Coroutine, async/await, Task, Future, gather(), Blocking Code, Sync vs Async & Async I/O</p></header>
+<div class="question">
+<button onclick="toggleAnswer(21)"><span>21. Event Loop কী?</span><span class="icon" id="icon-21">+</span></button>
+<div class="answer" id="answer-21">
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p><strong>Event Loop</strong> হলো <code>asyncio</code>-এর মূল execution mechanism, যা asynchronous tasks ও callbacks schedule করে এবং I/O-এর জন্য অপেক্ষার সময় অন্য ready কাজ চালাতে পারে।</p>
+<h3>সহজভাবে</h3>
+<p>একটি async application-এ অনেক coroutine থাকতে পারে। Event loop ঠিক করে কোন কাজ এখন চালানো যাবে এবং কোন কাজ I/O-এর জন্য অপেক্ষা করছে।</p>
+<div class="flow">Coroutine A → await I/O → অপেক্ষা<br>↓<br>Event Loop → Coroutine B চালায়<br>↓<br>Coroutine B → await I/O → অপেক্ষা<br>↓<br>Event Loop → A-এর I/O complete হলে A resume করে</div>
+<h3>Example</h3>
+<pre><code>import asyncio
+
+async def main():
+    print("Hello")
+    await asyncio.sleep(1)
+    print("World")
+
+asyncio.run(main())</code></pre>
+<p><code>asyncio.run(main())</code> সাধারণভাবে event loop চালিয়ে <code>main()</code> coroutine execute করে এবং শেষে loop বন্ধ করে।</p>
+<h3>Event Loop কী করে?</h3>
+<ul><li>Coroutine/task schedule করে।</li><li>Ready callbacks ও tasks চালায়।</li><li>Async I/O completion-এর জন্য অপেক্ষা করে।</li><li><code>await</code>-এর কারণে current coroutine suspend হলে অন্য ready কাজ চালাতে পারে।</li></ul>
+<div class="warning"><strong>Important:</strong> Event loop নিজে CPU-bound code-কে multiple CPU core-এ parallelভাবে execute করে না। দীর্ঘ CPU-bound synchronous code event loop block করতে পারে।</div>
+<div class="highlight"><strong>Interview line:</strong> The event loop is the core execution mechanism of asyncio that schedules asynchronous tasks and handles I/O readiness so multiple I/O-bound operations can make progress cooperatively.</div>
+</div>
+</div><div class="question">
+<button onclick="toggleAnswer(22)"><span>22. Coroutine কী?</span><span class="icon" id="icon-22">+</span></button>
+<div class="answer" id="answer-22">
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p><code>async def</code> দিয়ে defined function call করলে সাধারণ function-এর মতো সরাসরি result পাওয়া যায় না; এটি একটি <strong>coroutine object</strong> তৈরি করে। Coroutine object asynchronous execution-এর জন্য awaitable।</p>
+<h3>Example</h3>
+<pre><code>import asyncio
+
+async def fetch_data():
+    await asyncio.sleep(1)
+    return "data"
+
+coro = fetch_data()
+
+result = asyncio.run(coro)
+print(result)</code></pre>
+<p><code>fetch_data()</code> call করলে একটি coroutine object তৈরি হয়। Event loop-এর মাধ্যমে coroutine চালানো যায়।</p>
+<h3>মূল বৈশিষ্ট্য</h3>
+<ul><li><code>async def</code> একটি coroutine function define করে।</li><li>Call করলে coroutine object পাওয়া যায়।</li><li>Coroutine-কে <code>await</code> করা যায়।</li><li>Coroutine-কে Task হিসেবে schedule করা যায়।</li><li><code>await</code>-এ পৌঁছালে coroutine suspend হয়ে event loop-কে অন্য কাজের সুযোগ দিতে পারে।</li></ul>
+<div class="compare"><strong>Coroutine:</strong> একটি awaitable asynchronous computation।<br><strong>Task:</strong> একটি coroutine-কে event loop-এ schedule ও track করা object।</div>
+<div class="highlight"><strong>Interview line:</strong> A coroutine is an awaitable object produced by calling an <code>async def</code> function; it can be awaited directly or scheduled as a Task.</div>
+</div>
+</div><div class="question">
+<button onclick="toggleAnswer(23)"><span>23. async কী?</span><span class="icon" id="icon-23">+</span></button>
+<div class="answer" id="answer-23">
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p><code>async</code> asynchronous programming syntax-এর অংশ। সবচেয়ে common form <code>async def</code>, যা একটি coroutine function define করে।</p>
+<pre><code>async def fetch_user():
+    return {"id": 1, "name": "Anik"}</code></pre>
+<p><code>fetch_user()</code> call করলে dictionary সরাসরি পাওয়া যায় না; একটি coroutine object পাওয়া যায়।</p>
+<pre><code>import asyncio
+
+async def fetch_user():
+    return {"id": 1, "name": "Anik"}
+
+async def main():
+    result = await fetch_user()
+    print(result)
+
+asyncio.run(main())</code></pre>
+<h3>আরও দুইটি async syntax</h3>
+<p><code>async with</code> asynchronous context manager এবং <code>async for</code> asynchronous iteration-এর জন্য ব্যবহৃত হয়।</p>
+<div class="highlight"><strong>Interview line:</strong> <code>async</code> is used to define asynchronous operations, most commonly through <code>async def</code>, which creates coroutine functions.</div>
+</div>
+</div><div class="question">
+<button onclick="toggleAnswer(24)"><span>24. await কী?</span><span class="icon" id="icon-24">+</span></button>
+<div class="answer" id="answer-24">
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p><code>await</code> একটি awaitable-এর completion/result-এর জন্য অপেক্ষা করার syntax। Coroutine-এর ভিতরে এটি ব্যবহার করা হয় এবং waiting-এর সময় current coroutine event loop-কে control ফিরিয়ে দিতে পারে।</p>
+<pre><code>import asyncio
+
+async def fetch_data():
+    await asyncio.sleep(2)
+    return "data"
+
+async def main():
+    result = await fetch_data()
+    print(result)
+
+asyncio.run(main())</code></pre>
+<h3>এখানে কী হচ্ছে?</h3>
+<ol><li><code>fetch_data()</code> coroutine object তৈরি করে।</li><li><code>await</code> তার completion-এর জন্য অপেক্ষা করে।</li><li>যখন coroutine I/O-এর জন্য অপেক্ষা করে, event loop অন্য ready task চালাতে পারে।</li><li>Operation complete হলে coroutine resume করে এবং result পাওয়া যায়।</li></ol>
+<div class="warning"><strong>Important:</strong> <code>await</code> মানে পুরো application/thread block করা নয়। তবে awaited operation-এর implementation যদি blocking synchronous code হয়, event loop block হতে পারে।</div>
+<div class="highlight"><strong>Interview line:</strong> <code>await</code> waits for an awaitable and allows the current coroutine to suspend so the event loop can run other work.</div>
+</div>
+</div><div class="question">
+<button onclick="toggleAnswer(25)"><span>25. Task কী?</span><span class="icon" id="icon-25">+</span></button>
+<div class="answer" id="answer-25">
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p><code>asyncio.Task</code> হলো event loop-এর মধ্যে একটি coroutine-কে schedule এবং track করার object। Task তৈরি করলে coroutine execution-এর জন্য event loop-এ schedule হয়।</p>
+<pre><code>import asyncio
+
+async def work(name):
+    await asyncio.sleep(1)
+    return f"{name} done"
+
+async def main():
+    task1 = asyncio.create_task(work("A"))
+    task2 = asyncio.create_task(work("B"))
+
+    result1 = await task1
+    result2 = await task2
+
+    print(result1)
+    print(result2)
+
+asyncio.run(main())</code></pre>
+<h3>Coroutine বনাম Task</h3>
+<div class="compare"><strong>Coroutine:</strong> <code>async def</code> function call-এর ফল হিসেবে তৈরি awaitable object।<br><strong>Task:</strong> coroutine-কে event loop-এ schedule করে execution manage/track করে।</div>
+<p>একটি coroutine সরাসরি <code>await</code> করলে current coroutine সেটির completion-এর জন্য অপেক্ষা করে। একাধিক coroutine আগে Task হিসেবে schedule করলে তাদের I/O waiting overlap করতে পারে।</p>
+<div class="highlight"><strong>Interview line:</strong> A Task wraps and schedules a coroutine for execution by the event loop and provides a handle for awaiting or monitoring it.</div>
+</div>
+</div><div class="question">
+<button onclick="toggleAnswer(26)"><span>26. Future কী?</span><span class="icon" id="icon-26">+</span></button>
+<div class="answer" id="answer-26">
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p><code>asyncio.Future</code> হলো একটি low-level awaitable object, যা asynchronous operation-এর ভবিষ্যৎ result বা exception-এর placeholder হিসেবে কাজ করে।</p>
+<div class="flow">Future created<br>↓<br>Result not ready<br>↓<br>Operation completes<br>↓<br>Future receives result / exception<br>↓<br>await future → result</div>
+<h3>Task বনাম Future</h3>
+<p><code>Task</code> হলো Future-এর specialized form যা coroutine execution schedule করে। Future সাধারণভাবে low-level asynchronous result placeholder হিসেবে কাজ করে।</p>
+<pre><code>import asyncio
+
+async def main():
+    loop = asyncio.get_running_loop()
+    future = loop.create_future()
+
+    loop.call_later(1, future.set_result, "Done")
+
+    result = await future
+    print(result)
+
+asyncio.run(main())</code></pre>
+<p>এখানে Future প্রথমে incomplete। পরে <code>set_result()</code> call হলে Future complete হয় এবং <code>await future</code> result return করে।</p>
+<div class="warning"><strong>Important:</strong> Application code-এ Future সাধারণত সরাসরি create করার প্রয়োজন কম। High-level APIs বেশি ব্যবহার করা হয়। Future asyncio internals ও low-level integration-এ গুরুত্বপূর্ণ।</div>
+<div class="highlight"><strong>Interview line:</strong> A Future is a low-level awaitable placeholder for a result that becomes available later; a Task is a Future-like object that runs a coroutine.</div>
+</div>
+</div><div class="question">
+<button onclick="toggleAnswer(27)"><span>27. asyncio.gather() কী?</span><span class="icon" id="icon-27">+</span></button>
+<div class="answer" id="answer-27">
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p><code>asyncio.gather()</code> একাধিক awaitable-কে concurrently schedule/await করে এবং তাদের results input order অনুযায়ী list-এ return করে।</p>
+<pre><code>import asyncio
+
+async def fetch(name, delay):
+    await asyncio.sleep(delay)
+    return name
+
+async def main():
+    results = await asyncio.gather(
+        fetch("A", 2),
+        fetch("B", 1),
+        fetch("C", 3),
+    )
+    print(results)
+
+asyncio.run(main())</code></pre>
+<p>এখানে I/O waits overlap করলে total duration সাধারণভাবে সব duration-এর যোগফল নয়; longest operation-এর কাছাকাছি হতে পারে, runtime overhead বাদ দিয়ে।</p>
+<h3>Result order</h3>
+<p>Execution order এবং result order একই নয়। B আগে finish করলেও result হবে:</p>
+<pre><code>["A", "B", "C"]</code></pre>
+<h3>Exception handling</h3>
+<p>Default behavior-এ একটি awaitable exception দিলে <code>gather()</code> সেই exception propagate করতে পারে। <code>return_exceptions=True</code> দিলে exceptions result list-এর element হিসেবে পাওয়া যায়।</p>
+<pre><code>results = await asyncio.gather(
+    task_a(),
+    task_b(),
+    return_exceptions=True
+)</code></pre>
+<div class="highlight"><strong>Interview line:</strong> <code>asyncio.gather()</code> runs multiple awaitables concurrently and returns their results in the same order as the awaitables were passed.</div>
+</div>
+</div><div class="question">
+<button onclick="toggleAnswer(28)"><span>28. Blocking code inside an async application — সমস্যা কী?</span><span class="icon" id="icon-28">+</span></button>
+<div class="answer" id="answer-28">
+<h3>মূল সমস্যা</h3>
+<p>Async application-এর event loop cooperative concurrency ব্যবহার করে। Event-loop thread-এ blocking synchronous operation চালালে operation শেষ না হওয়া পর্যন্ত অন্য async tasks চালানো যায় না।</p>
+<h3>Bad example</h3>
+<pre><code>import asyncio
+import time
+
+async def bad():
+    time.sleep(5)  # blocking!
+
+async def main():
+    await asyncio.gather(
+        bad(),
+        bad(),
+        bad(),
+    )
+
+asyncio.run(main())</code></pre>
+<p><code>time.sleep()</code> event loop block করে। তাই concurrency benefit নষ্ট হয়।</p>
+<h3>Correct async operation</h3>
+<pre><code>import asyncio
+
+async def good():
+    await asyncio.sleep(5)
+
+async def main():
+    await asyncio.gather(
+        good(),
+        good(),
+        good(),
+    )
+
+asyncio.run(main())</code></pre>
+<p><code>asyncio.sleep()</code> current coroutine suspend করে এবং event loop অন্য ready coroutine চালাতে পারে।</p>
+<h3>Blocking library ব্যবহার করতেই হলে</h3>
+<pre><code>import asyncio
+
+def blocking_work():
+    return "done"
+
+async def main():
+    result = await asyncio.to_thread(blocking_work)
+    print(result)
+
+asyncio.run(main())</code></pre>
+<p><code>asyncio.to_thread()</code> blocking synchronous function-কে worker thread-এ offload করার জন্য উপযোগী, বিশেষ করে blocking I/O-এর ক্ষেত্রে।</p>
+<div class="warning"><strong>Important:</strong> Traditional GIL-enabled CPython-এ <code>to_thread()</code> CPU-bound pure-Python work-এর জন্য সাধারণত CPU parallelism solve করে না।</div>
+<div class="highlight"><strong>Interview line:</strong> Blocking synchronous code inside the event-loop thread can block all other async tasks. Use async-compatible APIs or offload blocking work appropriately.</div>
+</div>
+</div><div class="question">
+<button onclick="toggleAnswer(29)"><span>29. Async vs sync — পার্থক্য কী?</span><span class="icon" id="icon-29">+</span></button>
+<div class="answer" id="answer-29">
+<h3>Sync</h3>
+<p>Synchronous execution-এ একটি operation শেষ হওয়ার পর পরবর্তী operation-এ যাওয়া হয়। Blocking I/O call return না করা পর্যন্ত execution path অপেক্ষা করতে পারে।</p>
+<pre><code>def fetch():
+    response = requests.get("https://example.com")
+    return response</code></pre>
+<h3>Async</h3>
+<p>Asynchronous execution-এ awaitable I/O-এর জন্য অপেক্ষা করার সময় current coroutine suspend হয়ে event loop অন্য ready async task চালাতে পারে।</p>
+<pre><code>async def fetch():
+    response = await async_client.get("https://example.com")
+    return response</code></pre>
+<h3>মূল পার্থক্য</h3>
+<div class="compare"><strong>Sync:</strong> Blocking operation-এর সময় execution path অপেক্ষা করতে পারে।<br><strong>Async:</strong> Awaitable I/O-এর জন্য অপেক্ষার সময় অন্য async work progress করতে পারে।</div>
+<h3>Async মানেই faster?</h3>
+<p>না। Async সব workload-এর জন্য faster নয়। High-concurrency I/O-bound workload-এ এটি resource utilization ও throughput improve করতে পারে।</p>
+<p>CPU-bound work event loop-এ সরাসরি চালালে loop block হতে পারে; workload অনুযায়ী multiprocessing বা অন্য CPU execution strategy দরকার হতে পারে।</p>
+<div class="highlight"><strong>Interview line:</strong> Synchronous execution generally waits for an operation to complete, while asynchronous execution can suspend an I/O-bound operation and let other tasks make progress.</div>
+</div>
+</div><div class="question">
+<button onclick="toggleAnswer(30)"><span>30. Async database/API calls কী? কীভাবে কাজ করে?</span><span class="icon" id="icon-30">+</span></button>
+<div class="answer" id="answer-30">
+<h3>সংক্ষিপ্ত উত্তর</h3>
+<p>Async database/API call হলো async-compatible client/driver ব্যবহার করে I/O operation করা, যাতে response-এর জন্য অপেক্ষার সময় event loop অন্য async task চালাতে পারে।</p>
+<h3>Async API example</h3>
+<pre><code>import asyncio
+import httpx
+
+async def fetch_user(client, user_id):
+    response = await client.get(
+        f"https://example.com/users/{user_id}"
+    )
+    return response.json()
+
+async def main():
+    async with httpx.AsyncClient() as client:
+        users = await asyncio.gather(
+            fetch_user(client, 1),
+            fetch_user(client, 2),
+            fetch_user(client, 3),
+        )
+        print(users)
+
+asyncio.run(main())</code></pre>
+<h3>Flow</h3>
+<div class="flow">Async application<br>↓<br>Async API request<br>↓<br>await network I/O<br>↓<br>Event Loop অন্য task চালায়<br>↓<br>Response ready<br>↓<br>Coroutine resume করে</div>
+<h3>Async database example</h3>
+<pre><code>from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+async def get_users(session: AsyncSession):
+    result = await session.execute(
+        select(User)
+    )
+    users = result.scalars().all()
+    return users</code></pre>
+<p><code>await session.execute(...)</code> database I/O-এর জন্য asynchronous waiting point।</p>
+<h3>সবচেয়ে গুরুত্বপূর্ণ</h3>
+<p>শুধু function-এর সামনে <code>async</code> লিখলেই database/API call asynchronous হয় না। Underlying library/driver-ও async-compatible হতে হবে।</p>
+<div class="warning"><strong>Wrong:</strong><pre><code>async def get_data():
+    response = requests.get(url)  # blocking
+    return response</code></pre>এটি async function হলেও <code>requests.get()</code> blocking call; এটি event loop block করতে পারে।</div>
+<h3>কখন useful?</h3>
+<ul><li>High-concurrency API server</li><li>অনেক external API call</li><li>Concurrent database I/O</li><li>Network-heavy services</li><li>WebSocket ও long-lived connections</li></ul>
+<div class="highlight"><strong>Interview line:</strong> Async database/API calls use async-compatible clients and awaitable I/O so the event loop can handle other tasks while waiting for database or network responses.</div>
+</div>
+</div>
+<div class="footer">Python Asyncio — Interview Preparation · Questions 21–30</div>
+</div>
+<script>
+function toggleAnswer(id){
+ const answer=document.getElementById("answer-"+id);
+ const icon=document.getElementById("icon-"+id);
+ const isOpen=answer.classList.contains("open");
+ answer.classList.toggle("open");
+ icon.textContent=isOpen?"+":"−";
+}
+</script>
+</body></html>
