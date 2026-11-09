@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Python OOP interview questions with detailed Bangla explanations and practical examples.">
+  <title>Python OOP — Interview Questions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --text: #172033;
+      --muted: #5d687b;
+      --border: #e2e7ef;
+      --accent: #315ee8;
+      --accent-soft: #edf2ff;
+      --code-bg: #10151f;
+      --code-text: #e6edf7;
+      --green: #a6e3a1;
+      --yellow: #f9e2af;
+      --purple: #cba6f7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Noto Sans Bengali", Inter, sans-serif;
+      line-height: 1.78;
+    }
+    .container { width: min(940px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 54px 0 28px; }
+    .eyebrow {
+      display: inline-block; color: var(--accent); background: var(--accent-soft);
+      padding: 5px 12px; border-radius: 999px; font: 600 12px Inter, sans-serif;
+      letter-spacing: .05em; text-transform: uppercase;
+    }
+    h1 { margin: 16px 0 8px; font-size: clamp(30px, 5vw, 44px); line-height: 1.25; }
+    .intro { color: var(--muted); max-width: 760px; margin: 0; }
+    .meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .meta {
+      border: 1px solid var(--border); background: var(--surface); border-radius: 8px;
+      padding: 6px 11px; color: var(--muted); font-size: 13px;
+    }
+    .toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin: 20px 0 14px;
+    }
+    .toolbar p { color: var(--muted); font-size: 13px; margin: 0; }
+    button {
+      font: inherit; cursor: pointer; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); border-radius: 8px;
+      padding: 8px 12px;
+    }
+    button:hover { border-color: var(--accent); color: var(--accent); }
+    .question {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      margin: 12px 0; overflow: hidden; box-shadow: 0 2px 8px rgba(22, 34, 55, .025);
+    }
+    .question summary {
+      list-style: none; cursor: pointer; display: flex; align-items: center;
+      gap: 14px; padding: 17px 19px; font-weight: 600; line-height: 1.55;
+    }
+    .question summary::-webkit-details-marker { display: none; }
+    .number {
+      flex: 0 0 30px; height: 30px; display: grid; place-items: center;
+      border-radius: 8px; background: var(--accent-soft); color: var(--accent);
+      font: 700 13px Inter, sans-serif;
+    }
+    .q-title { flex: 1; }
+    .chevron {
+      width: 9px; height: 9px; border-right: 2px solid #7b8798;
+      border-bottom: 2px solid #7b8798; transform: rotate(45deg);
+      transition: transform .2s ease; margin: 0 4px 5px 8px;
+    }
+    details[open] .chevron { transform: rotate(225deg); margin-bottom: -4px; }
+    .answer { border-top: 1px solid var(--border); padding: 20px 22px 24px; }
+    .answer h3 { font-size: 17px; margin: 20px 0 7px; }
+    .answer h3:first-child { margin-top: 0; }
+    .answer p { margin: 7px 0 12px; }
+    .answer ul, .answer ol { padding-left: 24px; margin: 7px 0 14px; }
+    .answer li { margin: 5px 0; }
+    .callout {
+      background: #f0f5ff; border-left: 3px solid var(--accent);
+      padding: 11px 14px; border-radius: 0 8px 8px 0; margin: 14px 0;
+    }
+    .warning {
+      background: #fff8e8; border-left: 3px solid #d69e26;
+      padding: 11px 14px; border-radius: 0 8px 8px 0; margin: 14px 0;
+    }
+    .code-wrap {
+      margin: 14px 0 18px; border-radius: 10px; overflow: hidden;
+      background: var(--code-bg); border: 1px solid #252d3b;
+    }
+    .code-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 13px; background: #1a2230; color: #aeb9ca;
+      font: 500 11px Inter, sans-serif; letter-spacing: .04em;
+    }
+    .copy-btn {
+      padding: 4px 9px; border: 1px solid #3a4659; background: #242e3e;
+      color: #dce5f2; font: 12px Inter, sans-serif; border-radius: 6px;
+    }
+    pre {
+      margin: 0; padding: 16px; overflow-x: auto; color: var(--code-text);
+      font: 13px/1.7 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      tab-size: 4;
+    }
+    code { font-family: "SFMono-Regular", Consolas, monospace; }
+    p code, li code {
+      background: #eef1f6; padding: 2px 5px; border-radius: 4px;
+      color: #24324a; font-size: .92em;
+    }
+    .kw { color: #cba6f7; } .fn { color: #89b4fa; }
+    .str { color: #a6e3a1; } .cm { color: #8793a5; font-style: italic; }
+    .key-points {
+      border: 1px solid var(--border); border-radius: 8px; padding: 12px 15px;
+      margin-top: 14px; background: #fbfcfe;
+    }
+    .key-points strong { color: var(--accent); }
+    footer { color: var(--muted); text-align: center; padding: 34px 0 45px; font-size: 13px; }
+    @media (max-width: 600px) {
+      header { padding-top: 34px; }
+      .answer { padding: 17px 15px 20px; }
+      .question summary { padding: 14px; }
+      .toolbar { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header class="container">
+    <span class="eyebrow">Python Interview Preparation</span>
+    <h1>Python OOP — 10 টি গুরুত্বপূর্ণ Interview Question</h1>
+  </header>
+
+  <main class="container">
+
+    <details class="question">
+      <summary><span class="number">01</span><span class="q-title">Class vs Object — Class এবং Object-এর মধ্যে পার্থক্য কী?</span><span class="chevron"></span></summary>
+      <div class="answer">
+        <h3>মূল ধারণা</h3>
+        <p><strong>Class</strong> হলো user-defined type বা blueprint, যেখানে কোনো ধরনের object-এর data এবং behavior define করা হয়। <strong>Object</strong> হলো সেই class থেকে তৈরি হওয়া নির্দিষ্ট instance। Class বলে object-এর কী কী attribute ও method থাকতে পারে; object সেই structure অনুযায়ী নিজের state ধারণ করে।</p>
+        <div class="callout"><strong>সহজ উদাহরণ:</strong> `Car` class-এ `brand`, `color` এবং `start()` define করা থাকতে পারে। `Toyota`-র একটি গাড়ি এবং `Honda`-র আরেকটি গাড়ি হলো ওই class-এর আলাদা object।</div>
+        <h3>Code Example</h3>
+        <div class="code-wrap"><div class="code-head"><span>PYTHON 3</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Car:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, brand, color):
+        self.brand = brand
+        self.color = color
+
+    <span class="kw">def</span> <span class="fn">start</span>(self):
+        <span class="kw">return</span> <span class="str">f"{self.brand} is starting"</span>
+
+
+car_one = Car(<span class="str">"Toyota"</span>, <span class="str">"Black"</span>)
+car_two = Car(<span class="str">"Honda"</span>, <span class="str">"White"</span>)
+
+<span class="fn">print</span>(car_one.brand)  <span class="cm"># Toyota</span>
+<span class="fn">print</span>(car_two.brand)  <span class="cm"># Honda</span>
+<span class="fn">print</span>(car_one.start())</code></pre></div>
+        <h3>Internal Working</h3>
+        <ul>
+          <li><code>class Car:</code> execute হলে Python একটি class object তৈরি করে এবং নাম <code>Car</code>-কে সেই object-এর সঙ্গে bind করে।</li>
+          <li><code>Car(...)</code> call করলে সাধারণত class-এর metaclass machinery object তৈরি করে; স্বাভাবিক ক্ষেত্রে <code>__new__()</code> allocation করে এবং <code>__init__()</code> নতুন object initialize করে।</li>
+          <li><code>car_one</code> এবং <code>car_two</code> একই class-এর instance, কিন্তু তাদের instance attribute আলাদা।</li>
+        </ul>
+        <h3>Common Confusion</h3>
+        <p>একটি class থেকে অনেক object তৈরি করা যায়। Class নিজে কোনো নির্দিষ্ট গাড়ি নয়; এটি গাড়ির object তৈরির structure। আবার Python-এ class-ও object—এটি একটি গুরুত্বপূর্ণ advanced detail।</p>
+        <div class="key-points"><strong>Interview answer:</strong> Class হলো object তৈরির blueprint বা user-defined type; object হলো class-এর concrete instance, যার নিজস্ব state থাকতে পারে এবং class-এ define করা behavior ব্যবহার করতে পারে।</div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">02</span><span class="q-title">What is __init__() in Python?</span><span class="chevron"></span></summary>
+      <div class="answer">
+        <h3>মূল ধারণা</h3>
+        <p><code>__init__()</code> হলো একটি special instance method, যেটি নতুন object তৈরি হওয়ার পর object-টিকে initialize করে। সাধারণত instance attribute-এর initial value এখানে set করা হয়। একে প্রায়ই constructor বলা হয়, তবে technicalভাবে Python-এর object creation method হলো <code>__new__()</code>; <code>__init__()</code> initializer।</p>
+        <h3>Code Example</h3>
+        <div class="code-wrap"><div class="code-head"><span>PYTHON 3</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Employee:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, salary):
+        self.name = name
+        self.salary = salary
+
+employee = Employee(<span class="str">"Anik"</span>, 50000)
+
+<span class="fn">print</span>(employee.name)    <span class="cm"># Anik</span>
+<span class="fn">print</span>(employee.salary)  <span class="cm"># 50000</span></code></pre></div>
+        <h3>কীভাবে কাজ করে?</h3>
+        <ol>
+          <li><code>Employee("Anik", 50000)</code> call করা হয়।</li>
+          <li>Python class-এর <code>__new__()</code> call করে instance তৈরি করে।</li>
+          <li>Instance তৈরি হলে Python সেই instance-কে প্রথম argument হিসেবে দিয়ে <code>__init__()</code> call করে।</li>
+          <li><code>self.name</code> ও <code>self.salary</code> assignment-এর মাধ্যমে instance-এর attribute তৈরি হয়।</li>
+        </ol>
+        <h3>গুরুত্বপূর্ণ নিয়ম</h3>
+        <ul>
+          <li><code>__init__()</code> থেকে <code>None</code> return করতে হয়; অন্য value return করলে <code>TypeError</code> হয়। Explicit <code>return</code> না থাকলেও Python implicitভাবে <code>None</code> return করে।</li>
+          <li>একটি class-এ সাধারণত একটি কার্যকর <code>__init__</code> definition থাকে। একই নামের method আবার define করলে আগের definition overwrite হয়।</li>
+          <li>Subclass চাইলে parent-এর initializer call করতে <code>super().__init__(...)</code> ব্যবহার করতে পারে।</li>
+        </ul>
+        <div class="code-wrap"><div class="code-head"><span>INHERITANCE EXAMPLE</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Person:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name):
+        self.name = name
+
+<span class="kw">class</span> Developer(Person):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, language):
+        <span class="fn">super</span>().__init__(name)
+        self.language = language</code></pre></div>
+        <div class="warning"><strong>Common confusion:</strong> <code>__init__()</code> object allocate করে না। Object creation-এর কাজ <code>__new__()</code>-এর; <code>__init__()</code> তৈরি হওয়া instance initialize করে।</div>
+        <div class="key-points"><strong>Interview answer:</strong> <code>__init__()</code> হলো initializer method, যা newly created instance-এর initial state set করে। Object allocation করে <code>__new__()</code>, তারপর initialization-এর জন্য <code>__init__()</code> চলে।</div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">03</span><span class="q-title">What is self in Python?</span><span class="chevron"></span></summary>
+      <div class="answer">
+        <h3>মূল ধারণা</h3>
+        <p><code>self</code> হলো instance method-এর conventional first parameter। Method call-এর সময় যে instance দিয়ে method call করা হয়, Python সেই instance-টিকে automatically first argument হিসেবে pass করে। <code>self</code> Python keyword নয়; এটি প্রচলিত naming convention।</p>
+        <h3>Code Example</h3>
+        <div class="code-wrap"><div class="code-head"><span>PYTHON 3</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Student:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name):
+        self.name = name
+
+    <span class="kw">def</span> <span class="fn">introduce</span>(self):
+        <span class="kw">return</span> <span class="str">f"My name is {self.name}"</span>
+
+student = Student(<span class="str">"Anik"</span>)
+
+<span class="cm"># Instance দিয়ে call</span>
+student.introduce()
+
+<span class="cm"># Class দিয়ে equivalent call</span>
+Student.introduce(student)</code></pre></div>
+        <h3>Internal Working: method binding</h3>
+        <p>Class-এর function-কে instance-এর মাধ্যমে access করলে Python descriptor mechanism-এর মাধ্যমে একটি bound method তৈরি করে। এই bound method call করার সময় instance-টি প্রথম argument হিসেবে pass হয়। তাই <code>student.introduce()</code> কার্যত <code>Student.introduce(student)</code>-এর সমতুল্য।</p>
+        <h3>কেন self প্রয়োজন?</h3>
+        <ul>
+          <li>কোন instance-এর attribute access বা update হবে, তা বোঝায়।</li>
+          <li>একই class-এর একাধিক instance-এর state আলাদা রাখতে সাহায্য করে।</li>
+          <li>Instance method-এর মধ্যে অন্য instance method call করা যায়, যেমন <code>self.calculate_total()</code>।</li>
+        </ul>
+        <div class="warning"><strong>মনে রাখা জরুরি:</strong> <code>self</code> নামটি বাধ্যতামূলক syntax নয়, কিন্তু convention হিসেবে <code>self</code> ব্যবহার করাই Python community standard। অন্য নাম technically কাজ করলেও তা avoid করা উচিত।</div>
+        <div class="key-points"><strong>Interview answer:</strong> <code>self</code> হলো current instance-কে reference করা instance-method parameter। Instance দিয়ে method call করলে Python instance-টিকে automatically pass করে; <code>self</code> keyword নয়, convention।</div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">04</span><span class="q-title">Instance Variables vs Class Variables</span><span class="chevron"></span></summary>
+      <div class="answer">
+        <h3>মূল ধারণা</h3>
+        <p><strong>Instance variable</strong> নির্দিষ্ট object-এর state রাখে। সাধারণত <code>self.attribute</code> দিয়ে initialize বা assign করা হয়। <strong>Class variable</strong> class-এর namespace-এ define করা হয় এবং class-এর instance-গুলোর মধ্যে shared value হিসেবে ব্যবহৃত হতে পারে।</p>
+        <div class="code-wrap"><div class="code-head"><span>PYTHON 3</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Employee:
+    company = <span class="str">"Divine IT"</span>  <span class="cm"># Class variable</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, salary):
+        self.name = name          <span class="cm"># Instance variable</span>
+        self.salary = salary      <span class="cm"># Instance variable</span>
+
+emp1 = Employee(<span class="str">"Rahim"</span>, 40000)
+emp2 = Employee(<span class="str">"Karim"</span>, 50000)
+
+<span class="fn">print</span>(emp1.company)  <span class="cm"># Divine IT</span>
+<span class="fn">print</span>(emp2.company)  <span class="cm"># Divine IT</span>
+
+emp1.salary = 45000
+Employee.company = <span class="str">"New Company"</span>
+
+<span class="fn">print</span>(emp1.salary)   <span class="cm"># 45000</span>
+<span class="fn">print</span>(emp2.salary)   <span class="cm"># 50000</span>
+<span class="fn">print</span>(emp1.company)  <span class="cm"># New Company</span>
+<span class="fn">print</span>(emp2.company)  <span class="cm"># New Company</span></code></pre></div>
+        <h3>Attribute lookup কীভাবে কাজ করে?</h3>
+        <p>সাধারণ instance attribute read করার সময় Python প্রথমে instance-এর attribute storage-এ খোঁজে; না পেলে class এবং inheritance lookup chain-এ খোঁজে। তাই instance-এ <code>company</code> নামে নতুন attribute assign করলে class variable overwrite হয় না—instance-level attribute তৈরি হয় এবং সেটিই ওই instance-এর read-এ অগ্রাধিকার পায়।</p>
+        <div class="code-wrap"><div class="code-head"><span>SHADOWING EXAMPLE</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Employee:
+    company = <span class="str">"Divine IT"</span>
+
+emp = Employee()
+emp.company = <span class="str">"Personal Value"</span>
+
+<span class="fn">print</span>(emp.company)          <span class="cm"># Personal Value</span>
+<span class="fn">print</span>(Employee.company)    <span class="cm"># Divine IT</span></code></pre></div>
+        <h3>Mutable class variable-এর সতর্কতা</h3>
+        <p>Class variable হিসেবে list বা dictionary রাখলে এবং instance থেকে সেটিকে mutate করলে shared object-টিই পরিবর্তিত হয়। ফলে সব instance সেই পরিবর্তন দেখতে পারে। Per-instance mutable data দরকার হলে <code>__init__()</code>-এর মধ্যে নতুন list/dict তৈরি করা উচিত।</p>
+        <div class="code-wrap"><div class="code-head"><span>SAFE INSTANCE DATA</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Team:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.members = []  <span class="cm"># প্রতিটি object-এর আলাদা list</span></code></pre></div>
+        <div class="key-points"><strong>Interview answer:</strong> Instance variable প্রতিটি object-এর নিজস্ব state রাখে; class variable class-level attribute, যা instance-গুলো সাধারণত sharedভাবে access করে। তবে instance assignment একই নামের instance attribute তৈরি করে class variable-কে shadow করতে পারে।</div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">05</span><span class="q-title">Instance Method vs Class Method vs Static Method</span><span class="chevron"></span></summary>
+      <div class="answer">
+        <h3>তিন ধরনের method-এর মূল পার্থক্য</h3>
+        <ul>
+          <li><strong>Instance method:</strong> প্রথম parameter convention অনুযায়ী <code>self</code>; instance state নিয়ে কাজ করে।</li>
+          <li><strong>Class method:</strong> <code>@classmethod</code> দিয়ে declare করা হয়; প্রথম parameter convention অনুযায়ী <code>cls</code>, অর্থাৎ যে class দিয়ে method call হয়েছে।</li>
+          <li><strong>Static method:</strong> <code>@staticmethod</code> দিয়ে declare করা হয়; automatic <code>self</code> বা <code>cls</code> পায় না। এটি class namespace-এর সঙ্গে সম্পর্কিত utility function হিসেবে রাখা যায়।</li>
+        </ul>
+        <div class="code-wrap"><div class="code-head"><span>PYTHON 3</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Employee:
+    company = <span class="str">"Divine IT"</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name):
+        self.name = name
+
+    <span class="cm"># Instance method</span>
+    <span class="kw">def</span> <span class="fn">get_name</span>(self):
+        <span class="kw">return</span> self.name
+
+    <span class="cm"># Class method</span>
+    @classmethod
+    <span class="kw">def</span> <span class="fn">change_company</span>(cls, new_name):
+        cls.company = new_name
+
+    <span class="cm"># Static method</span>
+    @staticmethod
+    <span class="kw">def</span> <span class="fn">is_valid_name</span>(name):
+        <span class="kw">return</span> <span class="fn">isinstance</span>(name, str) <span class="kw">and</span> <span class="fn">bool</span>(name.strip())
+
+
+employee = Employee(<span class="str">"Anik"</span>)
+<span class="fn">print</span>(employee.get_name())
+Employee.change_company(<span class="str">"Example Ltd"</span>)
+<span class="fn">print</span>(Employee.company)
+<span class="fn">print</span>(Employee.is_valid_name(<span class="str">"Anik"</span>))</code></pre></div>
+        <h3>Class method কেন useful?</h3>
+        <p>একটি common use case হলো alternative constructor বা factory method। যেমন string থেকে Employee object তৈরি করা। এখানে <code>cls</code> ব্যবহার করায় subclass দিয়ে inherited class method call করলেও সাধারণত subclass-ই instantiate হয়।</p>
+        <div class="code-wrap"><div class="code-head"><span>ALTERNATIVE CONSTRUCTOR</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Employee:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, salary):
+        self.name = name
+        self.salary = salary
+
+    @classmethod
+    <span class="kw">def</span> <span class="fn">from_string</span>(cls, value):
+        name, salary = value.split(<span class="str">","</span>)
+        <span class="kw">return</span> cls(name, <span class="fn">int</span>(salary))
+
+emp = Employee.from_string(<span class="str">"Anik,50000"</span>)</code></pre></div>
+        <h3>কখন কোনটি ব্যবহার করা হয়?</h3>
+        <ul>
+          <li>Instance-এর data read/update করতে: instance method।</li>
+          <li>Class-level state বা alternative constructor নিয়ে কাজ করতে: class method।</li>
+          <li>শুধু input নিয়ে কাজ করে, instance/class state লাগে না—এমন related utility: static method।</li>
+        </ul>
+        <div class="warning"><strong>Common confusion:</strong> Static method শুধু class-এর ভেতরে লেখা বলে instance method হয়ে যায় না। এটিকে class বা instance—দুইভাবেই call করা যায়, কিন্তু Python automaticভাবে <code>self</code>/<code>cls</code> bind করে না।</div>
+        <div class="key-points"><strong>Interview answer:</strong> Instance method instance পায়, class method calling class পায়, আর static method automatic কোনো instance বা class argument পায় না। পার্থক্যটি মূলত method binding এবং কোন state access করার প্রয়োজন তার উপর নির্ভর করে।</div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">06</span><span class="q-title">What is Encapsulation in Python?</span><span class="chevron"></span></summary>
+      <div class="answer">
+        <h3>মূল ধারণা</h3>
+        <p><strong>Encapsulation</strong> হলো data এবং সেই data-র উপর কাজ করা behavior-কে একটি unit—যেমন class—এর মধ্যে রাখা, এবং object-এর state কীভাবে access বা change হবে তার interface নির্ধারণ করা। এর উদ্দেশ্য হলো valid state বজায় রাখা, implementation detail আড়ালে রাখা এবং uncontrolled modification কমানো।</p>
+        <h3>Python-এ access convention</h3>
+        <ul>
+          <li><code>name</code>: public attribute—সাধারণভাবে সরাসরি access করার জন্য।</li>
+          <li><code>_name</code>: single leading underscore—এটি non-public/internal ব্যবহারের convention; language-level access restriction নয়।</li>
+          <li><code>__name</code>: double leading underscore—class-এর ভেতরে name mangling হয়, যেমন <code>_Account__balance</code>। এটি কঠোর private access control নয়; accidental name collision কমাতে সাহায্য করে।</li>
+        </ul>
+        <h3>Property দিয়ে controlled access</h3>
+        <div class="code-wrap"><div class="code-head"><span>PYTHON 3</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> BankAccount:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, initial_balance):
+        self._balance = 0
+        self.deposit(initial_balance)
+
+    @property
+    <span class="kw">def</span> <span class="fn">balance</span>(self):
+        <span class="kw">return</span> self._balance
+
+    <span class="kw">def</span> <span class="fn">deposit</span>(self, amount):
+        <span class="kw">if</span> amount <= 0:
+            <span class="kw">raise</span> ValueError(<span class="str">"Amount must be positive"</span>)
+        self._balance += amount
+
+    <span class="kw">def</span> <span class="fn">withdraw</span>(self, amount):
+        <span class="kw">if</span> amount <= 0:
+            <span class="kw">raise</span> ValueError(<span class="str">"Amount must be positive"</span>)
+        <span class="kw">if</span> amount > self._balance:
+            <span class="kw">raise</span> ValueError(<span class="str">"Insufficient balance"</span>)
+        self._balance -= amount
+
+
+account = BankAccount(1000)
+account.deposit(500)
+account.withdraw(200)
+<span class="fn">print</span>(account.balance)  <span class="cm"># 1300</span></code></pre></div>
+        <p>এখানে public interface হলো <code>deposit()</code>, <code>withdraw()</code> এবং read-only <code>balance</code> property। Internal attribute <code>_balance</code> সরাসরি modify না করে method দিয়ে পরিবর্তনের convention রাখা হয়েছে।</p>
+        <div class="warning"><strong>Python-specific note:</strong> Python Java/C++-এর মতো সাধারণ private field enforcement দেয় না। <code>_balance</code> convention মাত্র; code চাইলে <code>account._balance</code> access করতে পারে। তাই encapsulation মূলত API design, convention এবং validation-এর সমন্বয়।</div>
+        <div class="key-points"><strong>Interview answer:</strong> Encapsulation data ও behavior-কে class-এর মধ্যে সংগঠিত করে এবং controlled interface দিয়ে state access/change করতে উৎসাহিত করে। Python-এ underscore convention, name mangling এবং <code>@property</code> ব্যবহার করা হয়; এগুলো strict security boundary নয়।</div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">07</span><span class="q-title">What is Inheritance in Python?</span><span class="chevron"></span></summary>
+      <div class="answer">
+        <h3>মূল ধারণা</h3>
+        <p><strong>Inheritance</strong> হলো এমন একটি mechanism, যেখানে একটি class অন্য class-এর attribute ও method inherit করে। যে class inherit করে সেটি subclass/child class; যেখান থেকে inherit করে সেটি superclass/base class। এটি shared behavior reuse এবং subtype relationship প্রকাশ করতে পারে।</p>
+        <div class="code-wrap"><div class="code-head"><span>PYTHON 3</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Animal:
+    <span class="kw">def</span> <span class="fn">eat</span>(self):
+        <span class="kw">return</span> <span class="str">"Eating"</span>
+
+<span class="kw">class</span> Dog(Animal):
+    <span class="kw">def</span> <span class="fn">bark</span>(self):
+        <span class="kw">return</span> <span class="str">"Woof!"</span>
+
+dog = Dog()
+<span class="fn">print</span>(dog.eat())   <span class="cm"># Inherited method</span>
+<span class="fn">print</span>(dog.bark())  <span class="cm"># Dog's own method</span></code></pre></div>
+        <h3>Method Overriding</h3>
+        <p>Subclass parent-এর method একই নামে define করলে subclass-এর implementation lookup-এ অগ্রাধিকার পায়। এটিই method overriding। Parent implementation-ও প্রয়োজন হলে <code>super()</code> দিয়ে call করা যায়।</p>
+        <div class="code-wrap"><div class="code-head"><span>OVERRIDING</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Animal:
+    <span class="kw">def</span> <span class="fn">speak</span>(self):
+        <span class="kw">return</span> <span class="str">"Some sound"</span>
+
+<span class="kw">class</span> Dog(Animal):
+    <span class="kw">def</span> <span class="fn">speak</span>(self):
+        <span class="kw">return</span> <span class="str">"Bark"</span>
+
+<span class="fn">print</span>(Dog().speak())  <span class="cm"># Bark</span></code></pre></div>
+        <h3>Inheritance-এর ধরন</h3>
+        <ul>
+          <li><strong>Single:</strong> একটি subclass একটি base class inherit করে।</li>
+          <li><strong>Multiple:</strong> একটি subclass একাধিক base class inherit করে।</li>
+          <li><strong>Multilevel:</strong> একটি class আরেকটি subclass থেকে inherit করে—যেমন A → B → C।</li>
+          <li><strong>Hierarchical:</strong> একাধিক subclass একই base class inherit করে।</li>
+          <li><strong>Hybrid:</strong> একাধিক inheritance pattern একসঙ্গে থাকে।</li>
+        </ul>
+        <h3>super() এবং MRO</h3>
+        <p><code>super()</code> শুধু “direct parent”-কে call করার shortcut নয়। এটি Method Resolution Order (MRO) অনুযায়ী পরবর্তী class-এ method lookup চালায়। Multiple inheritance-এ cooperative design-এর জন্য প্রতিটি class-এর <code>super()</code> ব্যবহার এবং compatible method signatures গুরুত্বপূর্ণ। MRO দেখতে <code>ClassName.mro()</code> ব্যবহার করা যায়।</p>
+        <div class="code-wrap"><div class="code-head"><span>MRO INSPECTION</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> A: <span class="kw">pass</span>
+<span class="kw">class</span> B(A): <span class="kw">pass</span>
+<span class="kw">class</span> C(B): <span class="kw">pass</span>
+
+<span class="fn">print</span>(C.mro())</code></pre></div>
+        <div class="warning"><strong>Design caution:</strong> শুধু code reuse করার জন্য inheritance ব্যবহার করা উচিত নয়। Subclass-কে base class-এর contract বজায় রাখতে হবে। “is-a” relationship না থাকলে composition অনেক সময় ভালো design হয়।</div>
+        <div class="key-points"><strong>Interview answer:</strong> Inheritance subclass-কে base class-এর behavior reuse বা override করতে দেয়। Python MRO দিয়ে method lookup order নির্ধারণ করে; <code>super()</code> সেই MRO-র পরবর্তী implementation-এ যেতে সাহায্য করে।</div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">08</span><span class="q-title">What is Polymorphism in Python?</span><span class="chevron"></span></summary>
+      <div class="answer">
+        <h3>মূল ধারণা</h3>
+        <p><strong>Polymorphism</strong> অর্থ একই interface বা operation বিভিন্ন object-এর ক্ষেত্রে ভিন্ন behavior দিতে পারে। Caller-কে প্রতিটি concrete class-এর internal implementation জানতে হয় না; প্রয়োজনীয় interface থাকলেই কাজ করা যায়।</p>
+        <h3>Method overriding দিয়ে polymorphism</h3>
+        <div class="code-wrap"><div class="code-head"><span>PYTHON 3</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Dog:
+    <span class="kw">def</span> <span class="fn">speak</span>(self):
+        <span class="kw">return</span> <span class="str">"Bark"</span>
+
+<span class="kw">class</span> Cat:
+    <span class="kw">def</span> <span class="fn">speak</span>(self):
+        <span class="kw">return</span> <span class="str">"Meow"</span>
+
+<span class="kw">def</span> <span class="fn">make_speak</span>(animal):
+    <span class="fn">print</span>(animal.speak())
+
+make_speak(Dog())  <span class="cm"># Bark</span>
+make_speak(Cat())  <span class="cm"># Meow</span></code></pre></div>
+        <p><code>make_speak()</code> Dog বা Cat class-এর নাম check করে না। এটি শুধু ধরে নেয় object-এ callable <code>speak()</code> method আছে। এই approach duck typing-এর একটি উদাহরণ।</p>
+        <h3>Duck Typing</h3>
+        <p>Python-এ অনেক ক্ষেত্রে object-এর exact type-এর চেয়ে object কী operation support করে সেটি বেশি গুরুত্বপূর্ণ। প্রচলিত কথাটি হলো: “If it walks like a duck and quacks like a duck, it can be treated as a duck.” অর্থাৎ প্রয়োজনীয় behavior থাকলে object-টি ব্যবহার করা যায়।</p>
+        <h3>Operator overloading</h3>
+        <p>Special method implement করে built-in operator-এর behavior custom করা যায়। যেমন <code>__add__()</code> implement করলে <code>+</code> operator object-এর জন্য নির্দিষ্ট behavior পেতে পারে।</p>
+        <div class="code-wrap"><div class="code-head"><span>OPERATOR OVERLOADING</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Money:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, amount):
+        self.amount = amount
+
+    <span class="kw">def</span> <span class="fn">__add__</span>(self, other):
+        <span class="kw">if not</span> <span class="fn">isinstance</span>(other, Money):
+            <span class="kw">return</span> NotImplemented
+        <span class="kw">return</span> Money(self.amount + other.amount)
+
+total = Money(100) + Money(50)
+<span class="fn">print</span>(total.amount)  <span class="cm"># 150</span></code></pre></div>
+        <h3>Polymorphism এবং inheritance কি একই?</h3>
+        <p>না। Inheritance হলো class-এর মধ্যে relationship ও reuse mechanism। Polymorphism হলো একই interface-এর মাধ্যমে বিভিন্ন implementation ব্যবহার করার capability। Inheritance polymorphism implement করার একটি উপায়, কিন্তু Python-এ duck typing বা Protocol-based structural typing দিয়েও polymorphic design করা যায়।</p>
+        <div class="key-points"><strong>Interview answer:</strong> Polymorphism একই interface দিয়ে ভিন্ন object-এর ভিন্ন implementation ব্যবহার করতে দেয়। Python-এ method overriding, duck typing এবং operator overloading এর পরিচিত উদাহরণ।</div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">09</span><span class="q-title">What is Abstraction in Python?</span><span class="chevron"></span></summary>
+      <div class="answer">
+        <h3>মূল ধারণা</h3>
+        <p><strong>Abstraction</strong> হলো কোনো system-এর essential operation বা contract সামনে রাখা এবং implementation detail caller-এর কাছ থেকে আড়ালে রাখা। Caller জানে কী operation পাওয়া যাবে, কিন্তু প্রতিটি implementation কীভাবে কাজ করে তা জানার প্রয়োজন হয় না।</p>
+        <h3>Python ABC দিয়ে abstraction</h3>
+        <p><code>abc</code> module-এর <code>ABC</code> এবং <code>@abstractmethod</code> ব্যবহার করে abstract base class তৈরি করা যায়। Abstract method implement না করা subclass সাধারণত instantiate করা যায় না।</p>
+        <div class="code-wrap"><div class="code-head"><span>ABSTRACT BASE CLASS</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod
+
+<span class="kw">class</span> PaymentGateway(ABC):
+    @abstractmethod
+    <span class="kw">def</span> <span class="fn">pay</span>(self, amount):
+        <span class="kw">pass</span>
+
+<span class="kw">class</span> StripeGateway(PaymentGateway):
+    <span class="kw">def</span> <span class="fn">pay</span>(self, amount):
+        <span class="kw">return</span> <span class="str">f"Paid {amount} using Stripe"</span>
+
+<span class="kw">class</span> BkashGateway(PaymentGateway):
+    <span class="kw">def</span> <span class="fn">pay</span>(self, amount):
+        <span class="kw">return</span> <span class="str">f"Paid {amount} using bKash"</span>
+
+gateway = StripeGateway()
+<span class="fn">print</span>(gateway.pay(1000))</code></pre></div>
+        <p><code>PaymentGateway</code> একটি contract define করেছে: concrete gateway-কে <code>pay()</code> implement করতে হবে। Business logic এই common interface-এর উপর নির্ভর করতে পারে, নির্দিষ্ট provider-এর implementation-এর উপর নয়।</p>
+        <h3>Abstract class বনাম normal class</h3>
+        <ul>
+          <li>Normal class সাধারণত সরাসরি instantiate করা যায়।</li>
+          <li>Abstract class-এ abstract method থাকতে পারে; abstract method implement না করা subclass instantiate করা যায় না।</li>
+          <li>Abstract class-এ concrete method, attribute এবং shared implementation-ও থাকতে পারে।</li>
+        </ul>
+        <h3>Abstraction বনাম Encapsulation</h3>
+        <p>Abstraction প্রশ্ন করে: “কোন operation বা contract expose করা হবে?” Encapsulation প্রশ্ন করে: “State এবং implementation কীভাবে organize ও controlled access-এর মধ্যে রাখা হবে?” দুটি related, কিন্তু এক নয়।</p>
+        <div class="warning"><strong>সতর্কতা:</strong> Python-এ ABC ব্যবহার করলেই implementation detail automatically secure বা hidden হয়ে যায় না। ABC মূলত interface contract enforce করতে সাহায্য করে; এটি security mechanism নয়।</div>
+        <div class="key-points"><strong>Interview answer:</strong> Abstraction essential interface expose করে এবং implementation detail caller-এর কাছ থেকে আলাদা রাখে। Python-এ <code>abc.ABC</code> ও <code>@abstractmethod</code> দিয়ে abstract contract define করা যায়।</div>
+      </div>
+    </details>
+
+    <details class="question">
+      <summary><span class="number">10</span><span class="q-title">Composition vs Inheritance — পার্থক্য কী?</span><span class="chevron"></span></summary>
+      <div class="answer">
+        <h3>মূল ধারণা</h3>
+        <p><strong>Inheritance</strong> সাধারণত “is-a” relationship প্রকাশ করে: Dog is an Animal। <strong>Composition</strong> “has-a” relationship প্রকাশ করে: Car has an Engine। Composition-এ একটি object অন্য object-কে attribute হিসেবে ধরে এবং তার behavior ব্যবহার করে।</p>
+        <h3>Inheritance example</h3>
+        <div class="code-wrap"><div class="code-head"><span>INHERITANCE</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Engine:
+    <span class="kw">def</span> <span class="fn">start</span>(self):
+        <span class="kw">return</span> <span class="str">"Engine started"</span>
+
+<span class="kw">class</span> ElectricEngine(Engine):
+    <span class="kw">pass</span>
+
+<span class="kw">class</span> Car(ElectricEngine):
+    <span class="kw">pass</span></code></pre></div>
+        <p>উপরের design-এ Car-কে Engine-এর subclass করা হয়েছে। কিন্তু বাস্তবে Car হলো Engine নয়; Car-এর একটি Engine থাকে। তাই relationship-টি inheritance দিয়ে প্রকাশ করা ঠিক model নয়।</p>
+        <h3>Composition example</h3>
+        <div class="code-wrap"><div class="code-head"><span>COMPOSITION</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Engine:
+    <span class="kw">def</span> <span class="fn">start</span>(self):
+        <span class="kw">return</span> <span class="str">"Engine started"</span>
+
+<span class="kw">class</span> Car:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, engine):
+        self.engine = engine
+
+    <span class="kw">def</span> <span class="fn">start</span>(self):
+        <span class="kw">return</span> self.engine.start()
+
+engine = Engine()
+car = Car(engine)
+
+<span class="fn">print</span>(car.start())</code></pre></div>
+        <p>এখানে <code>Car</code> object-এর মধ্যে <code>Engine</code> object রাখা হয়েছে। Car নিজের start operation-এর জন্য Engine-এর behavior delegate করছে। Engine implementation আলাদা class হওয়ায় প্রয়োজন অনুযায়ী অন্য compatible engine দেওয়া যায়।</p>
+        <h3>Comparison</h3>
+        <ul>
+          <li><strong>Relationship:</strong> Inheritance = is-a; Composition = has-a/uses-a।</li>
+          <li><strong>Reuse:</strong> Inheritance base class-এর behavior inherit করে; Composition অন্য object-এর behavior delegate করে ব্যবহার করে।</li>
+          <li><strong>Coupling:</strong> Deep inheritance hierarchy subclass-কে base class-এর design-এর সঙ্গে tightly couple করতে পারে। Composition সাধারণত dependency আলাদা করে এবং replacement সহজ করে।</li>
+          <li><strong>Flexibility:</strong> Composition-এ constructor বা setter দিয়ে dependency inject করা যায়; runtime-এ collaborator বদলানোও সম্ভব, যদি design তা support করে।</li>
+          <li><strong>Polymorphism:</strong> দুই approach-ই polymorphism support করতে পারে—inheritance subtype দিয়ে, composition collaborator-এর common interface/duck typing দিয়ে।</li>
+        </ul>
+        <h3>কখন কোনটি বেছে নেওয়া উচিত?</h3>
+        <ul>
+          <li>Subclass সত্যিই base class-এর subtype এবং base class-এর contract ঠিকভাবে মানতে পারলে inheritance ব্যবহার করা যায়।</li>
+          <li>একটি class অন্য component-এর service ব্যবহার করলে বা dependency replaceable রাখতে হলে composition ভালো পছন্দ।</li>
+          <li>শুধু code reuse-এর জন্য inheritance hierarchy তৈরি না করে composition বিবেচনা করা উচিত।</li>
+        </ul>
+        <div class="key-points"><strong>Interview answer:</strong> Inheritance “is-a” relationship এবং subtype behavior প্রকাশ করে; Composition “has-a/uses-a” relationship-এ অন্য object-এর functionality ব্যবহার করে। Flexible, loosely coupled design-এর জন্য composition প্রায়ই ভালো default choice, তবে সঠিক subtype relationship থাকলে inheritance উপযুক্ত।</div>
+      </div>
+    </details>
+
+    <section class="key-points" style="margin-top:22px">
+      <strong>দ্রুত Revision:</strong>
+      <ul>
+        <li>Class = type/blueprint; Object = instance.</li>
+        <li><code>__new__()</code> instance তৈরি করে; <code>__init__()</code> initialize করে।</li>
+        <li><code>self</code> = current instance-এর reference; keyword নয়।</li>
+        <li>Instance variable object-specific; class variable class namespace-এ থাকে।</li>
+        <li>Instance method → <code>self</code>; class method → <code>cls</code>; static method → automatic receiver নেই।</li>
+        <li>Encapsulation = state ও behavior organize করা এবং controlled interface দেওয়া।</li>
+        <li>Inheritance = subclass/base class relationship; <code>super()</code> MRO follow করে।</li>
+        <li>Polymorphism = একই interface, ভিন্ন implementation; duck typing Python-এ গুরুত্বপূর্ণ।</li>
+        <li>Abstraction = contract expose, implementation detail আলাদা রাখা।</li>
+        <li>Composition = object-এর মধ্যে অন্য object ব্যবহার; inheritance = subtype relationship।</li>
+      </ul>
+    </section>
+  </main>
+  <footer class="container">Python OOP Interview Notes · Built for learning and revision</footer>
+
+  <script>
+    const questions = [...document.querySelectorAll(".question")];
+    const toggleButton = document.getElementById("toggleAll");
+
+    toggleButton.addEventListener("click", () => {
+      const shouldOpen = questions.some(question => !question.open);
+      questions.forEach(question => { question.open = shouldOpen; });
+      toggleButton.textContent = shouldOpen ? "সব উত্তর বন্ধ করুন" : "সব উত্তর খুলুন";
+    });
+
+    questions.forEach(question => {
+      question.addEventListener("toggle", () => {
+        const allOpen = questions.every(item => item.open);
+        toggleButton.textContent = allOpen ? "সব উত্তর বন্ধ করুন" : "সব উত্তর খুলুন";
+      });
+    });
+
+    document.querySelectorAll(".copy-btn").forEach(button => {
+      button.addEventListener("click", async () => {
+        const code = button.closest(".code-wrap").querySelector("pre code").innerText;
+        try {
+          await navigator.clipboard.writeText(code);
+          button.textContent = "Copied!";
+          setTimeout(() => { button.textContent = "Copy code"; }, 1400);
+        } catch {
+          button.textContent = "Copy unavailable";
+          setTimeout(() => { button.textContent = "Copy code"; }, 1400);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

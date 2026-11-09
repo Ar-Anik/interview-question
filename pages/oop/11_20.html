@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Python OOP interview questions 11 to 20 with detailed Bangla explanations and practical examples.">
+  <title>Python OOP — Interview Questions 11–20</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg:#f5f7fb; --surface:#fff; --text:#172033; --muted:#5d687b;
+      --border:#e2e7ef; --accent:#315ee8; --accent-soft:#edf2ff;
+      --code-bg:#10151f; --code-text:#e6edf7;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans Bengali",Inter,sans-serif;line-height:1.8}
+    .container{width:min(940px,calc(100% - 32px));margin:0 auto}
+    header{padding:48px 0 26px}
+    .eyebrow{display:inline-block;color:var(--accent);background:var(--accent-soft);padding:5px 12px;border-radius:999px;font:600 12px Inter,sans-serif;letter-spacing:.05em;text-transform:uppercase}
+    h1{margin:16px 0 8px;font-size:clamp(29px,5vw,43px);line-height:1.3}
+    .intro{color:var(--muted);max-width:780px;margin:0}
+    .meta-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+    .meta{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:5px 10px;color:var(--muted);font-size:13px}
+    .toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:20px 0 14px}
+    .toolbar p{color:var(--muted);font-size:13px;margin:0}
+    button{font:inherit;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:8px;padding:8px 12px}
+    button:hover{border-color:var(--accent);color:var(--accent)}
+    .question{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin:12px 0;overflow:hidden;box-shadow:0 2px 8px rgba(22,34,55,.025)}
+    summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:17px 19px;font-weight:600;line-height:1.6}
+    summary::-webkit-details-marker{display:none}
+    .number{flex:0 0 32px;height:32px;display:grid;place-items:center;border-radius:8px;background:var(--accent-soft);color:var(--accent);font:700 12px Inter,sans-serif}
+    .q-title{flex:1}
+    .chevron{width:9px;height:9px;border-right:2px solid #7b8798;border-bottom:2px solid #7b8798;transform:rotate(45deg);transition:transform .2s;margin:0 4px 5px 8px}
+    details[open] .chevron{transform:rotate(225deg);margin-bottom:-4px}
+    .answer{border-top:1px solid var(--border);padding:20px 22px 24px}
+    .answer h3{font-size:17px;margin:21px 0 7px}
+    .answer h3:first-child{margin-top:0}
+    .answer p{margin:7px 0 12px}
+    .answer ul,.answer ol{padding-left:24px;margin:7px 0 14px}
+    .answer li{margin:5px 0}
+    .callout{background:#f0f5ff;border-left:3px solid var(--accent);padding:11px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+    .warning{background:#fff8e8;border-left:3px solid #d69e26;padding:11px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+    .code-wrap{margin:14px 0 18px;border-radius:10px;overflow:hidden;background:var(--code-bg);border:1px solid #252d3b}
+    .code-head{display:flex;justify-content:space-between;align-items:center;padding:8px 13px;background:#1a2230;color:#aeb9ca;font:500 11px Inter,sans-serif;letter-spacing:.04em}
+    .copy-btn{padding:4px 9px;border:1px solid #3a4659;background:#242e3e;color:#dce5f2;font:12px Inter,sans-serif;border-radius:6px}
+    pre{margin:0;padding:16px;overflow-x:auto;color:var(--code-text);font:13px/1.75 "SFMono-Regular",Consolas,"Liberation Mono",monospace;tab-size:4}
+    p code,li code{background:#eef1f6;padding:2px 5px;border-radius:4px;color:#24324a;font-size:.92em}
+    .kw{color:#cba6f7}.fn{color:#89b4fa}.str{color:#a6e3a1}.cm{color:#8793a5;font-style:italic}
+    .key-points{border:1px solid var(--border);border-radius:8px;padding:12px 15px;margin-top:14px;background:#fbfcfe}
+    .key-points strong{color:var(--accent)}
+    footer{color:var(--muted);text-align:center;padding:32px 0 45px;font-size:13px}
+    @media(max-width:600px){header{padding-top:32px}.answer{padding:17px 15px 20px}summary{padding:14px}.toolbar{align-items:flex-start}}
+  </style>
+</head>
+<body>
+<header class="container">
+  <span class="eyebrow">Python Interview Preparation · Part 2</span>
+  <h1>Python OOP — Interview Questions 11–20</h1>
+ </header>
+<main class="container">
+
+  <details class="question">
+    <summary><span class="number">11</span><span class="q-title">What is Method Overriding in Python?</span><span class="chevron"></span></summary>
+    <div class="answer">
+      <h3>মূল ধারণা</h3>
+      <p>Method Overriding ঘটে যখন subclass তার parent বা base class-এ থাকা method-এর একই নাম দিয়ে নিজের implementation define করে। Subclass-এর object দিয়ে method call করলে Python-এর method lookup order অনুযায়ী subclass-এর implementation আগে পাওয়া যায়। ফলে inherited behavior-এর পরিবর্তে subclass-এর behavior চলে।</p>
+      <div class="callout"><strong>কেন প্রয়োজন?</strong> Parent class-এ common/default behavior রাখা যায়, আর subclass-এ প্রয়োজন অনুযায়ী সেই behavior customize করা যায়—parent class-এর code edit না করেই।</div>
+      <h3>Code Example</h3>
+      <div class="code-wrap"><div class="code-head"><span>PYTHON 3 · OVERRIDING</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Notification:
+    <span class="kw">def</span> <span class="fn">send</span>(self, message):
+        <span class="kw">return</span> <span class="str">f"Sending generic notification: {message}"</span>
+
+
+<span class="kw">class</span> EmailNotification(Notification):
+    <span class="kw">def</span> <span class="fn">send</span>(self, message):
+        <span class="kw">return</span> <span class="str">f"Sending email: {message}"</span>
+
+
+<span class="kw">class</span> SMSNotification(Notification):
+    <span class="kw">def</span> <span class="fn">send</span>(self, message):
+        <span class="kw">return</span> <span class="str">f"Sending SMS: {message}"</span>
+
+
+email = EmailNotification()
+sms = SMSNotification()
+
+<span class="fn">print</span>(email.send(<span class="str">"Hello"</span>))
+<span class="fn">print</span>(sms.send(<span class="str">"Hello"</span>))</code></pre></div>
+      <h3>Internal Working</h3>
+      <ol>
+        <li><code>EmailNotification</code> class <code>Notification</code>-কে inherit করেছে।</li>
+        <li><code>EmailNotification</code>-এ <code>send()</code> নিজস্বভাবে define করা আছে।</li>
+        <li><code>email.send()</code> call হলে Python instance-এর class থেকে method lookup শুরু করে।</li>
+        <li>Subclass-এ method পাওয়া যাওয়ায় parent-এর <code>send()</code> call হয় না।</li>
+      </ol>
+      <h3>Parent-এর implementation-ও ব্যবহার করা</h3>
+      <p>Override করা method-এর ভেতর <code>super()</code> দিয়ে পরবর্তী implementation call করা যায়। এটি শুধু direct parent-এ থেমে থাকে না; MRO অনুযায়ী next class-এ যায়।</p>
+      <div class="code-wrap"><div class="code-head"><span>USING super()</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> BaseReport:
+    <span class="kw">def</span> <span class="fn">generate</span>(self):
+        <span class="kw">return</span> <span class="str">"Base report"</span>
+
+
+<span class="kw">class</span> SalesReport(BaseReport):
+    <span class="kw">def</span> <span class="fn">generate</span>(self):
+        base_result = <span class="fn">super</span>().generate()
+        <span class="kw">return</span> base_result + <span class="str">" + Sales data"</span>
+
+
+<span class="fn">print</span>(SalesReport().generate())</code></pre></div>
+      <h3>Overriding vs Overloading</h3>
+      <ul>
+        <li><strong>Overriding:</strong> Subclass parent-এর method-এর implementation replace বা extend করে।</li>
+        <li><strong>Overloading:</strong> একই নামের function/method ভিন্ন parameter signature অনুযায়ী আলাদা implementation—এটি Java/C++-এর মতো traditional compile-time method overloading Python সরাসরি support করে না।</li>
+      </ul>
+      <p>Python-এ default argument, <code>*args</code>/<code>**kwargs</code>, অথবা <code>functools.singledispatch</code> দিয়ে কিছু related behavior করা যায়; এগুলো traditional method overloading-এর সঙ্গে এক নয়।</p>
+      <div class="key-points"><strong>Interview answer:</strong> Method overriding হলো subclass-এ inherited method-এর একই নাম দিয়ে নতুন implementation define করা। Subclass object দিয়ে call করলে MRO অনুযায়ী subclass-এর method আগে resolve হয়। Parent implementation দরকার হলে <code>super()</code> ব্যবহার করা যায়।</div>
+    </div>
+  </details>
+
+  <details class="question">
+    <summary><span class="number">12</span><span class="q-title">What is Multiple Inheritance in Python?</span><span class="chevron"></span></summary>
+    <div class="answer">
+      <h3>মূল ধারণা</h3>
+      <p>Multiple Inheritance হলো Python-এর এমন capability, যেখানে একটি class একাধিক base class inherit করতে পারে। ফলে subclass একাধিক parent class থেকে method ও attribute পেতে পারে।</p>
+      <div class="code-wrap"><div class="code-head"><span>PYTHON 3 · MULTIPLE INHERITANCE</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Camera:
+    <span class="kw">def</span> <span class="fn">take_photo</span>(self):
+        <span class="kw">return</span> <span class="str">"Photo captured"</span>
+
+
+<span class="kw">class</span> Phone:
+    <span class="kw">def</span> <span class="fn">make_call</span>(self):
+        <span class="kw">return</span> <span class="str">"Calling..."</span>
+
+
+<span class="kw">class</span> SmartPhone(Camera, Phone):
+    <span class="kw">pass</span>
+
+
+device = SmartPhone()
+<span class="fn">print</span>(device.take_photo())
+<span class="fn">print</span>(device.make_call())</code></pre></div>
+      <p><code>SmartPhone</code> একই সঙ্গে <code>Camera</code> এবং <code>Phone</code>-এর behavior ব্যবহার করতে পারে। এখানে দুই parent-এর method name আলাদা, তাই method lookup নিয়ে conflict হচ্ছে না।</p>
+      <h3>Method name conflict হলে কী হয়?</h3>
+      <p>দুই parent class-এ একই method name থাকলে কোন implementation আগে পাওয়া যাবে তা MRO নির্ধারণ করে। Class declaration-এ base class-এর order গুরুত্বপূর্ণ।</p>
+      <div class="code-wrap"><div class="code-head"><span>METHOD CONFLICT</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> A:
+    <span class="kw">def</span> <span class="fn">show</span>(self):
+        <span class="kw">return</span> <span class="str">"A"</span>
+
+
+<span class="kw">class</span> B:
+    <span class="kw">def</span> <span class="fn">show</span>(self):
+        <span class="kw">return</span> <span class="str">"B"</span>
+
+
+<span class="kw">class</span> C(A, B):
+    <span class="kw">pass</span>
+
+
+<span class="fn">print</span>(C().show())  <span class="cm"># A</span>
+<span class="fn">print</span>(C.mro())</code></pre></div>
+      <h3>Diamond Problem</h3>
+      <p>Diamond problem হয় যখন দুটি class একই base class inherit করে এবং আরেকটি class ওই দুই class-কে inherit করে। তখন common ancestor-এর method কোন পথে এবং কতবার execute হবে—এ প্রশ্ন আসে। Python MRO এবং cooperative <code>super()</code> call দিয়ে method execution-এর একটি consistent order বজায় রাখে।</p>
+      <div class="code-wrap"><div class="code-head"><span>DIAMOND SHAPE</span><button class="copy-btn">Copy code</button></div><pre><code>        A
+       / \
+      B   C
+       \ /
+        D
+
+<span class="kw">class</span> A: <span class="kw">pass</span>
+<span class="kw">class</span> B(A): <span class="kw">pass</span>
+<span class="kw">class</span> C(A): <span class="kw">pass</span>
+<span class="kw">class</span> D(B, C): <span class="kw">pass</span>
+
+<span class="fn">print</span>(D.mro())</code></pre></div>
+      <h3>Multiple Inheritance-এর সতর্কতা</h3>
+      <ul>
+        <li>Parent class-গুলোর method name conflict হতে পারে।</li>
+        <li>Cooperative multiple inheritance-এ প্রতিটি class-এর <code>super()</code> ব্যবহার এবং compatible method signature গুরুত্বপূর্ণ।</li>
+        <li>অতিরিক্ত জটিল inheritance chain code বুঝতে কঠিন করতে পারে।</li>
+        <li>অনেক ক্ষেত্রে composition দিয়ে dependency রাখা সহজ হয়।</li>
+      </ul>
+      <div class="key-points"><strong>Interview answer:</strong> Multiple inheritance-এ একটি class একাধিক base class inherit করে। Python MRO দিয়ে method lookup order ঠিক করে। Diamond problem সামলাতে cooperative <code>super()</code> ও consistent method signature গুরুত্বপূর্ণ।</div>
+    </div>
+  </details>
+
+  <details class="question">
+    <summary><span class="number">13</span><span class="q-title">What is MRO (Method Resolution Order)?</span><span class="chevron"></span></summary>
+    <div class="answer">
+      <h3>মূল ধারণা</h3>
+      <p>MRO-এর পূর্ণরূপ <strong>Method Resolution Order</strong>। কোনো object-এর method বা attribute খোঁজার সময় Python class hierarchy-র কোন order অনুসরণ করবে, সেটিই MRO নির্ধারণ করে। Single inheritance-এ order সহজ; multiple inheritance-এ ambiguity এড়াতে MRO বিশেষ গুরুত্বপূর্ণ।</p>
+      <h3>Simple Example</h3>
+      <div class="code-wrap"><div class="code-head"><span>PYTHON 3 · MRO</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> A:
+    <span class="kw">def</span> <span class="fn">show</span>(self):
+        <span class="kw">return</span> <span class="str">"A"</span>
+
+
+<span class="kw">class</span> B(A):
+    <span class="kw">def</span> <span class="fn">show</span>(self):
+        <span class="kw">return</span> <span class="str">"B"</span>
+
+
+<span class="kw">class</span> C(B):
+    <span class="kw">pass</span>
+
+
+<span class="fn">print</span>(C.mro())
+<span class="fn">print</span>(C().show())  <span class="cm"># B</span></code></pre></div>
+      <p><code>C</code>-তে <code>show()</code> নেই, তাই Python MRO অনুসরণ করে <code>B</code>-তে খুঁজে পায়।</p>
+      <h3>Python কীভাবে MRO calculate করে?</h3>
+      <p>Python multiple inheritance-এর MRO বের করতে <strong>C3 Linearization</strong> algorithm ব্যবহার করে। এর গুরুত্বপূর্ণ বৈশিষ্ট্য:</p>
+      <ul>
+        <li><strong>Local precedence order:</strong> Class declaration-এ base class-গুলোর order সম্মান করা হয়। যেমন <code>class D(B, C)</code>-তে B, C-এর আগে আসে।</li>
+        <li><strong>Monotonicity:</strong> কোনো subclass-এর MRO-তে base class-গুলোর আগে থেকে নির্ধারিত relative order অকারণে উল্টে যায় না।</li>
+        <li><strong>একবারের linear order:</strong> Diamond hierarchy-তে shared ancestor MRO list-এ একবারই থাকে।</li>
+      </ul>
+      <h3>Diamond Example ও MRO</h3>
+      <div class="code-wrap"><div class="code-head"><span>C3 LINEARIZATION EXAMPLE</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> A: <span class="kw">pass</span>
+<span class="kw">class</span> B(A): <span class="kw">pass</span>
+<span class="kw">class</span> C(A): <span class="kw">pass</span>
+<span class="kw">class</span> D(B, C): <span class="kw">pass</span>
+
+<span class="fn">print</span>([cls.__name__ <span class="kw">for</span> cls <span class="kw">in</span> D.mro()])
+<span class="cm"># ['D', 'B', 'C', 'A', 'object']</span></code></pre></div>
+      <p>এই output-এর অর্থ: প্রথমে <code>D</code>, এরপর <code>B</code>, তারপর <code>C</code>, এরপর common base <code>A</code>, সবশেষে root class <code>object</code> lookup order-এ থাকে।</p>
+      <h3>Inconsistent MRO</h3>
+      <p>যদি base class-গুলোর order এমন হয় যে C3 algorithm consistent linear order তৈরি করতে না পারে, Python class definition-এর সময় <code>TypeError: Cannot create a consistent method resolution order (MRO)</code> raise করে।</p>
+      <h3>MRO দেখার উপায়</h3>
+      <ul><li><code>MyClass.mro()</code> — class list return করে।</li><li><code>MyClass.__mro__</code> — MRO tuple হিসেবে পাওয়া যায়।</li><li><code>help(MyClass)</code> — class help output-এ MRO দেখা যায়।</li></ul>
+      <div class="key-points"><strong>Interview answer:</strong> MRO হলো Python-এর method lookup order। Multiple inheritance-এ Python C3 Linearization algorithm দিয়ে MRO তৈরি করে। <code>ClassName.mro()</code> বা <code>ClassName.__mro__</code> দিয়ে এটি দেখা যায়।</div>
+    </div>
+  </details>
+
+  <details class="question">
+    <summary><span class="number">14</span><span class="q-title">What is super() in Python?</span><span class="chevron"></span></summary>
+    <div class="answer">
+      <h3>মূল ধারণা</h3>
+      <p><code>super()</code> Python-এর built-in function, যা current class-এর MRO অনুযায়ী পরবর্তী class-এর method বা attribute access করতে সাহায্য করে। এটি parent class-কে hardcode করে call করার চেয়ে flexible, বিশেষ করে multiple inheritance-এ।</p>
+      <h3>Single Inheritance Example</h3>
+      <div class="code-wrap"><div class="code-head"><span>PYTHON 3 · super()</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Person:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name):
+        self.name = name
+
+
+<span class="kw">class</span> Developer(Person):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, language):
+        <span class="fn">super</span>().__init__(name)
+        self.language = language
+
+
+dev = Developer(<span class="str">"Anik"</span>, <span class="str">"Python"</span>)
+<span class="fn">print</span>(dev.name)
+<span class="fn">print</span>(dev.language)</code></pre></div>
+      <p><code>Developer</code>-এর initializer প্রথমে <code>super().__init__(name)</code> call করে। ফলে MRO অনুযায়ী পরবর্তী class-এর initializer চলে এবং <code>name</code> set হয়। তারপর subclass তার নিজস্ব <code>language</code> set করে।</p>
+      <h3>super() কি সরাসরি parent class call করে?</h3>
+      <p>সবসময় নয়। এটি current class-এর পরে MRO-তে যে class আসে, তার method lookup করে। Simple single inheritance-এ সেটি সাধারণত parent class। Multiple inheritance-এ next class অন্য branch-এর class-ও হতে পারে।</p>
+      <h3>Cooperative Multiple Inheritance</h3>
+      <div class="code-wrap"><div class="code-head"><span>COOPERATIVE super() CHAIN</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> A:
+    <span class="kw">def</span> <span class="fn">process</span>(self):
+        <span class="fn">print</span>(<span class="str">"A"</span>)
+        <span class="fn">super</span>().process()
+
+
+<span class="kw">class</span> B(A):
+    <span class="kw">def</span> <span class="fn">process</span>(self):
+        <span class="fn">print</span>(<span class="str">"B"</span>)
+        <span class="fn">super</span>().process()
+
+
+<span class="kw">class</span> C:
+    <span class="kw">def</span> <span class="fn">process</span>(self):
+        <span class="fn">print</span>(<span class="str">"C"</span>)
+        <span class="fn">super</span>().process()
+
+
+<span class="kw">class</span> D(B, C):
+    <span class="kw">def</span> <span class="fn">process</span>(self):
+        <span class="fn">print</span>(<span class="str">"D"</span>)
+        <span class="fn">super</span>().process()
+
+
+D().process()</code></pre></div>
+      <p>এই উদাহরণে <code>D → B → A → C → object</code> MRO তৈরি হয় না; প্রকৃত MRO হলো <code>D → B → A → C → object</code> কেবল তখনই, যদি A-এর base C হয়। উপরকার class definition-এ A এবং C দুইটিই independent base হওয়ায় <code>D(B, C)</code>-এর MRO হবে <code>D, B, A, C, object</code>। কিন্তু <code>A.process()</code> থেকে <code>super().process()</code> call করলে পরবর্তী class C-এর method চলে। C-এর পর object-এ <code>process</code> নেই, তাই chain-এর শেষ call-এ <code>AttributeError</code> হবে। এটি দেখায় কেন cooperative chain-এ root termination design করতে হয়।</p>
+      <p>নিচের safer version-এ root class chain শেষ করে:</p>
+      <div class="code-wrap"><div class="code-head"><span>SAFE COOPERATIVE PATTERN</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Root:
+    <span class="kw">def</span> <span class="fn">process</span>(self):
+        <span class="kw">pass</span>
+
+
+<span class="kw">class</span> A(Root):
+    <span class="kw">def</span> <span class="fn">process</span>(self):
+        <span class="fn">print</span>(<span class="str">"A"</span>)
+        <span class="fn">super</span>().process()
+
+
+<span class="kw">class</span> B(A):
+    <span class="kw">def</span> <span class="fn">process</span>(self):
+        <span class="fn">print</span>(<span class="str">"B"</span>)
+        <span class="fn">super</span>().process()
+
+
+<span class="kw">class</span> C(Root):
+    <span class="kw">def</span> <span class="fn">process</span>(self):
+        <span class="fn">print</span>(<span class="str">"C"</span>)
+        <span class="fn">super</span>().process()
+
+
+<span class="kw">class</span> D(B, C):
+    <span class="kw">def</span> <span class="fn">process</span>(self):
+        <span class="fn">print</span>(<span class="str">"D"</span>)
+        <span class="fn">super</span>().process()
+
+
+D().process()  <span class="cm"># D, B, A, C</span></code></pre></div>
+      <p>এখানে MRO হলো <code>D → B → A → C → Root → object</code>। প্রতিটি implementation একবার করে chain-এ অংশ নেয়।</p>
+      <h3>super() ব্যবহারের নিয়ম</h3>
+      <ul>
+        <li>একটি inheritance hierarchy-তে cooperative behavior চাইলে method-গুলোতে consistentভাবে <code>super()</code> ব্যবহার করতে হয়।</li>
+        <li>Multiple inheritance-এ method signature compatible রাখা জরুরি; প্রয়োজন হলে <code>*args</code>/<code>**kwargs</code> দিয়ে arguments forward করা যায়।</li>
+        <li>Parent class-কে সরাসরি <code>Parent.method(self)</code> দিয়ে call করলে MRO-based cooperation bypass হতে পারে।</li>
+      </ul>
+      <div class="key-points"><strong>Interview answer:</strong> <code>super()</code> MRO অনুযায়ী current class-এর পরবর্তী class-এর implementation access করে। এটি single inheritance-এ parent method call করতে এবং multiple inheritance-এ cooperative method chain তৈরি করতে ব্যবহৃত হয়।</div>
+    </div>
+  </details>
+
+  <details class="question">
+    <summary><span class="number">15</span><span class="q-title">What are Magic / Dunder Methods in Python?</span><span class="chevron"></span></summary>
+    <div class="answer">
+      <h3>মূল ধারণা</h3>
+      <p>Magic methods বা dunder methods হলো Python-এর special method, যাদের নামের শুরু ও শেষে double underscore থাকে—যেমন <code>__init__</code>, <code>__str__</code>, <code>__len__</code>। এগুলো Python-এর built-in syntax ও operation-এর সঙ্গে custom object-এর behavior যুক্ত করে। “Dunder” এসেছে “double underscore” থেকে।</p>
+      <h3>কিছু গুরুত্বপূর্ণ Dunder Method</h3>
+      <ul>
+        <li><code>__new__</code> — নতুন instance তৈরি করে।</li>
+        <li><code>__init__</code> — তৈরি হওয়া instance initialize করে।</li>
+        <li><code>__str__</code> — user-friendly string representation দেয়।</li>
+        <li><code>__repr__</code> — developer/debugging-oriented representation দেয়।</li>
+        <li><code>__len__</code> — <code>len(obj)</code> operation support করে।</li>
+        <li><code>__eq__</code> — <code>==</code> comparison-এর behavior define করে।</li>
+        <li><code>__lt__</code> — <code><</code> comparison-এর behavior define করে।</li>
+        <li><code>__add__</code> — <code>+</code> operation-এর behavior define করে।</li>
+        <li><code>__iter__</code> ও <code>__next__</code> — iteration protocol implement করে।</li>
+        <li><code>__enter__</code> ও <code>__exit__</code> — context manager protocol implement করে।</li>
+        <li><code>__getitem__</code> — <code>obj[key]</code> indexing behavior define করে।</li>
+        <li><code>__call__</code> — object-কে function-এর মতো call করার সুযোগ দেয়।</li>
+      </ul>
+      <h3>Example: len(), + এবং callable object</h3>
+      <div class="code-wrap"><div class="code-head"><span>PYTHON 3 · SPECIAL METHODS</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Cart:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, items):
+        self.items = items
+
+    <span class="kw">def</span> <span class="fn">__len__</span>(self):
+        <span class="kw">return</span> <span class="fn">len</span>(self.items)
+
+    <span class="kw">def</span> <span class="fn">__add__</span>(self, other):
+        <span class="kw">if not</span> <span class="fn">isinstance</span>(other, Cart):
+            <span class="kw">return</span> NotImplemented
+        <span class="kw">return</span> Cart(self.items + other.items)
+
+
+cart1 = Cart([<span class="str">"Book"</span>, <span class="str">"Pen"</span>])
+cart2 = Cart([<span class="str">"Laptop"</span>])
+
+<span class="fn">print</span>(<span class="fn">len</span>(cart1))       <span class="cm"># 2</span>
+combined = cart1 + cart2
+<span class="fn">print</span>(combined.items)   <span class="cm"># ['Book', 'Pen', 'Laptop']</span></code></pre></div>
+      <h3>Python syntax-এর সঙ্গে সম্পর্ক</h3>
+      <p><code>len(cart1)</code> call করলে Python length protocol ব্যবহার করে, যেখানে <code>__len__()</code> method কাজ করে। একইভাবে <code>cart1 + cart2</code> expression addition protocol ব্যবহার করে এবং উপযুক্ত ক্ষেত্রে <code>__add__()</code> invoke করে। Special method সাধারণত সরাসরি call করার বদলে সংশ্লিষ্ট built-in syntax ব্যবহার করাই ভালো।</p>
+      <h3>গুরুত্বপূর্ণ সতর্কতা</h3>
+      <ul>
+        <li><code>__len__()</code> non-negative integer return করবে; ভুল return type হলে <code>TypeError</code> হতে পারে।</li>
+        <li><code>__bool__()</code> define না থাকলে truth testing-এ Python <code>__len__()</code> ব্যবহার করতে পারে।</li>
+        <li>সব dunder method implement করা জরুরি নয়; প্রয়োজনীয় protocol-ই implement করা উচিত।</li>
+        <li>Special method lookup-এর কিছু অংশ type/class level-এ হয়; instance-এ একই নামে attribute বসালেই সব special syntax সেটি ব্যবহার করবে—এমন নয়।</li>
+      </ul>
+      <div class="key-points"><strong>Interview answer:</strong> Dunder methods হলো Python-এর special protocol methods, যা custom object-কে built-in operation ও syntax-এর সঙ্গে কাজ করতে দেয়। যেমন <code>__len__</code> দিয়ে <code>len()</code>, <code>__add__</code> দিয়ে <code>+</code>, এবং <code>__iter__</code> দিয়ে iteration support করা যায়।</div>
+    </div>
+  </details>
+
+  <details class="question">
+    <summary><span class="number">16</span><span class="q-title">__str__ vs __repr__ — পার্থক্য কী?</span><span class="chevron"></span></summary>
+    <div class="answer">
+      <h3>মূল ধারণা</h3>
+      <p><code>__str__()</code> object-এর readable বা user-friendly string representation তৈরি করে। <code>__repr__()</code> debugging এবং developer inspection-এর জন্য unambiguous representation দেওয়ার চেষ্টা করে। সম্ভব হলে <code>repr(obj)</code> এমন string দেবে, যা object-টি পুনরায় তৈরি করতে পারে—তবে এটি সব class-এর জন্য সম্ভব বা বাধ্যতামূলক নয়।</p>
+      <h3>Code Example</h3>
+      <div class="code-wrap"><div class="code-head"><span>PYTHON 3 · STR VS REPR</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> User:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, age):
+        self.name = name
+        self.age = age
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(self):
+        <span class="kw">return</span> <span class="str">f"{self.name} ({self.age} years old)"</span>
+
+    <span class="kw">def</span> <span class="fn">__repr__</span>(self):
+        <span class="kw">return</span> <span class="str">f"User(name={self.name!r}, age={self.age!r})"</span>
+
+
+user = User(<span class="str">"Anik"</span>, 27)
+
+<span class="fn">print</span>(str(user))
+<span class="fn">print</span>(repr(user))
+<span class="fn">print</span>(user)</code></pre></div>
+      <h3>কোন built-in কোথায় কোনটি ব্যবহার করে?</h3>
+      <ul>
+        <li><code>str(obj)</code> সাধারণত <code>obj.__str__()</code> ব্যবহার করে।</li>
+        <li><code>repr(obj)</code> <code>obj.__repr__()</code> ব্যবহার করে।</li>
+        <li><code>print(obj)</code> string conversion করে, তাই সাধারণত <code>__str__()</code> ব্যবহার হয়।</li>
+        <li>Interactive interpreter-এ expression evaluate করে result display করার সময় সাধারণত <code>repr()</code> ব্যবহার হয়।</li>
+        <li>List বা dict-এর মতো container-এর representation তৈরি করার সময় element-গুলোর জন্য সাধারণত <code>repr()</code> ব্যবহার হয়।</li>
+      </ul>
+      <h3>শুধু __repr__ থাকলে?</h3>
+      <p>Class-এ <code>__str__()</code> define না থাকলে <code>str(obj)</code> fallback হিসেবে <code>__repr__()</code> ব্যবহার করে। তাই অনেক class-এ ভালো <code>__repr__()</code> থাকাই useful baseline।</p>
+      <div class="code-wrap"><div class="code-head"><span>REPR FALLBACK</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Product:
+    <span class="kw">def</span> <span class="fn">__repr__</span>(self):
+        <span class="kw">return</span> <span class="str">"Product()"</span>
+
+product = Product()
+<span class="fn">print</span>(<span class="fn">str</span>(product))   <span class="cm"># Product()</span>
+<span class="fn">print</span>(<span class="fn">repr</span>(product))  <span class="cm"># Product()</span></code></pre></div>
+      <div class="warning"><strong>Security note:</strong> <code>__repr__()</code>-এ password, API token বা sensitive data রাখা উচিত নয়। Debugging output log-এ চলে যেতে পারে।</div>
+      <div class="key-points"><strong>Interview answer:</strong> <code>__str__</code> user-friendly display-এর জন্য, আর <code>__repr__</code> developer-facing, debugging-oriented representation-এর জন্য। <code>__str__</code> না থাকলে <code>str()</code> সাধারণত <code>__repr__</code>-এ fallback করে।</div>
+    </div>
+  </details>
+
+  <details class="question">
+    <summary><span class="number">17</span><span class="q-title">What are Properties in Python?</span><span class="chevron"></span></summary>
+    <div class="answer">
+      <h3>মূল ধারণা</h3>
+      <p>Python property হলো এমন একটি mechanism, যার মাধ্যমে method-কে attribute-এর মতো access করা যায়। এর সাহায্যে attribute read, write বা delete করার সময় custom logic চালানো যায়—কিন্তু caller-এর syntax attribute access-এর মতোই থাকে। Property descriptor protocol-এর উপর ভিত্তি করে কাজ করে।</p>
+      <h3>কেন Property দরকার?</h3>
+      <p>ধরা যাক প্রথমে class-এ <code>age</code> একটি normal public attribute। পরে age-এর value validate করা দরকার হলো। সব caller-এর code-এ <code>set_age()</code> call যোগ না করেও property দিয়ে existing attribute-style API বজায় রেখে validation যোগ করা যায়।</p>
+      <div class="code-wrap"><div class="code-head"><span>PYTHON 3 · PROPERTY</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Person:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, age):
+        self.age = age
+
+    @property
+    <span class="kw">def</span> <span class="fn">age</span>(self):
+        <span class="kw">return</span> self._age
+
+    @age.setter
+    <span class="kw">def</span> <span class="fn">age</span>(self, value):
+        <span class="kw">if</span> value < 0:
+            <span class="kw">raise</span> ValueError(<span class="str">"Age cannot be negative"</span>)
+        self._age = value
+
+    @age.deleter
+    <span class="kw">def</span> <span class="fn">age</span>(self):
+        <span class="kw">del</span> self._age
+
+
+person = Person(25)
+<span class="fn">print</span>(person.age)  <span class="cm"># getter</span>
+person.age = 26     <span class="cm"># setter</span>
+<span class="kw">del</span> person.age     <span class="cm"># deleter</span></code></pre></div>
+      <h3>Getter, Setter, Deleter</h3>
+      <ul>
+        <li><strong>Getter:</strong> <code>person.age</code> read করলে <code>age()</code> getter execute হয়।</li>
+        <li><strong>Setter:</strong> <code>person.age = 26</code> করলে setter execute হয়।</li>
+        <li><strong>Deleter:</strong> <code>del person.age</code> করলে deleter execute হয়।</li>
+      </ul>
+      <h3>Property-এর সুবিধা</h3>
+      <ul>
+        <li>Validation এক জায়গায় রাখা যায়।</li>
+        <li>Read-only বা computed attribute তৈরি করা যায়।</li>
+        <li>Public API attribute-style রাখা যায়, কিন্তু internal logic method-এ থাকে।</li>
+        <li>পরে implementation পরিবর্তন করলেও caller-এর access syntax একই রাখা যায়।</li>
+      </ul>
+      <div class="warning"><strong>Common mistake:</strong> Getter-এর ভেতরে <code>return self.age</code> লিখলে property নিজেকেই আবার call করবে এবং recursion হতে পারে। তাই internal storage হিসেবে <code>self._age</code> ব্যবহার করা হয়েছে।</div>
+      <div class="key-points"><strong>Interview answer:</strong> Property method-কে attribute-style interface দেয়। <code>@property</code>, <code>@name.setter</code> এবং <code>@name.deleter</code> দিয়ে read, write ও delete operation-এর custom logic define করা যায়।</div>
+    </div>
+  </details>
+
+  <details class="question">
+    <summary><span class="number">18</span><span class="q-title">What is @property in Python?</span><span class="chevron"></span></summary>
+    <div class="answer">
+      <h3>মূল ধারণা</h3>
+      <p><code>@property</code> হলো built-in <code>property</code> descriptor তৈরি করার decorator syntax। এটি কোনো method-কে এমন attribute-এ পরিণত করে, যেটি read করার সময় method-এর code execute করে। Method call-এর জন্য parentheses লাগে না।</p>
+      <h3>Basic Example: Computed Attribute</h3>
+      <div class="code-wrap"><div class="code-head"><span>PYTHON 3 · @property</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Rectangle:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, width, height):
+        self.width = width
+        self.height = height
+
+    @property
+    <span class="kw">def</span> <span class="fn">area</span>(self):
+        <span class="kw">return</span> self.width * self.height
+
+
+rectangle = Rectangle(10, 5)
+<span class="fn">print</span>(rectangle.area)  <span class="cm"># 50</span></code></pre></div>
+      <p><code>area</code> কোনো stored instance variable নয়। এটি <code>width</code> ও <code>height</code> থেকে calculate করা হচ্ছে। তবুও ব্যবহার হচ্ছে <code>rectangle.area</code>—<code>rectangle.area()</code> নয়।</p>
+      <h3>Read-only Property</h3>
+      <p>শুধু <code>@property</code> define করলে এবং setter না দিলে property সাধারণত read-only থাকে। Attribute-এ assign করার চেষ্টা করলে <code>AttributeError</code> হবে।</p>
+      <div class="code-wrap"><div class="code-head"><span>READ-ONLY PROPERTY</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Circle:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, radius):
+        self.radius = radius
+
+    @property
+    <span class="kw">def</span> <span class="fn">diameter</span>(self):
+        <span class="kw">return</span> self.radius * 2
+
+
+circle = Circle(5)
+<span class="fn">print</span>(circle.diameter)  <span class="cm"># 10</span>
+<span class="cm"># circle.diameter = 20  # AttributeError</span></code></pre></div>
+      <h3>@property internalভাবে কী?</h3>
+      <p>Python-এ <code>property</code> একটি built-in descriptor type। Class body-তে <code>@property</code> ব্যবহার করলে function-টি property object দিয়ে replace হয়। Instance থেকে attribute read করার সময় descriptor protocol-এর মাধ্যমে getter execute হয়। Setter যোগ করলে property object-এর write behavior-ও define হয়।</p>
+      <h3>@property বনাম normal method</h3>
+      <ul>
+        <li><code>obj.calculate_total()</code> — operation/function call বোঝায়।</li>
+        <li><code>obj.total</code> — attribute access বোঝায়; value calculate হলেও access syntax attribute-এর মতো।</li>
+      </ul>
+      <p>Property-তে খুব expensive কাজ, database query বা network request লুকিয়ে রাখা ভালো design নয়। Attribute access সাধারণত lightweight ও predictable হওয়া উচিত।</p>
+      <div class="key-points"><strong>Interview answer:</strong> <code>@property</code> method-কে attribute-এর মতো access করতে দেয়। এটি computed value, validation এবং read-only interface তৈরিতে useful। এটি Python-এর descriptor mechanism-এর উপর কাজ করে।</div>
+    </div>
+  </details>
+
+  <details class="question">
+    <summary><span class="number">19</span><span class="q-title">What are Abstract Base Classes (ABC) in Python?</span><span class="chevron"></span></summary>
+    <div class="answer">
+      <h3>মূল ধারণা</h3>
+      <p>Abstract Base Class (ABC) হলো এমন base class, যা subclass-গুলোর জন্য common interface বা contract define করতে পারে। <code>abc</code> module-এর <code>ABC</code> এবং <code>@abstractmethod</code> দিয়ে abstract method define করা যায়। Abstract method implement না করা concrete subclass instantiate করা যায় না।</p>
+      <h3>Code Example</h3>
+      <div class="code-wrap"><div class="code-head"><span>PYTHON 3 · ABC</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod
+
+
+<span class="kw">class</span> Storage(ABC):
+    @abstractmethod
+    <span class="kw">def</span> <span class="fn">save</span>(self, data):
+        <span class="kw">pass</span>
+
+    @abstractmethod
+    <span class="kw">def</span> <span class="fn">load</span>(self, key):
+        <span class="kw">pass</span>
+
+
+<span class="kw">class</span> FileStorage(Storage):
+    <span class="kw">def</span> <span class="fn">save</span>(self, data):
+        <span class="kw">return</span> <span class="str">"Saved to file"</span>
+
+    <span class="kw">def</span> <span class="fn">load</span>(self, key):
+        <span class="kw">return</span> <span class="str">f"Loaded {key} from file"</span>
+
+
+storage = FileStorage()
+<span class="fn">print</span>(storage.save(<span class="str">"hello"</span>))</code></pre></div>
+      <h3>কেন ABC দরকার?</h3>
+      <ul>
+        <li>একাধিক implementation-এর জন্য একই interface enforce করতে।</li>
+        <li>Incomplete subclass যেন ভুল করে instantiate না হয়, তা আটকাতে।</li>
+        <li>High-level code-কে concrete implementation-এর বদলে abstraction-এর উপর নির্ভর করাতে।</li>
+        <li>Team/project-এ class contract readable ও enforceable রাখতে।</li>
+      </ul>
+      <h3>Abstract method-এর implementation-ও থাকতে পারে?</h3>
+      <p>হ্যাঁ। Abstract method-এর body থাকতে পারে। Subclass-কে method override করতে হয়, তবে override করা method-এর ভেতর <code>super()</code> দিয়ে abstract base method-এর implementation reuse করা যায়।</p>
+      <h3>ABC vs Duck Typing</h3>
+      <ul>
+        <li><strong>ABC:</strong> Explicit inheritance বা virtual subclass registration-এর মাধ্যমে type relationship declare করা যায় এবং abstract method implementation-এর নিয়ম enforce করা যায়।</li>
+        <li><strong>Duck Typing:</strong> Object প্রয়োজনীয় operation support করলেই ব্যবহার করা হয়; নির্দিষ্ট base class inherit করা আবশ্যক নয়।</li>
+      </ul>
+      <h3>ABC vs Protocol</h3>
+      <p><code>typing.Protocol</code> structural typing-এর জন্য ব্যবহৃত হয়। কোনো class Protocol inherit না করেও প্রয়োজনীয় method/attribute implement করলে static type checker সেটিকে compatible ধরতে পারে। ABC সাধারণত explicit runtime class hierarchy এবং abstract method enforcement-এর জন্য; Protocol static structural contract প্রকাশে useful। Python-এ <code>@runtime_checkable</code> Protocol-এর কিছু runtime check support করে, তবে সেটি পূর্ণ static type checking-এর বিকল্প নয়।</p>
+      <div class="key-points"><strong>Interview answer:</strong> ABC হলো <code>abc</code> module দিয়ে তৈরি abstract base class, যা subclass-এর জন্য interface/contract define করে। <code>@abstractmethod</code> implement না করলে concrete subclass instantiate করা যায় না। ABC explicit contract enforcement-এ useful।</div>
+    </div>
+  </details>
+
+  <details class="question">
+    <summary><span class="number">20</span><span class="q-title">What are SOLID Principles in Python?</span><span class="chevron"></span></summary>
+    <div class="answer">
+      <h3>মূল ধারণা</h3>
+      <p>SOLID হলো object-oriented software design-এর পাঁচটি principle-এর acronym। এগুলোর লক্ষ্য code-কে maintainable, extensible এবং change-friendly রাখা। SOLID কোনো Python-only feature নয়; Python-সহ বিভিন্ন OOP language-এ design guideline হিসেবে ব্যবহার করা যায়।</p>
+      <div class="callout"><strong>S — Single Responsibility Principle</strong><br>একটি class/module-এর change করার একটি প্রধান কারণ থাকা উচিত। অর্থাৎ একটি class-এ একাধিক unrelated responsibility জমা করা উচিত নয়।</div>
+      <h3>S — Single Responsibility Principle (SRP)</h3>
+      <p>ধরা যাক <code>Invoice</code> class invoice calculation, PDF generation এবং email sending—সব কাজ করছে। PDF format বা email provider change হলেও class edit করতে হচ্ছে। আলাদা responsibility আলাদা class-এ রাখলে change-এর impact কমে।</p>
+      <div class="code-wrap"><div class="code-head"><span>SRP EXAMPLE</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Invoice:
+    <span class="kw">def</span> <span class="fn">total</span>(self, items):
+        <span class="kw">return</span> <span class="fn">sum</span>(items)
+
+
+<span class="kw">class</span> InvoicePrinter:
+    <span class="kw">def</span> <span class="fn">print_invoice</span>(self, invoice):
+        <span class="kw">print</span>(<span class="str">f"Total: {invoice}"</span>)
+
+
+<span class="kw">class</span> InvoiceRepository:
+    <span class="kw">def</span> <span class="fn">save</span>(self, invoice):
+        <span class="kw">print</span>(<span class="str">"Invoice saved"</span>)</code></pre></div>
+      <div class="callout"><strong>O — Open/Closed Principle</strong><br>Software entity extension-এর জন্য open, কিন্তু existing tested code modification-এর প্রয়োজন কম—এমন design হওয়া উচিত। নতুন behavior যোগ করতে গিয়ে বারবার পুরনো code edit না করে abstraction বা polymorphism ব্যবহার করা যায়।</div>
+      <h3>O — Open/Closed Principle (OCP)</h3>
+      <p>নতুন discount type যোগ করতে প্রতিবার বড় <code>if/elif</code> block edit করার বদলে common interface ও আলাদা strategy class ব্যবহার করা যায়।</p>
+      <div class="code-wrap"><div class="code-head"><span>OCP · STRATEGY STYLE</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod
+
+
+<span class="kw">class</span> Discount(ABC):
+    @abstractmethod
+    <span class="kw">def</span> <span class="fn">apply</span>(self, price):
+        <span class="kw">pass</span>
+
+
+<span class="kw">class</span> NoDiscount(Discount):
+    <span class="kw">def</span> <span class="fn">apply</span>(self, price):
+        <span class="kw">return</span> price
+
+
+<span class="kw">class</span> TenPercentDiscount(Discount):
+    <span class="kw">def</span> <span class="fn">apply</span>(self, price):
+        <span class="kw">return</span> price * 0.90
+
+
+<span class="kw">class</span> Checkout:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, discount):
+        self.discount = discount
+
+    <span class="kw">def</span> <span class="fn">total</span>(self, price):
+        <span class="kw">return</span> self.discount.apply(price)
+
+
+checkout = Checkout(TenPercentDiscount())
+<span class="fn">print</span>(checkout.total(1000))  <span class="cm"># 900.0</span></code></pre></div>
+      <div class="callout"><strong>L — Liskov Substitution Principle</strong><br>যে জায়গায় base class-এর object ব্যবহার করা যায়, সেখানে তার subtype object বসালেও program-এর expected behavior ভেঙে যাওয়া উচিত নয়। Subclass-কে base class-এর contract মানতে হবে।</div>
+      <h3>L — Liskov Substitution Principle (LSP)</h3>
+      <p>যদি <code>Bird</code> class-এ সব bird-এর জন্য <code>fly()</code> বাধ্যতামূলক করা হয়, তাহলে Penguin-এর মতো উড়তে না-পারা bird subclass design-এ সমস্যা তৈরি করবে। Base abstraction ভুলভাবে তৈরি হয়েছে।</p>
+      <div class="code-wrap"><div class="code-head"><span>LSP-FRIENDLY DESIGN</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">class</span> Bird:
+    <span class="kw">def</span> <span class="fn">move</span>(self):
+        <span class="kw">raise</span> NotImplementedError
+
+
+<span class="kw">class</span> FlyingBird(Bird):
+    <span class="kw">def</span> <span class="fn">fly</span>(self):
+        <span class="kw">return</span> <span class="str">"Flying"</span>
+
+
+<span class="kw">class</span> Sparrow(FlyingBird):
+    <span class="kw">def</span> <span class="fn">move</span>(self):
+        <span class="kw">return</span> self.fly()
+
+
+<span class="kw">class</span> Penguin(Bird):
+    <span class="kw">def</span> <span class="fn">move</span>(self):
+        <span class="kw">return</span> <span class="str">"Swimming or walking"</span></code></pre></div>
+      <p>এখানে সব Bird-এর common behavior <code>move()</code> রাখা হয়েছে; শুধু flying capability যাদের আছে তারা <code>FlyingBird</code> inherit করে। বাস্তব design-এ capability-based interface বা composition আরও উপযুক্ত হতে পারে।</p>
+      <div class="callout"><strong>I — Interface Segregation Principle</strong><br>Client-কে এমন method-এর উপর depend করানো উচিত নয়, যেগুলো তার প্রয়োজন নেই। একটি বড় interface-এর বদলে ছোট ও focused interface ভালো।</div>
+      <h3>I — Interface Segregation Principle (ISP)</h3>
+      <p>একটি interface-এ <code>print()</code>, <code>scan()</code>, <code>fax()</code> সব বাধ্যতামূলক থাকলে শুধু print করতে পারে এমন device-কে অপ্রয়োজনীয় method implement করতে হবে। ছোট interface করলে এই সমস্যা এড়ানো যায়।</p>
+      <div class="code-wrap"><div class="code-head"><span>ISP EXAMPLE</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod
+
+
+<span class="kw">class</span> Printer(ABC):
+    @abstractmethod
+    <span class="kw">def</span> <span class="fn">print_document</span>(self, document):
+        <span class="kw">pass</span>
+
+
+<span class="kw">class</span> Scanner(ABC):
+    @abstractmethod
+    <span class="kw">def</span> <span class="fn">scan</span>(self):
+        <span class="kw">pass</span>
+
+
+<span class="kw">class</span> BasicPrinter(Printer):
+    <span class="kw">def</span> <span class="fn">print_document</span>(self, document):
+        <span class="kw">return</span> <span class="str">"Printing document"</span></code></pre></div>
+      <div class="callout"><strong>D — Dependency Inversion Principle</strong><br>High-level module যেন low-level concrete implementation-এর উপর সরাসরি depend না করে। দুটিই abstraction-এর উপর depend করবে। Abstraction যেন detail-এর উপর depend না করে; detail abstraction-এর উপর depend করবে।</div>
+      <h3>D — Dependency Inversion Principle (DIP)</h3>
+      <p>Checkout class যদি সরাসরি <code>StripePayment</code> instantiate করে, তাহলে payment provider change করতে Checkout code edit করতে হবে। এর বদলে payment interface-এর উপর depend করালে constructor দিয়ে dependency inject করা যায়।</p>
+      <div class="code-wrap"><div class="code-head"><span>DIP · DEPENDENCY INJECTION</span><button class="copy-btn">Copy code</button></div><pre><code><span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod
+
+
+<span class="kw">class</span> PaymentProcessor(ABC):
+    @abstractmethod
+    <span class="kw">def</span> <span class="fn">pay</span>(self, amount):
+        <span class="kw">pass</span>
+
+
+<span class="kw">class</span> CardPayment(PaymentProcessor):
+    <span class="kw">def</span> <span class="fn">pay</span>(self, amount):
+        <span class="kw">return</span> <span class="str">f"Card payment: {amount}"</span>
+
+
+<span class="kw">class</span> MobilePayment(PaymentProcessor):
+    <span class="kw">def</span> <span class="fn">pay</span>(self, amount):
+        <span class="kw">return</span> <span class="str">f"Mobile payment: {amount}"</span>
+
+
+<span class="kw">class</span> Checkout:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, processor: PaymentProcessor):
+        self.processor = processor
+
+    <span class="kw">def</span> <span class="fn">complete</span>(self, amount):
+        <span class="kw">return</span> self.processor.pay(amount)
+
+
+checkout = Checkout(CardPayment())
+<span class="fn">print</span>(checkout.complete(1500))</code></pre></div>
+      <h3>SOLID একসঙ্গে কীভাবে কাজ করে?</h3>
+      <ul>
+        <li>SRP class-এর responsibility সীমিত রাখে।</li>
+        <li>OCP নতুন behavior যোগ করার সময় existing code change কমায়।</li>
+        <li>LSP subtype যেন base contract ভঙ্গ না করে তা নিশ্চিত করে।</li>
+        <li>ISP ছোট ও focused interface তৈরি করে।</li>
+        <li>DIP concrete class-এর বদলে abstraction-এর উপর dependency তৈরি করে।</li>
+      </ul>
+      <h3>Python-এ SOLID প্রয়োগের সময় মনে রাখার বিষয়</h3>
+      <p>Python dynamic language; সব জায়গায় ABC বা বড় class hierarchy দরকার হয় না। Duck typing, Protocol, functions, composition এবং dependency injection দিয়েও SOLID-এর লক্ষ্য অর্জন করা যায়। SOLID checklist হিসেবে ব্যবহার করা উচিত, অকারণে abstraction বা class বাড়ানোর নিয়ম হিসেবে নয়।</p>
+      <div class="key-points"><strong>Interview answer:</strong> SOLID হলো পাঁচটি OOP design principle: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation এবং Dependency Inversion। এগুলো class-এর responsibility, extension, substitutability, interface size এবং dependency design উন্নত করতে সাহায্য করে।</div>
+    </div>
+  </details>
+
+  <section class="key-points" style="margin-top:22px">
+    <strong>Quick Revision — Questions 11–20</strong>
+    <ul>
+      <li><strong>11. Overriding:</strong> Subclass parent method-এর নিজস্ব implementation দেয়।</li>
+      <li><strong>12. Multiple Inheritance:</strong> একটি class একাধিক base class inherit করে।</li>
+      <li><strong>13. MRO:</strong> Method lookup-এর নির্ধারিত order; Python C3 Linearization ব্যবহার করে।</li>
+      <li><strong>14. super():</strong> MRO-তে current class-এর পরবর্তী implementation access করে।</li>
+      <li><strong>15. Dunder Methods:</strong> Python protocol ও built-in syntax-এর সঙ্গে object-এর behavior যুক্ত করে।</li>
+      <li><strong>16. __str__ vs __repr__:</strong> User-friendly display বনাম developer/debug representation।</li>
+      <li><strong>17. Properties:</strong> Attribute access-এর সময় getter/setter/deleter logic চালায়।</li>
+      <li><strong>18. @property:</strong> Method-কে attribute-style interface দেয়।</li>
+      <li><strong>19. ABC:</strong> Abstract contract ও method implementation enforce করে।</li>
+      <li><strong>20. SOLID:</strong> Maintainable OOP design-এর পাঁচটি guideline।</li>
+    </ul>
+  </section>
+</main>
+<footer class="container">Python OOP Interview Notes · Part 2 · Questions 11–20</footer>
+<script>
+  const questions = [...document.querySelectorAll(".question")];
+  const toggleButton = document.getElementById("toggleAll");
+  toggleButton.addEventListener("click", () => {
+    const shouldOpen = questions.some(question => !question.open);
+    questions.forEach(question => { question.open = shouldOpen; });
+    toggleButton.textContent = shouldOpen ? "সব উত্তর বন্ধ করুন" : "সব উত্তর খুলুন";
+  });
+  questions.forEach(question => question.addEventListener("toggle", () => {
+    toggleButton.textContent = questions.every(item => item.open) ? "সব উত্তর বন্ধ করুন" : "সব উত্তর খুলুন";
+  }));
+  document.querySelectorAll(".copy-btn").forEach(button => {
+    button.addEventListener("click", async () => {
+      const code = button.closest(".code-wrap").querySelector("pre code").innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = "Copied!";
+        setTimeout(() => button.textContent = "Copy code", 1400);
+      } catch {
+        button.textContent = "Copy unavailable";
+        setTimeout(() => button.textContent = "Copy code", 1400);
+      }
+    });
+  });
+</script>
+</body>
+</html>
