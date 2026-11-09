@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Python advanced interview preparation in Bangla: Generic Types, Structural Typing, Dependency Injection, Functional Programming and Memory Management.">
+<title>Advanced Python Interview Questions 21–25 — বাংলা</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+:root{--bg:#0b1020;--panel:#111a2e;--panel2:#16213a;--line:#263653;--text:#e8eefc;--muted:#a9b7d0;--accent:#80aaff;--green:#75d6ad;--yellow:#f4cb79;--code:#050914;--shadow:0 14px 40px #0005}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 20% 0%,#18284b 0,transparent 40%),var(--bg);color:var(--text);font-family:Inter,'Noto Sans Bengali',sans-serif;line-height:1.78}
+.wrap{width:min(1080px,92%);margin:auto}.hero{padding:54px 0 34px}.eyebrow{color:var(--green);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(28px,5vw,46px);line-height:1.25;margin:12px 0}.hero p{color:var(--muted);max-width:820px}.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.stat{background:#ffffff0a;border:1px solid var(--line);border-radius:12px;padding:8px 13px;color:var(--muted);font-size:13px}.stat b{color:var(--text)}
+.toolbar{position:sticky;top:0;z-index:5;background:#0b1020ed;backdrop-filter:blur(14px);border-block:1px solid var(--line);padding:12px 0}.tools{display:flex;gap:10px;align-items:center}.search{flex:1;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 14px;color:var(--text);font:inherit;outline:none}.search:focus{border-color:var(--accent)}button{cursor:pointer;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--text);padding:10px 13px;font:600 13px Inter,sans-serif}button:hover{border-color:var(--accent);color:var(--accent)}
+main{padding:27px 0 70px}.intro{background:linear-gradient(135deg,#142443,#111a2e);border:1px solid var(--line);border-radius:16px;padding:19px 21px;margin-bottom:22px}.intro strong{color:var(--green)}.question{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:12px 0;overflow:hidden;box-shadow:var(--shadow)}.question[open]{border-color:#47618e}.question summary{list-style:none;cursor:pointer;padding:17px 19px;display:flex;gap:14px;align-items:center;font-weight:700;font-size:16px}.question summary::-webkit-details-marker{display:none}.num{flex:0 0 36px;height:36px;border-radius:10px;background:#243858;color:#a9c6ff;display:grid;place-items:center;font-size:13px}.qtext{flex:1}.chev{color:var(--muted);transition:transform .2s}.question[open] .chev{transform:rotate(180deg)}.answer{padding:0 20px 23px 69px;color:#d7e0f2}.answer h3{font-size:16px;color:#9fc0ff;margin:21px 0 7px}.answer h4{font-size:14px;color:var(--green);margin:16px 0 6px}.answer p{margin:7px 0}.answer ul,.answer ol{padding-left:23px;margin:7px 0}.answer li{margin:5px 0}.answer code:not(pre code){font-family:'Fira Code',monospace;color:#ffd58b;background:#263149;padding:2px 5px;border-radius:5px;font-size:.9em}.code-label{font:700 11px Inter,sans-serif;color:#8da4c9;letter-spacing:1px;text-transform:uppercase;margin:14px 0 0}.codebox{position:relative;background:var(--code);border:1px solid #25334d;border-radius:10px;margin:7px 0 13px;overflow:hidden}.codebox pre{margin:0;padding:18px 17px;overflow-x:auto;color:#d8e5ff;font:13px/1.75 'Fira Code',monospace;tab-size:4}.copy{position:absolute;top:8px;right:8px;background:#17233a;border-color:#334766;font-size:11px;padding:6px 9px}.tip{border-left:3px solid var(--yellow);background:#f4cb7910;padding:11px 13px;border-radius:0 8px 8px 0;margin:14px 0;color:#e9d8b5}.good{border-left:3px solid var(--green);background:#75d6ad10;padding:11px 13px;border-radius:0 8px 8px 0;margin:14px 0}.compare{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}.compare th,.compare td{border:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}.compare th{background:#1b2a46;color:#bcd0f5}.hidden{display:none!important}.footer{border-top:1px solid var(--line);padding:25px 0 40px;color:var(--muted);font-size:13px}
+@media(max-width:650px){.hero{padding-top:38px}.tools{flex-wrap:wrap}.search{flex-basis:100%}.answer{padding:0 15px 18px}.question summary{padding:14px}.answer h3{margin-top:17px}.compare{font-size:12px}.compare th,.compare td{padding:6px}}
+</style>
+</head>
+<body>
+<header class="hero wrap">
+ <div class="eyebrow">Python · Advanced Interview Preparation</div>
+ <h1>Advanced Python Interview Questions</h1>
+</header>
+<div class="toolbar"><div class="wrap tools">
+</div></div>
+<main class="wrap">
+ <div id="questions">
+ <details class="question"><summary><span class="num">21</span><span class="qtext">Generic Types কী? TypeVar, Generic এবং Type Parameters কীভাবে কাজ করে?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept — Generic Type কী?</h3><p>Generic Type এমন class, function বা data structure define করতে সাহায্য করে, যা একাধিক data type-এর সঙ্গে কাজ করতে পারে; একই সঙ্গে type relationship ধরে রাখে। একই logic-এর জন্য <code>int</code>, <code>str</code> বা অন্য type অনুযায়ী আলাদা class/function লিখতে হয় না।</p><p>মূল সুবিধা শুধু “যেকোনো type গ্রহণ” নয়। Generic type input ও output-এর type-এর মধ্যে সম্পর্ক প্রকাশ করে, যাতে Static Type Checker ভুল usage ধরতে পারে।</p>
+ <div class="code-label">Generic ছাড়া — type relationship হারিয়ে যেতে পারে</div><div class="codebox"><button class="copy">Copy</button><pre><code>def first_item(items: list) -> object:
+    return items[0]
+
+# এখানে input list-এর element type এবং return type-এর
+# সম্পর্ক type checker-এর কাছে নির্দিষ্ট নয়।</code></pre></div>
+ <div class="code-label">Generic type variable ব্যবহার করে</div><div class="codebox"><button class="copy">Copy</button><pre><code>from typing import TypeVar
+
+T = TypeVar("T")
+
+def first_item(items: list[T]) -> T:
+    return items[0]
+
+name = first_item(["Anik", "Rafi"])  # inferred: str
+age = first_item([25, 30])           # inferred: int</code></pre></div>
+ <h3>TypeVar কী করে?</h3><p><code>TypeVar</code> একটি type variable তৈরি করে। Generic function call-এর সময় type checker argument দেখে <code>T</code>-এর উপযুক্ত type infer করার চেষ্টা করে। উপরের example-এ string list পাঠালে return type <code>str</code>, integer list পাঠালে return type <code>int</code> হিসেবে infer হয়।</p>
+ <h3>Generic class</h3><div class="code-label">Python 3.9+ compatible typing style</div><div class="codebox"><button class="copy">Copy</button><pre><code>from typing import Generic, TypeVar
+
+T = TypeVar("T")
+
+class Box(Generic[T]):
+    def __init__(self, value: T) -> None:
+        self.value = value
+
+    def get(self) -> T:
+        return self.value
+
+int_box = Box[int](100)
+str_box = Box[str]("Python")
+
+number = int_box.get()  # inferred: int
+text = str_box.get()    # inferred: str</code></pre></div>
+ <p><code>Generic[T]</code> class-টিকে generic হিসেবে declare করে। <code>Box[int]</code> এবং <code>Box[str]</code> হলো type-checking-এর জন্য আলাদা parameterized type expression। সাধারণ Python runtime-এ এগুলো আলাদা generated class তৈরি করে না।</p>
+ <h3>Python 3.12-এর নতুন generic syntax</h3><div class="code-label">PEP 695 syntax — Python 3.12+</div><div class="codebox"><button class="copy">Copy</button><pre><code>def first_item[T](items: list[T]) -> T:
+    return items[0]
+
+class Box[T]:
+    def __init__(self, value: T) -> None:
+        self.value = value
+
+    def get(self) -> T:
+        return self.value</code></pre></div>
+ <p>Python 3.12 থেকে type parameter সরাসরি <code>def</code> বা <code>class</code> declaration-এ লেখা যায়। পুরোনো <code>TypeVar</code> ও <code>Generic</code> syntax এখনও প্রচলিত এবং supported। Project-এর minimum Python version অনুযায়ী syntax বেছে নিতে হয়।</p>
+ <h3>Bound ও constrained TypeVar</h3><div class="code-label">Bound: একটি base type বা তার subtype</div><div class="codebox"><button class="copy">Copy</button><pre><code>from typing import TypeVar
+
+Number = TypeVar("Number", bound=float)
+
+def normalize(value: Number) -> Number:
+    return value</code></pre></div>
+ <p><code>bound=float</code> হলে type variable-টি <code>float</code> বা তার subtype-এ সীমাবদ্ধ থাকে। এটি exact <code>float</code> only বোঝায় না।</p>
+ <div class="code-label">Constraints: নির্দিষ্ট কয়েকটি type-এর একটি</div><div class="codebox"><button class="copy">Copy</button><pre><code>TextOrBytes = TypeVar("TextOrBytes", str, bytes)
+
+def duplicate(value: TextOrBytes) -> TextOrBytes:
+    return value + value</code></pre></div>
+ <p>Constrained TypeVar-এর ক্ষেত্রে type checker constraint list-এর উপযুক্ত type বেছে নেয়। Bound ও constraints এক জিনিস নয়: bound একটি upper bound/subtype relationship, আর constraints হলো নির্দিষ্ট বিকল্প type-এর set।</p>
+ <h3>কেন দরকার এবং কখন ব্যবহার হয়?</h3><ul><li>Reusable collection, repository, cache, API response wrapper এবং utility function type-safe করতে।</li><li>একটি function-এর input type ও output type-এর সম্পর্ক ধরে রাখতে।</li><li>Library/API design-এ consumer-কে type information দিতে।</li></ul>
+ <div class="tip"><b>Common confusion:</b> Generic annotation runtime validation করে না। <code>Box[int]("hello")</code> লিখলে Python নিজে থেকেই সাধারণত runtime-এ type mismatch reject করে না। Static type checker এটি ধরতে পারে। Runtime validation আলাদা করে implement করতে হয়।</div>
+ <div class="good"><b>Interview answer:</b> Generics একই implementation-কে বিভিন্ন type-এর জন্য reusable করে এবং type variable-এর মাধ্যমে input-output relationship ধরে রাখে। Python-এ <code>TypeVar</code>/<code>Generic</code> বা Python 3.12+ type parameter syntax ব্যবহার করা যায়। Type hints মূলত static analysis-এর জন্য; এগুলো স্বয়ংক্রিয় runtime validation নয়।</div>
+ </div></details>
+
+ <details class="question"><summary><span class="num">22</span><span class="qtext">Structural Typing কী? Nominal Typing ও Protocol-এর সঙ্গে সম্পর্ক কী?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept — Structural Typing</h3><p>Structural Typing-এ কোনো object কোন class থেকে তৈরি হয়েছে, সেটি প্রধান বিষয় নয়। বরং object-টির প্রয়োজনীয় attribute ও method আছে কি না, সেটি দেখে compatibility বিচার করা হয়। অর্থাৎ object-এর structure বা capability গুরুত্বপূর্ণ।</p><p>এটি Duck Typing-এর ধারণার সঙ্গে সম্পর্কিত। Python-এর static typing system-এ <code>typing.Protocol</code> structural interface প্রকাশ করার একটি উপায়।</p>
+ <h3>Structural বনাম Nominal Typing</h3><table class="compare"><tr><th>Nominal Typing</th><th>Structural Typing</th></tr><tr><td>Declared inheritance বা type identity গুরুত্বপূর্ণ।</td><td>Required members-এর structure গুরুত্বপূর্ণ।</td></tr><tr><td>একটি type compatible হতে নির্দিষ্ট base class inherit করতে হতে পারে।</td><td>Explicit inheritance ছাড়াও structure মিলে গেলে compatible হতে পারে।</td></tr><tr><td>ABC সাধারণত এই style-এর উদাহরণ।</td><td>Protocol static structural typing-এর উদাহরণ।</td></tr></table>
+ <h3>Protocol দিয়ে practical example</h3><div class="code-label">Python example</div><div class="codebox"><button class="copy">Copy</button><pre><code>from typing import Protocol
+
+class PaymentGateway(Protocol):
+    def charge(self, amount: float) -> bool:
+        ...
+
+class StripeGateway:
+    def charge(self, amount: float) -> bool:
+        print(f"Stripe charged: {amount}")
+        return True
+
+class MockGateway:
+    def charge(self, amount: float) -> bool:
+        print(f"Mock charge: {amount}")
+        return True
+
+def checkout(
+    gateway: PaymentGateway,
+    amount: float
+) -> bool:
+    return gateway.charge(amount)
+
+checkout(StripeGateway(), 500.0)
+checkout(MockGateway(), 500.0)</code></pre></div>
+ <h3>কেন দুইটি class compatible?</h3><ol><li><code>PaymentGateway</code> একটি required method declare করেছে: <code>charge(amount: float) -> bool</code>।</li><li><code>StripeGateway</code> ও <code>MockGateway</code> Protocol inherit করেনি।</li><li>দুই class-ই required method implement করেছে। তাই static type checker structural compatibility গ্রহণ করতে পারে।</li><li><code>checkout()</code> concrete implementation-এর বদলে required behavior-এর উপর নির্ভর করছে।</li></ol>
+ <h3>Duck Typing বনাম Static Structural Typing</h3><p>Duck Typing সাধারণত runtime behavior: কোনো object-এর প্রয়োজনীয় method call করা যায় কি না, সেটি দিয়ে কাজ চলে। Static Structural Typing-এ type checker আগে থেকেই declared Protocol-এর সঙ্গে object-এর structure compare করতে পারে।</p>
+ <h3>কেন গুরুত্বপূর্ণ?</h3><ul><li>Unrelated class-কে একই interface-এর মাধ্যমে ব্যবহার করা যায়।</li><li>Third-party library বা external class modify না করেও compatibility প্রকাশ করা যায়।</li><li>Unit test-এ fake/mock implementation inject করা সহজ হয়।</li><li>Concrete class-এর উপর dependency কমে, design বেশি flexible হয়।</li></ul>
+ <div class="tip"><b>Common confusion:</b> Protocol-এর সঙ্গে structural compatibility থাকলেই runtime-এ পূর্ণ validation হয় না। <code>@runtime_checkable</code> দিয়ে <code>isinstance()</code> check করা গেলেও সেটি মূলত member presence পরীক্ষা করে; method signature ও type correctness সম্পূর্ণ validate করে না।</div>
+ <div class="good"><b>Interview answer:</b> Structural Typing type compatibility নির্ধারণ করে required members-এর structure দেখে, explicit inheritance দিয়ে নয়। Python-এর <code>Protocol</code> static type checker-কে এই contract প্রকাশ করতে সাহায্য করে।</div>
+ </div></details>
+
+ <details class="question"><summary><span class="num">23</span><span class="qtext">Dependency Injection (DI) কী? Python-এ DI-এর patterns ও benefits কী?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept — Dependency কী?</h3><p>একটি class বা function কাজ করার জন্য অন্য object/service ব্যবহার করলে সেটি তার dependency। যেমন <code>OrderService</code> order process করতে <code>PaymentGateway</code> ব্যবহার করে।</p><p>Dependency Injection হলো এমন design technique, যেখানে একটি component নিজের dependency নিজে তৈরি না করে বাইরে থেকে dependency গ্রহণ করে। ফলে component-এর concrete implementation-এর সঙ্গে tight coupling কমে।</p>
+ <h3>Problem: Dependency নিজে তৈরি করা</h3><div class="code-label">Tightly coupled design</div><div class="codebox"><button class="copy">Copy</button><pre><code>class StripeGateway:
+    def charge(self, amount: float) -> bool:
+        return True
+
+class OrderService:
+    def __init__(self):
+        self.gateway = StripeGateway()  # নিজেই dependency তৈরি করছে
+
+    def place_order(self, amount: float) -> bool:
+        return self.gateway.charge(amount)</code></pre></div>
+ <p>এখানে <code>OrderService</code> সরাসরি <code>StripeGateway</code>-এর উপর নির্ভরশীল। অন্য payment provider বা test fake ব্যবহার করতে গেলে service code পরিবর্তন করতে হয়।</p>
+ <h3>Solution: Constructor Injection</h3><div class="code-label">Dependency বাইরে থেকে inject করা</div><div class="codebox"><button class="copy">Copy</button><pre><code>from typing import Protocol
+
+class PaymentGateway(Protocol):
+    def charge(self, amount: float) -> bool:
+        ...
+
+class StripeGateway:
+    def charge(self, amount: float) -> bool:
+        print("Stripe payment")
+        return True
+
+class FakeGateway:
+    def charge(self, amount: float) -> bool:
+        print("Fake payment")
+        return True
+
+class OrderService:
+    def __init__(self, gateway: PaymentGateway):
+        self.gateway = gateway
+
+    def place_order(self, amount: float) -> bool:
+        return self.gateway.charge(amount)
+
+# Production composition
+service = OrderService(StripeGateway())
+
+# Test composition
+test_service = OrderService(FakeGateway())</code></pre></div>
+ <h3>DI-এর প্রধান patterns</h3><h4>1. Constructor Injection</h4><p>Dependency constructor-এর parameter হিসেবে পাঠানো হয়। Required dependency-এর জন্য এটি সাধারণত সবচেয়ে পরিষ্কার এবং সহজে testable pattern। Object তৈরি হওয়ার সময়ই dependency পাওয়া যায়।</p>
+ <div class="codebox"><button class="copy">Copy</button><pre><code>class ReportService:
+    def __init__(self, repository):
+        self.repository = repository</code></pre></div>
+ <h4>2. Setter / Property Injection</h4><p>Object তৈরি হওয়ার পর setter বা property দিয়ে dependency assign করা হয়। Optional dependency বা runtime-এ replace করার প্রয়োজন থাকলে ব্যবহার হতে পারে। তবে dependency সেট না করেই method call হয়ে যাওয়ার ঝুঁকি থাকে।</p>
+ <div class="codebox"><button class="copy">Copy</button><pre><code>class ReportService:
+    def set_repository(self, repository):
+        self.repository = repository
+
+service = ReportService()
+service.set_repository(repository)</code></pre></div>
+ <h4>3. Method Injection</h4><p>শুধু নির্দিষ্ট operation-এর সময় dependency method parameter হিসেবে পাঠানো হয়। Dependency যদি পুরো object-এর lifetime জুড়ে প্রয়োজন না হয়, এই pattern উপযোগী হতে পারে।</p>
+ <div class="codebox"><button class="copy">Copy</button><pre><code>class ExportService:
+    def export(self, data, storage):
+        storage.save(data)</code></pre></div>
+ <h4>4. Interface / Protocol-based Injection</h4><p>Concrete class-এর বদলে Protocol বা ABC-এর মতো abstraction-এর মাধ্যমে dependency গ্রহণ করা হয়। এতে implementation বদলালেও consumer-এর code সাধারণত বদলাতে হয় না।</p>
+ <h3>Composition Root কী?</h3><p>Application-এর একটি নির্দিষ্ট জায়গায় concrete dependency তৈরি করে service-গুলোর মধ্যে connect করাকে Composition Root pattern বলা হয়। যেমন application startup বা configuration layer-এ repository, gateway, service তৈরি করে একে অন্যের কাছে inject করা। Business logic-এর ভিতরে সব জায়গায় object creation ছড়িয়ে না দেওয়াই লক্ষ্য।</p>
+ <div class="code-label">Simple composition root</div><div class="codebox"><button class="copy">Copy</button><pre><code>def build_order_service():
+    gateway = StripeGateway()
+    return OrderService(gateway)
+
+order_service = build_order_service()</code></pre></div>
+ <h3>DI বনাম Dependency Inversion Principle</h3><p>দুইটি related কিন্তু এক নয়। Dependency Injection হলো dependency সরবরাহ করার technique। Dependency Inversion Principle (DIP) হলো design principle: high-level policy ও low-level implementation সরাসরি একে অন্যের উপর নির্ভর না করে abstraction-এর উপর নির্ভর করবে। DI, DIP বাস্তবায়নে সাহায্য করতে পারে; কিন্তু DI ব্যবহার করলেই স্বয়ংক্রিয়ভাবে DIP মেনে চলা হয় না।</p>
+ <h3>Benefits ও trade-offs</h3><ul><li><b>Testability:</b> Real database/payment service-এর বদলে fake dependency দেওয়া যায়।</li><li><b>Loose coupling:</b> Consumer concrete implementation-এর detail কম জানে।</li><li><b>Flexibility:</b> Configuration অনুযায়ী implementation বদলানো যায়।</li><li><b>Maintainability:</b> Object creation ও business logic আলাদা থাকে।</li><li><b>Trade-off:</b> অতিরিক্ত abstraction বা বড় DI container configuration system বোঝা কঠিন করতে পারে। ছোট project-এ manual constructor injection যথেষ্ট।</li></ul>
+ <div class="tip"><b>Common confusion:</b> DI মানেই কোনো framework বা DI container ব্যবহার করা নয়। Constructor parameter দিয়ে object pass করাও Dependency Injection। Container শুধু dependency creation ও wiring automate করতে পারে।</div>
+ <div class="good"><b>Interview answer:</b> Dependency Injection হলো dependency-কে component-এর ভিতরে instantiate না করে বাইরে থেকে সরবরাহ করা। Constructor Injection সবচেয়ে common pattern। এটি loose coupling ও testability বাড়ায়। DI একটি technique; DIP একটি design principle।</div>
+ </div></details>
+
+ <details class="question"><summary><span class="num">24</span><span class="qtext">Functional Programming কী? Pure Function, Immutability, Higher-order Function ও Closure কী?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept</h3><p>Functional Programming (FP) হলো programming paradigm, যেখানে computation-কে function composition ও value transformation হিসেবে সাজানো হয়। এতে predictable function, immutable data এবং side effect নিয়ন্ত্রণের উপর গুরুত্ব দেওয়া হয়। Python multi-paradigm language: একই project-এ object-oriented, procedural এবং functional style একসঙ্গে ব্যবহার করা যায়।</p>
+ <h3>1. Pure Function</h3><p>একটি pure function-এর দুইটি গুরুত্বপূর্ণ বৈশিষ্ট্য থাকে: একই input-এর জন্য একই output দেয় এবং function-এর বাইরে observable side effect ঘটায় না।</p>
+ <div class="code-label">Pure function</div><div class="codebox"><button class="copy">Copy</button><pre><code>def add_tax(price: float, rate: float) -> float:
+    return price + (price * rate)
+
+print(add_tax(100, 0.10))  # 110.0</code></pre></div>
+ <div class="code-label">Impure function — external state পরিবর্তন করে</div><div class="codebox"><button class="copy">Copy</button><pre><code>total = 0
+
+def add_to_total(value):
+    global total
+    total += value
+    return total</code></pre></div>
+ <p>Pure function test ও reason করা সহজ, কারণ output নির্ভর করে শুধু input-এর উপর। তবে বাস্তব application-এ database, network, file system বা logging-এর মতো side effect প্রয়োজন হয়; FP style-এ এগুলোকে সীমিত boundary-তে রাখা হয়।</p>
+ <h3>2. Immutability</h3><p>Immutability মানে তৈরি হওয়ার পর object-এর state পরিবর্তন না করা। Python-এ <code>int</code>, <code>str</code>, <code>tuple</code>-এর মতো কিছু built-in type immutable; কিন্তু <code>list</code>, <code>dict</code>, <code>set</code> mutable। Tuple-এর ভিতরে mutable object থাকলে সেটির internal state বদলাতে পারে—তাই tuple সবসময় deeply immutable নয়।</p>
+ <div class="code-label">নতুন value তৈরি করা</div><div class="codebox"><button class="copy">Copy</button><pre><code>numbers = (1, 2, 3)
+updated = numbers + (4,)
+
+print(numbers)  # (1, 2, 3)
+print(updated)  # (1, 2, 3, 4)</code></pre></div>
+ <h3>3. First-class ও Higher-order Function</h3><p>Python-এ function হলো first-class object: variable-এ রাখা, argument হিসেবে পাঠানো এবং অন্য function থেকে return করা যায়। Higher-order function হলো এমন function, যা অন্য function-কে argument হিসেবে নেয় অথবা function return করে (অথবা দুটোই করে)।</p>
+ <div class="code-label">Function as argument</div><div class="codebox"><button class="copy">Copy</button><pre><code>def apply_operation(value, operation):
+    return operation(value)
+
+def square(number):
+    return number * number
+
+print(apply_operation(5, square))  # 25</code></pre></div>
+ <h3>4. map(), filter() এবং reduce()</h3><div class="code-label">Transformation ও filtering</div><div class="codebox"><button class="copy">Copy</button><pre><code>numbers = [1, 2, 3, 4, 5]
+
+squares = list(map(lambda x: x * x, numbers))
+evens = list(filter(lambda x: x % 2 == 0, numbers))
+
+print(squares)  # [1, 4, 9, 16, 25]
+print(evens)    # [2, 4]</code></pre></div>
+ <p>Python 3-এ <code>map()</code> ও <code>filter()</code> iterator return করে; তাই এখানে <code>list()</code> দিয়ে materialize করা হয়েছে। অনেক ক্ষেত্রে list comprehension আরও readable:</p>
+ <div class="codebox"><button class="copy">Copy</button><pre><code>squares = [x * x for x in numbers]
+evens = [x for x in numbers if x % 2 == 0]</code></pre></div>
+ <div class="code-label">reduce() — একাধিক value combine করা</div><div class="codebox"><button class="copy">Copy</button><pre><code>from functools import reduce
+
+numbers = [1, 2, 3, 4]
+
+product = reduce(lambda a, b: a * b, numbers)
+print(product)  # 24</code></pre></div>
+ <h3>5. Closure</h3><p>Closure হলো inner function, যা outer function-এর scope-এর variable reference ধরে রাখতে পারে—outer function execution শেষ হওয়ার পরও।</p>
+ <div class="code-label">Closure example</div><div class="codebox"><button class="copy">Copy</button><pre><code>def make_multiplier(factor):
+    def multiply(value):
+        return value * factor
+    return multiply
+
+double = make_multiplier(2)
+triple = make_multiplier(3)
+
+print(double(10))  # 20
+print(triple(10))  # 30</code></pre></div>
+ <p><code>multiply()</code> function তার enclosing scope-এর <code>factor</code> variable ধরে রাখে। এই captured environment-এর কারণেই <code>double</code> ও <code>triple</code> আলাদা behavior দেয়।</p>
+ <h3>6. Function Composition</h3><p>একটি function-এর output অন্য function-এর input হিসেবে ব্যবহার করে বড় operation তৈরি করাকে function composition বলা হয়।</p>
+ <div class="codebox"><button class="copy">Copy</button><pre><code>def strip_text(value):
+    return value.strip()
+
+def normalize_text(value):
+    return value.lower()
+
+def compose(value):
+    return normalize_text(strip_text(value))
+
+print(compose("  PYTHON  "))  # python</code></pre></div>
+ <h3>Functional Programming-এর সুবিধা ও সীমাবদ্ধতা</h3><ul><li>Pure function unit test ও debugging সহজ করে।</li><li>Immutable data accidental shared-state mutation কমায়।</li><li>Function composition ছোট logic পুনরায় ব্যবহার করতে সাহায্য করে।</li><li>Side effect boundary-তে রাখলে business logic বেশি predictable হয়।</li><li>অতিরিক্ত abstraction বা nested lambda code readability কমাতে পারে; Python-এ readability ও team convention গুরুত্বপূর্ণ।</li></ul>
+ <div class="tip"><b>Common confusion:</b> Functional Programming মানে class ব্যবহার করা যাবে না—এমন নয়। Python-এ এটি একটি style/paradigm, বাধ্যতামূলক programming rule নয়। Pure function মানে function-এর ভিতরে কোনো computation হবে না, সেটিও নয়; মূল বিষয় হলো external observable state-এর side effect না থাকা।</div>
+ <div class="good"><b>Interview answer:</b> Functional Programming computation-কে function ও value transformation দিয়ে সাজায়। এর গুরুত্বপূর্ণ concept হলো pure function, immutability, first-class/higher-order function, closure ও function composition। Python multi-paradigm হওয়ায় প্রয়োজন অনুযায়ী FP technique ব্যবহার করা যায়।</div>
+ </div></details>
+
+ <details class="question"><summary><span class="num">25</span><span class="qtext">Python Memory Management কীভাবে কাজ করে? Reference Counting, Garbage Collection ও Memory Allocator কী?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept — Memory Management</h3><p>Program চলার সময় object ও data রাখার জন্য memory প্রয়োজন হয়। Python runtime object allocation, object lifetime এবং অপ্রয়োজনীয় object cleanup-এর বড় অংশ পরিচালনা করে। তাই সাধারণ Python code-এ প্রতিটি object-এর memory manually allocate/free করতে হয় না।</p><p>তবে Python language-এর সব implementation একই internal memory management ব্যবহার করে না। নিচের reference counting ও cyclic garbage collector-এর আলোচনা মূলত <b>CPython</b>-এর behavior নিয়ে, যা সবচেয়ে প্রচলিত Python implementation।</p>
+ <h3>1. Object ও Reference</h3><p>Python-এ variable-কে object-এর named box হিসেবে না দেখে object-এর reference বা binding হিসেবে বোঝা ভালো। একটি object-এর একাধিক reference থাকতে পারে।</p>
+ <div class="code-label">একই object-এর একাধিক reference</div><div class="codebox"><button class="copy">Copy</button><pre><code>first = [10, 20]
+second = first
+
+second.append(30)
+
+print(first)   # [10, 20, 30]
+print(second)  # [10, 20, 30]
+
+print(first is second)  # True</code></pre></div>
+ <p><code>first</code> ও <code>second</code> একই list object-কে reference করছে। তাই এক reference দিয়ে mutable object পরিবর্তন করলে অন্য reference দিয়েও পরিবর্তনটি দেখা যায়।</p>
+ <h3>2. Reference Counting</h3><p>CPython প্রতিটি object-এর reference count track করে। কোনো object-এর strong reference তৈরি হলে count বাড়ে; reference remove হলে count কমে। Reference count শূন্য হলে CPython সাধারণত object-এর memory release করার জন্য deallocation শুরু করতে পারে।</p>
+ <div class="code-label">Reference remove করার example</div><div class="codebox"><button class="copy">Copy</button><pre><code>import sys
+
+data = []
+alias = data
+
+print(sys.getrefcount(data))  # getrefcount নিজেও temporary reference নেয়
+
+del alias
+print(sys.getrefcount(data))
+
+del data  # এই নামের binding সরানো হলো</code></pre></div>
+ <p><code>sys.getrefcount()</code> নিজেই temporary reference তৈরি করে, তাই printed value সরাসরি “কতটি variable আছে” তা নয়। Reference count implementation detail; application logic এর উপর নির্ভর করা উচিত নয়।</p>
+ <h3>3. Garbage Collection (GC)</h3><p>Reference counting একা সব object cleanup করতে পারে না। বিশেষ করে circular reference থাকলে object-গুলো একে অন্যকে reference করায় count শূন্য হয় না—যদিও বাইরে থেকে সেগুলো আর reachable নয়। CPython-এর cyclic garbage collector এ ধরনের unreachable reference cycle শনাক্ত ও cleanup করতে সাহায্য করে।</p>
+ <div class="code-label">Circular reference</div><div class="codebox"><button class="copy">Copy</button><pre><code>class Node:
+    pass
+
+a = Node()
+b = Node()
+
+a.other = b
+b.other = a
+
+# a এবং b একে অন্যকে reference করছে।
+# বাইরের reference মুছে গেলে cycle garbage collector
+# এই unreachable cycle cleanup করতে পারে।
+
+del a
+del b</code></pre></div>
+ <p>CPython-এর cyclic GC মূলত container object-এর reference graph বিশ্লেষণ করে unreachable cycle খুঁজে পায়। এটি reference counting-এর বিকল্প নয়; reference counting-এর পাশাপাশি কাজ করে।</p>
+ <h3>4. gc module</h3><div class="code-label">GC inspect ও control</div><div class="codebox"><button class="copy">Copy</button><pre><code>import gc
+
+print(gc.isenabled())  # automatic GC enabled কি না
+print(gc.get_count())  # generation অনুযায়ী allocation counters
+
+collected = gc.collect()
+print("Collected:", collected)</code></pre></div>
+ <p><code>gc.collect()</code> explicit collection request করে এবং collected unreachable cyclic object-এর count return করে। এটি সব ধরনের memory সঙ্গে সঙ্গে operating system-এ ফেরত দেবে—এমন guarantee নয়। সাধারণ application-এ অকারণে GC disable করা উচিত নয়।</p>
+ <h3>5. Memory Allocator এবং Python Memory Arena</h3><p>CPython-এর memory allocation system বিভিন্ন স্তরে কাজ করে। Python object-এর memory request প্রথমে Python memory manager-এর মাধ্যমে যায়; ছোট object allocation-এর ক্ষেত্রে CPython-এর <code>pymalloc</code> allocator ব্যবহার হতে পারে। এটি memory pool/arena-ভিত্তিক allocation করে allocation overhead কমাতে সাহায্য করে। বড় allocation বা নির্দিষ্ট allocation path-এ lower-level allocator ব্যবহার হতে পারে।</p>
+ <ul><li><b>Object allocator:</b> Python object-এর জন্য প্রয়োজনীয় memory allocation পরিচালনা করে।</li><li><b>Pool:</b> একই size class-এর ছোট block রাখার allocation unit।</li><li><b>Arena:</b> একাধিক pool রাখার বড় memory region।</li><li><b>Underlying allocator:</b> operating system বা C runtime-এর allocator থেকে বড় memory region সংগ্রহ করতে পারে।</li></ul>
+ <p>এগুলো CPython-এর implementation detail; Python language specification সব implementation-এর জন্য একই allocator architecture বাধ্যতামূলক করে না।</p>
+ <h3>6. del statement কী করে?</h3><p><code>del x</code> সাধারণত object-কে সরাসরি destroy করে না; এটি current scope থেকে <code>x</code> নামের binding remove করে। Object-এর অন্য reference থাকলে object বেঁচে থাকে। শেষ strong reference সরলে CPython object deallocate করতে পারে, তবে finalization ও resource management-এর আরও জটিলতা থাকতে পারে।</p>
+ <div class="code-label">del মানেই object delete নয়</div><div class="codebox"><button class="copy">Copy</button><pre><code>items = [1, 2, 3]
+backup = items
+
+del items
+
+print(backup)  # [1, 2, 3]
+# Object এখনও backup-এর মাধ্যমে reachable</code></pre></div>
+ <h3>7. Memory leak কি Python-এ হতে পারে?</h3><p>হ্যাঁ। Garbage collector থাকলেও application memory leak বা unbounded memory growth ঘটতে পারে। সাধারণ কারণ:</p><ul><li>Global list/dictionary-তে object জমিয়ে রাখা।</li><li>Cache-এ eviction policy ছাড়া data রাখা।</li><li>Long-lived object-এর মধ্যে অপ্রয়োজনীয় reference ধরে রাখা।</li><li>Event handler, callback বা closure-এ object ধরে রাখা।</li><li>C extension বা native library-তে allocation/freeing সমস্যা।</li><li>Unbounded queue বা background task accumulation।</li></ul>
+ <h3>8. Memory diagnose করার tools</h3><div class="code-label">tracemalloc — Python allocation trace</div><div class="codebox"><button class="copy">Copy</button><pre><code>import tracemalloc
+
+tracemalloc.start()
+
+data = [i for i in range(100_000)]
+
+current, peak = tracemalloc.get_traced_memory()
+print("Current:", current)
+print("Peak:", peak)
+
+tracemalloc.stop()</code></pre></div>
+ <p><code>tracemalloc</code> Python memory allocation trace ও snapshot তুলনায় কাজে লাগে। এটি সব native/C-extension memory allocation track করে না। Process-level memory দেখতে OS tools বা <code>psutil</code>-এর মতো tool প্রয়োজন হতে পারে।</p>
+ <h3>9. Object cleanup বনাম external resource cleanup</h3><p>File, socket, database connection-এর মতো external resource release করার জন্য garbage collection-এর উপর নির্ভর করা উচিত নয়। Deterministic cleanup-এর জন্য context manager ব্যবহার করা ভালো।</p>
+ <div class="code-label">Context manager</div><div class="codebox"><button class="copy">Copy</button><pre><code>with open("data.txt", "r", encoding="utf-8") as file:
+    content = file.read()
+
+# with block শেষ হলে file close হয়,
+# exception হলেও context manager cleanup চালায়।</code></pre></div>
+ <h3>Reference Counting বনাম Garbage Collection</h3><table class="compare"><tr><th>Reference Counting</th><th>Cyclic Garbage Collector</th></tr><tr><td>প্রতিটি object-এর reference count track করে।</td><td>Unreachable reference cycle খুঁজে বের করে।</td></tr><tr><td>Count শূন্য হলে CPython সাধারণত দ্রুত deallocation শুরু করে।</td><td>Cycle শনাক্তের জন্য collection pass চালায়।</td></tr><tr><td>Simple unreferenced object cleanup করে।</td><td>Reference cycle-এর ক্ষেত্রে সহায়তা করে।</td></tr><tr><td>Cycle একা resolve করতে পারে না।</td><td>Reference counting-এর পাশাপাশি কাজ করে।</td></tr></table>
+ <h3>GIL কি Memory Management?</h3><p>না। GIL (Global Interpreter Lock) CPython-এর কিছু build-এ Python bytecode execution-এর concurrency নিয়ন্ত্রণের mechanism; এটি garbage collector বা memory allocator নয়। Python 3.13 থেকে free-threaded CPython build-ও experimental/optionalভাবে পাওয়া যায়, তাই GIL-কে সব Python implementation বা সব build-এর universal property বলা ঠিক নয়।</p>
+ <div class="tip"><b>Common confusion:</b> Object deallocate হওয়া, Python allocator-এর কাছে memory ফেরত যাওয়া এবং operating system-এ memory ফেরত যাওয়া—এগুলো এক ঘটনা নয়। Python allocator freed block ভবিষ্যৎ allocation-এর জন্য ধরে রাখতে পারে। তাই object delete করার পর process memory (RSS) সঙ্গে সঙ্গে কমবে এমন guarantee নেই।</div>
+ <div class="good"><b>Interview answer:</b> CPython memory management-এ reference counting প্রধান mechanism এবং cyclic garbage collector unreachable reference cycle cleanup করে। Python memory allocator object allocation পরিচালনা করে; small allocations-এর জন্য pymalloc pool/arena ব্যবহার করতে পারে। Object deallocation মানেই memory সঙ্গে সঙ্গে OS-এ ফেরত যাওয়া নয়। External resource-এর জন্য context manager ব্যবহার করা উচিত।</div>
+ </div></details>
+ </div>
+</main>
+<footer class="footer"><div class="wrap">Advanced Python Interview Preparation · Part 2 · Questions 21–25<br>Implementation note: Reference counting, cyclic GC ও pymalloc-এর নির্দিষ্ট আলোচনা CPython-কেন্দ্রিক। Python version ও implementation অনুযায়ী internal details বদলাতে পারে।</div></footer>
+<script>
+const items=[...document.querySelectorAll('.question')];
+document.getElementById('expand').addEventListener('click',()=>items.forEach(x=>x.open=true));
+document.getElementById('collapse').addEventListener('click',()=>items.forEach(x=>x.open=false));
+document.getElementById('search').addEventListener('input',e=>{
+ const q=e.target.value.trim().toLocaleLowerCase();
+ items.forEach(item=>{
+  const match=!q||item.innerText.toLocaleLowerCase().includes(q);
+  item.classList.toggle('hidden',!match);
+  if(q&&match)item.open=true;
+ });
+});
+document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{
+ const code=btn.parentElement.querySelector('code').innerText;
+ try{await navigator.clipboard.writeText(code);btn.textContent='Copied!';}
+ catch(e){btn.textContent='Copy failed';}
+ setTimeout(()=>btn.textContent='Copy',1400);
+}));
+</script>
+</body>
+</html>

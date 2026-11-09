@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Python advanced interview questions in Bangla: generators, descriptors, metaclasses, dataclasses, slots, type hints and Protocol.">
+<title>Advanced Python Interview Questions — বাংলা</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+:root{--bg:#0b1020;--panel:#111a2e;--panel2:#16213a;--line:#263653;--text:#e8eefc;--muted:#a9b7d0;--accent:#80aaff;--green:#75d6ad;--yellow:#f4cb79;--code:#050914;--shadow:0 14px 40px #0005}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:radial-gradient(ellipse at 20% 0%,#18284b 0,transparent 40%),var(--bg);color:var(--text);font-family:Inter,'Noto Sans Bengali',sans-serif;line-height:1.75}
+.wrap{width:min(1080px,92%);margin:auto}.hero{padding:58px 0 34px}.eyebrow{color:var(--green);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(28px,5vw,48px);line-height:1.25;margin:12px 0}.hero p{color:var(--muted);max-width:780px;font-size:16px}.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}.stat{background:#ffffff0a;border:1px solid var(--line);border-radius:12px;padding:9px 14px;color:var(--muted);font-size:13px}.stat b{color:var(--text)}
+.toolbar{position:sticky;top:0;z-index:5;background:#0b1020eF;backdrop-filter:blur(14px);border-block:1px solid var(--line);padding:12px 0}.tools{display:flex;gap:10px;align-items:center}.search{flex:1;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 14px;color:var(--text);font:inherit;outline:none}.search:focus{border-color:var(--accent)}button{cursor:pointer;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--text);padding:10px 13px;font:600 13px Inter,sans-serif}button:hover{border-color:var(--accent);color:var(--accent)}
+main{padding:28px 0 70px}.intro{background:linear-gradient(135deg,#142443,#111a2e);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin-bottom:22px}.intro strong{color:var(--green)}.section-title{font-size:18px;margin:28px 0 12px;color:#cbd9f4}.question{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:12px 0;overflow:hidden;box-shadow:var(--shadow)}.question[open]{border-color:#47618e}.question summary{list-style:none;cursor:pointer;padding:17px 19px;display:flex;gap:14px;align-items:center;font-weight:700;font-size:16px}.question summary::-webkit-details-marker{display:none}.num{flex:0 0 34px;height:34px;border-radius:10px;background:#243858;color:#a9c6ff;display:grid;place-items:center;font-size:13px}.qtext{flex:1}.chev{color:var(--muted);transition:transform .2s}.question[open] .chev{transform:rotate(180deg)}.answer{padding:0 20px 22px 67px;color:#d7e0f2}.answer h3{font-size:16px;color:#9fc0ff;margin:21px 0 7px}.answer h4{font-size:14px;color:var(--green);margin:16px 0 6px}.answer p{margin:7px 0}.answer ul{padding-left:22px;margin:7px 0}.answer li{margin:5px 0}.answer code:not(pre code){font-family:'Fira Code',monospace;color:#ffd58b;background:#263149;padding:2px 5px;border-radius:5px;font-size:.9em}.code-label{font:700 11px Inter,sans-serif;color:#8da4c9;letter-spacing:1px;text-transform:uppercase;margin:13px 0 0}.codebox{position:relative;background:var(--code);border:1px solid #25334d;border-radius:10px;margin:7px 0 13px;overflow:hidden}.codebox pre{margin:0;padding:17px;overflow-x:auto;color:#d8e5ff;font:13px/1.7 'Fira Code',monospace;tab-size:4}.copy{position:absolute;top:8px;right:8px;background:#17233a;border-color:#334766;font-size:11px;padding:6px 9px}.tip{border-left:3px solid var(--yellow);background:#f4cb7910;padding:10px 13px;border-radius:0 8px 8px 0;margin:13px 0;color:#e9d8b5}.good{border-left:3px solid var(--green);background:#75d6ad10;padding:10px 13px;border-radius:0 8px 8px 0;margin:13px 0}.compare{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}.compare th,.compare td{border:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}.compare th{background:#1b2a46;color:#bcd0f5}.footer{border-top:1px solid var(--line);padding:25px 0 40px;color:var(--muted);font-size:13px}.hidden{display:none!important}
+@media(max-width:650px){.hero{padding-top:38px}.tools{flex-wrap:wrap}.search{flex-basis:100%}.answer{padding:0 15px 18px}.question summary{padding:14px}.answer h3{margin-top:17px}.compare{font-size:12px}.compare th,.compare td{padding:6px}}
+</style>
+</head>
+<body>
+<header class="hero wrap">
+ <div class="eyebrow">Python · Advanced Interview Preparation</div>
+ <h1>Advanced Python Interview Questions</h1>
+</header>
+<div class="toolbar"><div class="wrap tools">
+</div></div>
+<main class="wrap">
+ <div id="questions">
+ <details class="question"><summary><span class="num">01</span><span class="qtext">Generator expression কী? List comprehension থেকে পার্থক্য কী?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept</h3><p><code>Generator expression</code> হলো এমন expression, যা একবারে পুরো collection তৈরি না করে প্রয়োজন অনুযায়ী একটির পর একটি value produce করে। Syntax দেখতে List comprehension-এর মতো, তবে square bracket <code>[]</code>-এর বদলে parentheses <code>()</code> ব্যবহার হয়। এর Result হলো generator iterator।</p>
+ <div class="code-label">Python example</div><div class="codebox"><button class="copy">Copy</button><pre><code>numbers = (x * x for x in range(5))
+
+print(numbers)       # generator object
+print(next(numbers)) # 0
+print(next(numbers)) # 1
+
+for value in numbers:
+    print(value)     # 4, 9, 16</code></pre></div>
+ <h3>কেন প্রয়োজন?</h3><p>বড় dataset নিয়ে কাজ করার সময় সব value একসাথে memory-তে তৈরি করা ব্যয়বহুল হতে পারে। Generator expression lazy evaluation ব্যবহার করে: iteration-এ যখন পরের value দরকার হয়, তখন সেটি calculate করে। ফলে peak memory usage কমতে পারে।</p>
+ <h3>Internal working</h3><ul><li>Expression evaluate করলে generator object তৈরি হয়; তখন সব item calculate হয় না।</li><li><code>next()</code> বা <code>for</code> loop পরের item চাইলে generator execution চালু বা resume হয়।</li><li>প্রতিটি item yield করার পর execution state সংরক্ষিত থাকে।</li><li>সব item শেষ হলে <code>StopIteration</code> দিয়ে iteration শেষ হয়।</li></ul>
+ <div class="code-label">List comprehension বনাম generator expression</div><div class="codebox"><button class="copy">Copy</button><pre><code># List comprehension: সব value তৈরি করে list-এ রাখে
+squares_list = [x * x for x in range(1_000_000)]
+
+# Generator expression: প্রয়োজনমতো value তৈরি করে
+squares_gen = (x * x for x in range(1_000_000))</code></pre></div>
+ <table class="compare"><tr><th>বিষয়</th><th>List comprehension</th><th>Generator expression</th></tr><tr><td>Result type</td><td>list</td><td>generator iterator</td></tr><tr><td>Evaluation</td><td>Eager</td><td>Lazy</td></tr><tr><td>Memory</td><td>সব item ধরে রাখে</td><td>সাধারণত একবারে একটি item</td></tr><tr><td>Reuse</td><td>বারবার iterate করা যায়</td><td>একবার শেষ হলে exhausted</td></tr><tr><td>Indexing</td><td><code>items[0]</code> সম্ভব</td><td>সরাসরি indexing সম্ভব নয়</td></tr></table>
+ <div class="tip"><b>Common confusion:</b> Generator expression নিজে সবসময় দ্রুততর নয়। ছোট collection-এ list comprehension বেশি সুবিধাজনকও হতে পারে। Generator-এর বড় সুবিধা হলো lazy processing ও কম memory requirement; repeated iteration বা random access দরকার হলে list উপযুক্ত।</div>
+ <div class="good"><b>Interview answer:</b> Generator expression হলো lazy iterator তৈরির compact syntax। এটি একসাথে সব item materialize না করে demand অনুযায়ী value produce করে, তাই বড় বা streaming dataset-এ memory-efficient processing সম্ভব হয়।</div>
+ </div></details>
+
+ <details class="question"><summary><span class="num">02</span><span class="qtext">Generator-এর send() method কীভাবে কাজ করে?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept</h3><p>Generator-এর <code>send(value)</code> method generator-কে resume করার পাশাপাশি suspended <code>yield</code> expression-এর Result হিসেবে একটি value পাঠায়। অর্থাৎ <code>next()</code> মূলত generator-কে পরের yield পর্যন্ত চালায়, আর <code>send(value)</code> value-টিও generator-এর ভিতরে পাঠাতে পারে।</p>
+ <h3>Basic example</h3><div class="code-label">Python example</div><div class="codebox"><button class="copy">Copy</button><pre><code>def receiver():
+    received = yield "Ready"
+    print("Received:", received)
+    yield "Done"
+
+gen = receiver()
+
+print(next(gen))       # Ready
+print(gen.send("Hello"))  # Received: Hello, then Done</code></pre></div>
+ <h3>এখানে execution কীভাবে হলো?</h3><ul><li><code>gen = receiver()</code> generator object তৈরি করে; function body তখনও execute হয় না।</li><li><code>next(gen)</code> function চালিয়ে <code>yield "Ready"</code>-তে pause করে।</li><li><code>gen.send("Hello")</code> generator resume করে এবং suspended <code>yield</code> expression-এর value হিসেবে <code>"Hello"</code> বসায়।</li><li>তাই <code>received</code>-এর value হয় <code>"Hello"</code>; এরপর পরের <code>yield "Done"</code> থেকে control ফেরত আসে।</li></ul>
+ <h3>কেন প্রথমে next() লাগে?</h3><p>নতুন generator এখনো কোনো <code>yield</code> point-এ pause করেনি। তাই প্রথমবার non-<code>None</code> value দিয়ে <code>send()</code> করা যায় না। আগে <code>next(gen)</code> অথবা <code>gen.send(None)</code> দিয়ে generator-কে প্রথম <code>yield</code> পর্যন্ত চালু করতে হয়।</p>
+ <div class="code-label">সঠিক sequence</div><div class="codebox"><button class="copy">Copy</button><pre><code>gen = receiver()
+first = next(gen)          # অথবা gen.send(None)
+second = gen.send("Data")</code></pre></div>
+ <h3>Real-world use</h3><p>Coroutine-style workflow-এ generator-এর ভিতরে data পাঠাতে <code>send()</code> ব্যবহার করা যায়। তবে modern asynchronous programming-এ সাধারণত <code>async</code>/<code>await</code> বেশি ব্যবহৃত হয়।</p>
+ <div class="tip"><b>Common confusion:</b> <code>send()</code> generator থেকে value বের করার method মাত্র নয়; এটি generator-এর ভিতরেও value পাঠায়। <code>yield</code> expression-এর value হলো পরবর্তী <code>send(value)</code>-এর পাঠানো value।</div>
+ <div class="good"><b>Interview answer:</b> <code>send(value)</code> একটি generator-কে resume করে এবং suspended <code>yield</code> expression-এ value inject করে। নতুন generator-এ non-None value পাঠানোর আগে সেটিকে প্রথম yield পর্যন্ত advance করতে হয়।</div>
+ </div></details>
+
+ <details class="question"><summary><span class="num">03</span><span class="qtext">yield from কী? সাধারণ yield থেকে পার্থক্য কী?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept</h3><p><code>yield from iterable</code> একটি sub-iterator বা iterable-এর item-গুলোকে current generator থেকে সরাসরি delegate করে। এটি nested generator-এর value একে একে forward করার concise উপায়।</p>
+ <div class="code-label">সাধারণ yield দিয়ে</div><div class="codebox"><button class="copy">Copy</button><pre><code>def combined():
+    for item in [1, 2, 3]:
+        yield item
+    for item in [4, 5]:
+        yield item</code></pre></div>
+ <div class="code-label">yield from দিয়ে</div><div class="codebox"><button class="copy">Copy</button><pre><code>def combined():
+    yield from [1, 2, 3]
+    yield from [4, 5]
+
+print(list(combined()))  # [1, 2, 3, 4, 5]</code></pre></div>
+ <h3>Internal working</h3><p><code>yield from sub_iterable</code> শুধু syntactic shortcut নয়। এটি sub-iterator-এর সঙ্গে delegation protocol পরিচালনা করে। Sub-iterator-এর item caller-এর কাছে yield হয়; উপযুক্ত ক্ষেত্রে caller-এর <code>send()</code>, <code>throw()</code> এবং generator close করার প্রভাবও delegate-এর কাছে forward হয়। Sub-generator return করলে তার return value <code>yield from</code> expression-এর value হয়।</p>
+ <div class="code-label">Sub-generator-এর return value</div><div class="codebox"><button class="copy">Copy</button><pre><code>def child():
+    yield 10
+    yield 20
+    return "child finished"
+
+def parent():
+    result = yield from child()
+    print(result)  # child finished
+    yield 30
+
+print(list(parent()))  # [10, 20, 30]</code></pre></div>
+ <h3>yield বনাম yield from</h3><table class="compare"><tr><th><code>yield item</code></th><th><code>yield from iterable</code></th></tr><tr><td>একটি object yield করে।</td><td>Iterable-এর item-গুলো delegate করে।</td></tr><tr><td>Nested generator হলে সেটি একটি yielded value হতে পারে।</td><td>Nested generator-এর output stream forward করে।</td></tr><tr><td>Delegation নিজে manually লিখতে হয়।</td><td>Delegation protocol handle করে।</td></tr></table>
+ <div class="tip"><b>Common confusion:</b> <code>yield from [1, 2, 3]</code> list-টিকে একবারে yield করে না; list-এর item-গুলো একে একে yield করে। কিন্তু <code>yield [1, 2, 3]</code> পুরো list-টিকে একটি value হিসেবে yield করে।</div>
+ <div class="good"><b>Interview answer:</b> <code>yield from</code> sub-iterator-এর কাছে iteration control delegate করে। এটি nested generator composition সহজ করে এবং send/throw/close delegation ও sub-generator-এর return value handle করতে পারে।</div>
+ </div></details>
+
+ <details class="question"><summary><span class="num">04</span><span class="qtext">Python Descriptor কী? __get__, __set__, __delete__ কী করে?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept</h3><p>Descriptor হলো এমন object, যার type-এ নিচের এক বা একাধিক special method define করা থাকে: <code>__get__()</code>, <code>__set__()</code>, <code>__delete__()</code>। কোনো class-এর attribute হিসেবে descriptor instance ব্যবহার করলে attribute access, assignment বা deletion-এর behavior customize করা যায়।</p>
+ <h3>Descriptor methods</h3><ul><li><code>__get__(self, instance, owner)</code>: attribute read হলে call হয়। Class থেকে access করলে <code>instance</code> সাধারণত <code>None</code> থাকে।</li><li><code>__set__(self, instance, value)</code>: attribute-এ value assign হলে call হয়।</li><li><code>__delete__(self, instance)</code>: attribute delete হলে call হয়।</li></ul>
+ <h3>একটি validation descriptor</h3><div class="code-label">Python example</div><div class="codebox"><button class="copy">Copy</button><pre><code>class PositiveNumber:
+    def __set_name__(self, owner, name):
+        self.name = name
+
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self
+        return instance.__dict__[self.name]
+
+    def __set__(self, instance, value):
+        if value <= 0:
+            raise ValueError("Value must be positive")
+        instance.__dict__[self.name] = value
+
+
+class Product:
+    price = PositiveNumber()
+
+p = Product()
+p.price = 100
+print(p.price)  # 100
+# p.price = -5   # ValueError</code></pre></div>
+ <h3>এই code-এর flow</h3><ul><li>Class তৈরির সময় Python descriptor-এর <code>__set_name__</code> call করে attribute name জানায়।</li><li><code>p.price = 100</code> হলে descriptor-এর <code>__set__</code> call হয়; validation শেষে instance dictionary-তে value রাখা হয়।</li><li><code>p.price</code> read করলে <code>__get__</code> call হয়ে stored value ফেরত আসে।</li></ul>
+ <h3>Data descriptor বনাম Non-data descriptor</h3><p><code>__set__</code> অথবা <code>__delete__</code> থাকা descriptor হলো data descriptor। শুধু <code>__get__</code> থাকলে সেটি non-data descriptor। সাধারণ instance attribute lookup-এ data descriptor instance-এর একই নামের entry-র চেয়ে অগ্রাধিকার পায়; non-data descriptor-এর ক্ষেত্রে instance dictionary entry অগ্রাধিকার পেতে পারে।</p>
+ <h3>Python-এর কোথায় ব্যবহৃত?</h3><p><code>property</code>, bound methods, <code>classmethod</code> এবং <code>staticmethod</code> descriptor protocol-এর উপর ভিত্তি করে কাজ করে। Django ORM-এর model fields-ও descriptor behavior ব্যবহার করে model attribute access পরিচালনা করে।</p>
+ <div class="tip"><b>Common confusion:</b> Descriptor নিজে decorator নয়। এটি protocol implement করা object। <code>property</code> descriptor-এর একটি built-in ব্যবহার।</div>
+ <div class="good"><b>Interview answer:</b> Descriptor protocol Python-এর attribute access customize করার mechanism। <code>__get__</code>, <code>__set__</code>, <code>__delete__</code> implement করে reusable validation, computed attributes এবং framework-level field behavior তৈরি করা যায়।</div>
+ </div></details>
+
+ <details class="question"><summary><span class="num">05</span><span class="qtext">Metaclass কী? Python class কীভাবে তৈরি হয়?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept</h3><p>Metaclass হলো class তৈরির class। সাধারণ object-এর type যেমন তার class, তেমনি সাধারণ class object-এর type হলো metaclass। Python-এ default metaclass হলো <code>type</code>।</p>
+ <div class="code-label">Class এবং type relationship</div><div class="codebox"><button class="copy">Copy</button><pre><code>class User:
+    pass
+
+user = User()
+
+print(type(user))  # &lt;class '__main__.User'&gt;
+print(type(User))  # &lt;class 'type'&gt;</code></pre></div>
+ <h3>Class creation-এর ধারণা</h3><p><code>class User:</code> statement execute হলে Python class body execute করে namespace তৈরি করে; তারপর metaclass সেই namespace ব্যবহার করে class object তৈরি করে। সাধারণ ক্ষেত্রে metaclass হলো <code>type</code>। Class body execution-এর আগে base class ও metaclass selection-সহ আরও কিছু preparation step হয়।</p>
+ <h3>Custom metaclass example</h3><div class="code-label">Python example</div><div class="codebox"><button class="copy">Copy</button><pre><code>class RequireTableName(type):
+    def __new__(mcls, name, bases, namespace):
+        if name != "BaseModel" and "table_name" not in namespace:
+            raise TypeError("table_name is required")
+
+        return super().__new__(mcls, name, bases, namespace)
+
+
+class BaseModel(metaclass=RequireTableName):
+    pass
+
+
+class User(BaseModel):
+    table_name = "users"
+
+
+# class Product(BaseModel):
+#     pass  # TypeError: table_name is required</code></pre></div>
+ <h3>__new__-এর arguments কী?</h3><ul><li><code>mcls</code>: যে metaclass class তৈরি করছে।</li><li><code>name</code>: তৈরি হতে থাকা class-এর নাম।</li><li><code>bases</code>: parent/base class-এর tuple।</li><li><code>namespace</code>: class body থেকে পাওয়া attribute ও method-এর mapping।</li></ul>
+ <h3>কখন ব্যবহার করা উচিত?</h3><p>যখন class definition-এর সময় central rule enforce, automatic registration, class attribute validation বা API generation দরকার হয়, তখন metaclass কাজে আসতে পারে। তবে সাধারণত class decorator, <code>__init_subclass__</code> বা composition দিয়ে কাজটি সহজে করা গেলে metaclass এড়িয়ে যাওয়া ভালো।</p>
+ <div class="tip"><b>Common confusion:</b> Metaclass object তৈরি করে না; এটি class object তৈরি করে। Metaclass দিয়ে তৈরি class থেকে পরে ordinary instance তৈরি হয়।</div>
+ <div class="good"><b>Interview answer:</b> Metaclass হলো class-এর type এবং class creation customize করার mechanism। Python-এর default metaclass <code>type</code>; custom metaclass দিয়ে class তৈরি হওয়ার সময় validation বা registration করা যায়।</div>
+ </div></details>
+
+ <details class="question"><summary><span class="num">06</span><span class="qtext">__new__ vs __init__ — পার্থক্য কী?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept</h3><p><code>__new__</code> instance তৈরি করে এবং instance return করে। <code>__init__</code> তৈরি হওয়া instance initialize করে; এটি নতুন instance return করে না। তাই <code>__new__</code> হলো object creation stage, আর <code>__init__</code> হলো initialization stage।</p>
+ <h3>Execution order</h3><div class="code-label">Python example</div><div class="codebox"><button class="copy">Copy</button><pre><code>class Person:
+    def __new__(cls, name):
+        print("__new__: creating instance")
+        instance = super().__new__(cls)
+        return instance
+
+    def __init__(self, name):
+        print("__init__: initializing instance")
+        self.name = name
+
+
+person = Person("Anik")</code></pre></div>
+ <p>Output:</p><div class="codebox"><pre><code>__new__: creating instance
+__init__: initializing instance</code></pre></div>
+ <h3>Internal working</h3><ul><li><code>Person("Anik")</code> call হলে metaclass <code>type.__call__</code> সাধারণ object instantiation flow পরিচালনা করে।</li><li>প্রথমে <code>Person.__new__</code> call হয়। এটি <code>Person</code> instance return করলে সেই instance-এ <code>__init__</code> call হয়।</li><li><code>__new__</code> যদি <code>Person</code>-এর instance return না করে, তাহলে সাধারণত <code>__init__</code> call হয় না।</li><li><code>__init__</code> অবশ্যই <code>None</code> return করবে; অন্য কিছু return করলে <code>TypeError</code> হয়।</li></ul>
+ <h3>কখন __new__ override করা হয়?</h3><p>Immutable type subclass করার সময় value তৈরির পর্যায়ে control দরকার হতে পারে। এছাড়া singleton-like object creation বা specialized object construction-এও ব্যবহার হতে পারে, যদিও singleton pattern-এর জন্য এটি সবসময় সেরা design নয়।</p>
+ <div class="code-label">Immutable type subclass example</div><div class="codebox"><button class="copy">Copy</button><pre><code>class UppercaseString(str):
+    def __new__(cls, value):
+        return super().__new__(cls, value.upper())
+
+name = UppercaseString("anik")
+print(name)  # ANIK</code></pre></div>
+ <table class="compare"><tr><th><code>__new__</code></th><th><code>__init__</code></th></tr><tr><td>Instance তৈরি করে।</td><td>তৈরি instance initialize করে।</td></tr><tr><td>একটি instance return করে।</td><td>কোনো value return করে না; implicit return <code>None</code>।</td></tr><tr><td>Static method-এর মতো class-level creation hook।</td><td>Instance method; <code>self</code> পায়।</td></tr><tr><td>Immutable subclassing-এ গুরুত্বপূর্ণ।</td><td>Mutable state assign করতে বেশি ব্যবহৃত।</td></tr></table>
+ <div class="tip"><b>Common confusion:</b> <code>__init__</code> object তৈরি করে না। Object তৈরির দায়িত্ব <code>__new__</code>-এর। অধিকাংশ application code-এ <code>__init__</code> override করাই যথেষ্ট।</div>
+ <div class="good"><b>Interview answer:</b> <code>__new__</code> class-এর instance allocate/create করে এবং instance return করে; <code>__init__</code> সেই instance initialize করে। Python সাধারণত <code>__new__</code> থেকে একই class-এর instance ফেরত এলে <code>__init__</code> চালায়।</div>
+ </div></details>
+
+ <details class="question"><summary><span class="num">07</span><span class="qtext">Dataclasses কী? কেন ব্যবহার করা হয়?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept</h3><p><code>dataclasses</code> হলো Python standard library-এর module, যা মূলত data রাখার class-এর জন্য boilerplate method automatic generate করে। <code>@dataclass</code> decorator field declaration দেখে সাধারণত <code>__init__</code>, <code>__repr__</code> এবং <code>__eq__</code> তৈরি করে।</p>
+ <div class="code-label">Without dataclass</div><div class="codebox"><button class="copy">Copy</button><pre><code>class Product:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price</code></pre></div>
+ <div class="code-label">With dataclass</div><div class="codebox"><button class="copy">Copy</button><pre><code>from dataclasses import dataclass
+
+@dataclass
+class Product:
+    name: str
+    price: float
+
+p1 = Product("Keyboard", 1200.0)
+p2 = Product("Keyboard", 1200.0)
+
+print(p1)        # Product(name='Keyboard', price=1200.0)
+print(p1 == p2)  # True</code></pre></div>
+ <h3>Field default এবং mutable default</h3><p>একই mutable object একাধিক instance-এর মধ্যে share হয়ে যাওয়ার ঝুঁকি এড়াতে <code>default_factory</code> ব্যবহার করা হয়।</p>
+ <div class="code-label">Correct mutable default</div><div class="codebox"><button class="copy">Copy</button><pre><code>from dataclasses import dataclass, field
+
+@dataclass
+class Team:
+    name: str
+    members: list[str] = field(default_factory=list)
+
+a = Team("A")
+b = Team("B")
+a.members.append("Rafi")
+
+print(a.members)  # ['Rafi']
+print(b.members)  # []</code></pre></div>
+ <h3>গুরুত্বপূর্ণ options</h3><ul><li><code>frozen=True</code>: field assignment বন্ধ করে; shallow immutability, nested mutable object নিজে থেকে immutable হয় না।</li><li><code>order=True</code>: field order অনুযায়ী comparison methods generate করে।</li><li><code>slots=True</code>: slots-enabled class তৈরি করে; Python 3.10+ এ সমর্থিত।</li><li><code>kw_only=True</code>: generated initializer-এর field-গুলো keyword-only করে।</li><li><code>field(repr=False)</code>: repr output-এ field বাদ দেয়।</li></ul>
+ <h3>Dataclass বনাম Pydantic model</h3><p>Dataclass মূলত Python object data structure এবং generated methods-এর সুবিধা দেয়; সাধারণ dataclass runtime-এ type annotation validate করে না। Pydantic model parsing ও runtime validation-এর জন্য তৈরি।</p>
+ <div class="tip"><b>Common confusion:</b> <code>name: str</code> লেখা মানেই runtime-এ string ছাড়া অন্য value assign আটকাবে না। Dataclass annotation নিজে runtime type enforcement করে না।</div>
+ <div class="good"><b>Interview answer:</b> Dataclass data-centric class-এর boilerplate কমায়। Field annotation থেকে initializer, representation এবং equality-এর মতো method generate করে। Mutable default-এর জন্য <code>field(default_factory=...)</code> ব্যবহার করা উচিত।</div>
+ </div></details>
+
+ <details class="question"><summary><span class="num">08</span><span class="qtext">Python __slots__ কী? এর সুবিধা ও সীমাবদ্ধতা কী?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept</h3><p><code>__slots__</code> class-level declaration, যা instance-এর জন্য নির্দিষ্ট attribute storage slot নির্ধারণ করে। সাধারণ class instance-এর <code>__dict__</code> থাকে; <code>__slots__</code> ব্যবহার করলে সাধারণত instance dictionary তৈরি হয় না, যদি না inheritance বা explicit declaration-এর কারণে তা থাকে।</p>
+ <div class="code-label">Example</div><div class="codebox"><button class="copy">Copy</button><pre><code>class Point:
+    __slots__ = ("x", "y")
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+point = Point(10, 20)
+print(point.x)  # 10
+
+# point.z = 30  # AttributeError
+# print(point.__dict__)  # AttributeError</code></pre></div>
+ <h3>কেন ব্যবহার করা হয়?</h3><ul><li>প্রতি instance-এর dynamic attribute dictionary বাদ দিতে পারে।</li><li>অনেক instance তৈরি হলে memory usage কমাতে পারে।</li><li>অনুমোদিত attribute সীমিত করে accidental extra attribute assignment আটকায়।</li></ul>
+ <h3>গুরুত্বপূর্ণ সীমাবদ্ধতা</h3><ul><li>নতুন arbitrary attribute assign করা যায় না।</li><li>Parent class-এর slots এবং child class-এর slots inheritance-এ সঠিকভাবে বিবেচনা করতে হয়।</li><li>Parent class-এর <code>__dict__</code> থাকলে child-এ slots দিলেও inherited dictionary থাকতে পারে।</li><li><code>__weakref__</code> slot না থাকলে weak reference সমর্থিত নাও হতে পারে।</li><li>একাধিক inheritance-এ slot layout conflict হতে পারে।</li></ul>
+ <h3>Slots মানেই সবসময় দ্রুত?</h3><p>না। কিছু workload-এ memory কমে, attribute access-এও সুবিধা হতে পারে; কিন্তু performance gain ধরে নেওয়া ঠিক নয়। বাস্তব workload-এ benchmark করা উচিত।</p>
+ <div class="tip"><b>Common confusion:</b> <code>__slots__</code> object-কে সম্পূর্ণ immutable করে না। Declared slot-এর value পরিবর্তন করা যায়; শুধু arbitrary নতুন attribute যোগ করা সীমিত হয়।</div>
+ <div class="good"><b>Interview answer:</b> <code>__slots__</code> নির্দিষ্ট instance attribute storage declare করে এবং সাধারণত per-instance <code>__dict__</code> বাদ দেয়। এটি অনেক instance-এর memory footprint কমাতে পারে, তবে dynamic attributes ও কিছু inheritance pattern সীমিত করে।</div>
+ </div></details>
+
+ <details class="question"><summary><span class="num">09</span><span class="qtext">Python Type Hints কী? এগুলো কি runtime-এ type check করে?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept</h3><p>Type hints হলো variable, function parameter এবং return value-এর expected type প্রকাশ করার annotation। এগুলো code readability, IDE autocomplete, static analysis এবং refactoring-এ সাহায্য করে।</p>
+ <div class="code-label">Basic example</div><div class="codebox"><button class="copy">Copy</button><pre><code>def calculate_total(price: float, quantity: int) -> float:
+    return price * quantity
+
+username: str = "Anik"</code></pre></div>
+ <h3>Runtime behavior</h3><p>Python সাধারণভাবে type hints enforce করে না। অর্থাৎ function-এ ভুল type পাঠালেই Python স্বয়ংক্রিয়ভাবে <code>TypeError</code> দেবে—এমন নয়। Type checker যেমন mypy বা Pyright static analysis করে সম্ভাব্য mismatch ধরতে পারে। Runtime validation প্রয়োজন হলে আলাদা validation logic বা Pydantic-এর মতো library ব্যবহার করা যায়।</p>
+ <div class="code-label">Type hint enforcement নয়</div><div class="codebox"><button class="copy">Copy</button><pre><code>def greet(name: str) -> str:
+    return "Hello " + name
+
+print(greet(123))  # Runtime-এ TypeError হবে concatenation-এর কারণে,
+                   # type hint enforce করার কারণে নয়</code></pre></div>
+ <h3>Common typing forms</h3><div class="codebox"><button class="copy">Copy</button><pre><code>from typing import Optional
+
+def find_user(user_id: int) -> str | None:
+    ...
+
+def average(values: list[float]) -> float:
+    ...
+
+def get_config() -> dict[str, str]:
+    ...
+
+def process(value: int | str) -> None:
+    ...</code></pre></div>
+ <p>Python 3.10+ এ <code>A | B</code> union syntax ব্যবহার করা যায়। পুরোনো version support করতে <code>Union[A, B]</code> লাগতে পারে। <code>Optional[T]</code> অর্থ <code>T | None</code>।</p>
+ <h3>Any বনাম object</h3><ul><li><code>Any</code> static type checker-কে অনেক ক্ষেত্রে type checking এড়িয়ে যেতে বলে; এটি type safety কমিয়ে দিতে পারে।</li><li><code>object</code> হলো Python-এর সব object-এর base type। এর উপর operation করার আগে type narrow বা validate করতে হয়।</li></ul>
+ <h3>Type hints কোথায় দেখা যায়?</h3><p><code>__annotations__</code> attribute-এ annotation রাখা হতে পারে; function-এর জন্য <code>function.__annotations__</code> দিয়ে দেখা যায়। Annotation evaluation-এর নিয়ম Python version ও <code>from __future__ import annotations</code>-এর উপর নির্ভর করতে পারে।</p>
+ <div class="tip"><b>Common confusion:</b> Type hints runtime validation নয়। Static checker, IDE এবং developer tooling এগুলো ব্যবহার করে; runtime enforcement আলাদা concern।</div>
+ <div class="good"><b>Interview answer:</b> Type hints expected types document করে এবং mypy/Pyright-এর মতো static type checker-কে সম্ভাব্য bug ধরতে সাহায্য করে। Python নিজে সাধারণত annotation enforce করে না।</div>
+ </div></details>
+
+ <details class="question"><summary><span class="num">10</span><span class="qtext">Protocol কী? Duck Typing ও ABC-এর সঙ্গে পার্থক্য কী?</span><span class="chev">⌄</span></summary><div class="answer">
+ <h3>Concept</h3><p><code>typing.Protocol</code> structural subtyping-এর interface define করতে ব্যবহার হয়। কোনো class Protocol inherit না করেও যদি প্রয়োজনীয় attribute ও method-এর shape পূরণ করে, static type checker সেটিকে ওই Protocol-এর উপযুক্ত type হিসেবে গ্রহণ করতে পারে।</p>
+ <h3>Example</h3><div class="code-label">Protocol definition</div><div class="codebox"><button class="copy">Copy</button><pre><code>from typing import Protocol
+
+class Notifier(Protocol):
+    def send(self, message: str) -> None:
+        ...
+
+
+class EmailNotifier:
+    def send(self, message: str) -> None:
+        print(f"Email: {message}")
+
+
+class SMSNotifier:
+    def send(self, message: str) -> None:
+        print(f"SMS: {message}")
+
+
+def alert(notifier: Notifier) -> None:
+    notifier.send("Server is down")
+
+
+alert(EmailNotifier())
+alert(SMSNotifier())</code></pre></div>
+ <h3>এখানে কী হচ্ছে?</h3><ul><li><code>Notifier</code> বলে দেয়, compatible object-এর <code>send(message: str) -> None</code> method থাকতে হবে।</li><li><code>EmailNotifier</code> এবং <code>SMSNotifier</code> Protocol inherit করেনি।</li><li>তবুও তাদের method signature contract-এর সঙ্গে মিলে যাওয়ায় static type checker এগুলোকে <code>Notifier</code> হিসেবে গ্রহণ করতে পারে।</li><li><code>alert()</code> concrete implementation না জেনে interface অনুযায়ী কাজ করে।</li></ul>
+ <h3>Protocol বনাম ABC বনাম Duck Typing</h3><table class="compare"><tr><th>পদ্ধতি</th><th>মূল ধারণা</th><th>কীভাবে compatibility বোঝে</th></tr><tr><td>Duck Typing</td><td>প্রয়োজনীয় behavior থাকলে ব্যবহার করা যায়।</td><td>সাধারণত runtime-এ method call করে; explicit interface declaration বাধ্যতামূলক নয়।</td></tr><tr><td>ABC</td><td>Abstract base class contract ও shared implementation দিতে পারে।</td><td>সাধারণত inheritance বা virtual subclass registration; abstract method implement না করলে instantiate করা যায় না।</td></tr><tr><td>Protocol</td><td>Structural interface contract।</td><td>মূলত static type checker member structure দেখে compatibility নির্ধারণ করে।</td></tr></table>
+ <h3>@runtime_checkable কী করে?</h3><p><code>@runtime_checkable</code> decorator দিলে Protocol-এর বিরুদ্ধে <code>isinstance()</code> check করা যায়। তবে runtime check মূলত member presence দেখে; full signature ও type compatibility validate করে না। তাই এটিকে পূর্ণ runtime type validator মনে করা যাবে না।</p>
+ <div class="code-label">Runtime-checkable Protocol</div><div class="codebox"><button class="copy">Copy</button><pre><code>from typing import Protocol, runtime_checkable
+
+@runtime_checkable
+class Closable(Protocol):
+    def close(self) -> None:
+        ...
+
+class FileLike:
+    def close(self) -> None:
+        print("closed")
+
+print(isinstance(FileLike(), Closable))  # True</code></pre></div>
+ <h3>কখন Protocol ব্যবহার করা ভালো?</h3><p>একাধিক unrelated class-এর একই behavior দরকার হলে, library বা application code-কে concrete class-এর উপর tightly coupled না রেখে dependency-এর expected interface type দিয়ে প্রকাশ করতে Protocol উপকারী।</p>
+ <div class="tip"><b>Common confusion:</b> Protocol ব্যবহার করতে class-কে অবশ্যই Protocol inherit করতে হবে না। এটিই structural typing-এর মূল সুবিধা। তবে runtime enforcement বা validation দরকার হলে আলাদা mechanism প্রয়োজন।</div>
+ <div class="good"><b>Interview answer:</b> <code>Protocol</code> structural subtyping support করে। কোনো class explicit inheritance ছাড়াই Protocol-এর required members implement করলে static type checker সেটিকে compatible হিসেবে বিবেচনা করতে পারে। এটি flexible interface typing-এর জন্য উপযোগী।</div>
+ </div></details>
+ </div>
+</main>
+<footer class="footer"><div class="wrap">Advanced Python Interview Preparation · বাংলা ব্যাখ্যা · Code examples for Python 3<br>Learning note: Python-এর কিছু typing ও dataclass feature version-dependent। Production code-এ project-এর supported Python version অনুযায়ী syntax যাচাই করা উচিত।</div></footer>
+<script>
+const items=[...document.querySelectorAll('.question')];
+document.getElementById('expand').addEventListener('click',()=>items.forEach(x=>x.open=true));
+document.getElementById('collapse').addEventListener('click',()=>items.forEach(x=>x.open=false));
+document.getElementById('search').addEventListener('input',e=>{
+ const q=e.target.value.trim().toLocaleLowerCase();
+ items.forEach(item=>{item.classList.toggle('hidden',q && !item.innerText.toLocaleLowerCase().includes(q)); if(q && !item.classList.contains('hidden')) item.open=true;});
+});
+document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{
+ const code=btn.parentElement.querySelector('code').innerText;
+ try{await navigator.clipboard.writeText(code);btn.textContent='Copied!';}
+ catch(e){btn.textContent='Copy failed';}
+ setTimeout(()=>btn.textContent='Copy',1400);
+}));
+</script>
+</body>
+</html>
