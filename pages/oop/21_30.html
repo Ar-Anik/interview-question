@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Advanced Python OOP interview questions 21–30 with detailed Bangla explanations, internals and runnable examples.">
+<title>Advanced Python OOP Interview Questions 21–30</title>
+<style>
+:root{color-scheme:dark;--bg:#080c13;--panel:#111a27;--panel2:#172334;--text:#e8edf5;--muted:#a8b5c6;--line:#29384c;--accent:#9fc4ff;--code:#020508;--codehead:#0b121c;--green:#8bd5aa;--amber:#f0c477}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% -10%,#1b2d47 0%,#0b111b 36%,var(--bg) 70%);color:var(--text);font:16px/1.9 "Noto Sans Bengali",Inter,sans-serif}.container{width:min(1000px,calc(100% - 34px));margin:0 auto}header{padding:48px 0 22px}.tag{display:inline-flex;align-items:center;padding:5px 12px;border:1px solid #315078;border-radius:99px;background:#172a43;color:#c6dcff;font:600 11px Inter,sans-serif;letter-spacing:.07em}.tag .dot{width:6px;height:6px;background:#80d6a6;border-radius:50%;margin-right:8px}h1{font-size:clamp(29px,5vw,44px);line-height:1.32;letter-spacing:-.02em;margin:17px 0 9px}.intro{color:var(--muted);max-width:860px;margin:0}.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.meta span{padding:5px 10px;border:1px solid var(--line);border-radius:7px;background:#111c2a;color:#b6c4d7;font:12px Inter,sans-serif}.section-title{font:600 13px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#8fa8c8;margin:28px 0 9px}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 12px;padding:11px 13px;border:1px solid #26364a;border-radius:10px;background:#0e1723}.toolbar p{color:var(--muted);font-size:13px;margin:0}.toolbar-actions{display:flex;gap:8px;flex-wrap:wrap}button{cursor:pointer;color:#e4edfa;background:#19283c;border:1px solid #3a506d;border-radius:7px;padding:8px 11px;font:600 12px Inter,sans-serif;transition:border-color .15s,background .15s,color .15s}button:hover{border-color:var(--accent);color:var(--accent);background:#20344e}button:focus-visible,summary:focus-visible{outline:2px solid #a9ceff;outline-offset:3px}.question{margin:12px 0;border:1px solid var(--line);border-radius:12px;background:linear-gradient(145deg,#131e2c,#101722);overflow:hidden;box-shadow:0 7px 20px #0004;scroll-margin-top:18px}.question[open]{border-color:#3c5879}.question summary{display:flex;align-items:center;gap:13px;padding:16px 18px;cursor:pointer;list-style:none;font-weight:600;line-height:1.55}.question summary::-webkit-details-marker{display:none}.num{display:grid;place-items:center;flex:0 0 36px;height:36px;border-radius:9px;background:#1e3656;color:#c5dcff;font:700 12px Inter,sans-serif}.qtitle{flex:1}.chev{width:9px;height:9px;border-right:2px solid #aab8ca;border-bottom:2px solid #aab8ca;transform:rotate(45deg);margin:0 5px 5px;transition:transform .2s}.question[open] .chev{transform:rotate(225deg);margin-bottom:-4px}.answer{padding:20px 23px 25px;border-top:1px solid var(--line)}h3{font-size:17px;line-height:1.5;color:#dce9fa;margin:23px 0 7px}h3:first-child{margin-top:0}p{margin:8px 0 12px}ul,ol{padding-left:25px;margin:8px 0 15px}li{margin:6px 0}strong{color:#f4f7fc}p code,li code{background:#223147;color:#d9e8ff;padding:2px 5px;border-radius:4px;font:.92em ui-monospace,SFMono-Regular,Consolas,monospace}.callout,.warning,.interview{margin:15px 0;padding:12px 15px;border-left:3px solid #82b4ff;border-radius:0 8px 8px 0;background:#172941}.warning{border-color:var(--amber);background:#302719}.interview{border-color:var(--green);background:#172b25}.codebox{margin:14px 0 18px;border:1px solid #26364b;border-radius:9px;overflow:hidden;background:var(--code);box-shadow:0 8px 22px #0006}.codehead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 11px 8px 13px;background:var(--codehead);border-bottom:1px solid #202d40;color:#9fb2ca;font:600 10px Inter,sans-serif;letter-spacing:.075em}.copy{padding:6px 9px;font-size:11px;letter-spacing:0;white-space:nowrap;background:#17263a}.copy.copied{border-color:#4b9870;color:#a7e4bf;background:#14271e}pre{margin:0;padding:16px;overflow-x:auto;color:#e6edf7;font:13px/1.75 "SFMono-Regular",Consolas,"Liberation Mono",monospace;tab-size:4;background:#020508}pre code{font:inherit;white-space:pre}.output{white-space:pre-wrap;background:#0a111a;border:1px dashed #34465e;border-radius:7px;padding:10px 13px;color:#c8d7ea;font:13px/1.75 "SFMono-Regular",Consolas,monospace;margin:9px 0 15px}.outlabel{font:600 10px Inter,sans-serif;color:#91a7c3;letter-spacing:.08em;margin-bottom:4px}.revision{margin-top:25px;padding:17px 19px;border:1px solid #30435b;border-radius:10px;background:#111d2b}.revision h2{font-size:18px;margin:0 0 10px;color:#dce9fa}.revision ul{margin-bottom:0}.revision strong{color:#b6d2ff}.sequence{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 0}.sequence span{font:11px Inter,sans-serif;color:#c5d5e9;background:#17263a;border:1px solid #2e425c;padding:5px 8px;border-radius:6px}footer{text-align:center;color:#8999ad;padding:31px 0 44px;font:12px Inter,sans-serif}a{color:#a9ccff}@media(max-width:650px){header{padding-top:32px}.answer{padding:17px 15px}.question summary{padding:14px 13px;gap:10px}.toolbar{align-items:flex-start;flex-direction:column}.toolbar-actions{width:100%}.toolbar-actions button{flex:1}pre{font-size:12px}.num{flex-basis:33px;height:33px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="container">
+  <span class="tag"><span class="dot"></span>PYTHON INTERVIEW PREPARATION · ADVANCED OOP</span>
+  <h1>Python OOP — Interview Questions 21–30</h1>
+  </header>
+<main class="container">
+  <div class="section-title">Questions 21–30</div>
+  <details class="question" id="q21"><summary><span class="num">21</span><span class="qtitle">What is the Descriptor Protocol in Python?</span><span class="chev" aria-hidden="true"></span></summary><div class="answer">
+<h3>মূল ধারণা</h3>
+<p><strong>Descriptor</strong> হলো এমন একটি Python object, যার class-এ <code>__get__()</code>, <code>__set__()</code> অথবা <code>__delete__()</code> special method-এর অন্তত একটি define করা থাকে। Descriptor-কে অন্য class-এর class attribute হিসেবে রাখলে সেই attribute access-এর সময় Python descriptor protocol ব্যবহার করে।</p>
+<p>Descriptor মূলত attribute access-এর behavior control করে। Validation, lazy loading, ORM field, reusable property logic এবং framework-level API তৈরিতে এটি কাজে লাগে। <code>@property</code> নিজেও descriptor protocol-এর উপর তৈরি।</p>
+<div class="callout"><strong>এক লাইনে:</strong> Descriptor এমন object, যা অন্য object-এর attribute read, write বা delete কীভাবে হবে তা নিয়ন্ত্রণ করতে পারে।</div>
+<h3>Descriptor protocol-এর method</h3>
+<ul>
+<li><code>__get__(self, instance, owner)</code>: attribute read হলে call হয়। <code>instance</code> হলো যে object থেকে access হচ্ছে; class দিয়ে access করলে এটি <code>None</code> হয়। <code>owner</code> হলো owning class।</li>
+<li><code>__set__(self, instance, value)</code>: attribute assign হলে call হয়।</li>
+<li><code>__delete__(self, instance)</code>: attribute delete হলে call হয়।</li>
+<li><code>__set_name__(self, owner, name)</code>: class তৈরির সময় descriptor-কে তার owner class ও attribute name জানায়। এটি descriptor protocol-এর বাধ্যতামূলক method নয়, তবে reusable descriptor বানাতে খুব কাজে লাগে।</li>
+</ul>
+<h3>Practical Example: reusable validation</h3>
+<p>একই validation logic অনেক model/class-এ ব্যবহার করা যায়। নিচের <code>PositiveNumber</code> descriptor negative value reject করে এবং প্রতিটি instance-এর value তার নিজের <code>__dict__</code>-এ রাখে।</p>
+<div class="codebox"><div class="codehead"><span>PYTHON 3 · CUSTOM DATA DESCRIPTOR</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class PositiveNumber:
+    def __set_name__(self, owner, name):
+        self.storage_name = f&quot;_{name}&quot;
+
+    def __get__(self, instance, owner=None):
+        if instance is None:
+            return self
+        return instance.__dict__.get(self.storage_name)
+
+    def __set__(self, instance, value):
+        if value &lt;= 0:
+            raise ValueError(&quot;Value must be positive&quot;)
+        instance.__dict__[self.storage_name] = value
+
+
+class Product:
+    price = PositiveNumber()
+
+    def __init__(self, price):
+        self.price = price
+
+
+first = Product(1200)
+second = Product(800)
+print(first.price)
+print(second.price)
+first.price = 1500
+print(first.price)</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>1200
+800
+1500</div>
+<p><code>Product.price</code> class attribute হিসেবে একটি descriptor object। কিন্তু <code>first.price = 1500</code> করলে Python সরাসরি instance-এর <code>price</code> key-তে value না রেখে descriptor-এর <code>__set__()</code> call করে। Descriptor নিজে <code>_price</code> নামে storage key ব্যবহার করছে। ফলে <code>first</code> ও <code>second</code>-এর value আলাদা থাকে।</p>
+<h3>Data descriptor vs Non-data descriptor</h3>
+<ul>
+<li><strong>Data descriptor:</strong> <code>__set__()</code> অথবা <code>__delete__()</code> define করে।</li>
+<li><strong>Non-data descriptor:</strong> শুধু <code>__get__()</code> define করে; <code>__set__()</code>/<code>__delete__()</code> নেই।</li>
+</ul>
+<p>একটি গুরুত্বপূর্ণ lookup rule: instance attribute lookup-এ সাধারণত data descriptor আগে, তারপর instance <code>__dict__</code>, এরপর non-data descriptor/class attribute খোঁজা হয়। তাই data descriptor instance-এর একই নামের attribute-কে override করতে পারে; non-data descriptor-এর ক্ষেত্রে instance dictionary value অগ্রাধিকার পেতে পারে।</p>
+<div class="codebox"><div class="codehead"><span>DATA DESCRIPTOR PRECEDENCE</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class DataDescriptor:
+    def __get__(self, instance, owner):
+        return &quot;descriptor value&quot;
+
+    def __set__(self, instance, value):
+        instance.__dict__[&quot;item&quot;] = value
+
+
+class Example:
+    item = DataDescriptor()
+
+
+obj = Example()
+obj.__dict__[&quot;item&quot;] = &quot;instance value&quot;
+print(obj.item)</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>descriptor value</div>
+<h3>Internal working: attribute read</h3>
+<ol>
+<li><code>obj.attribute</code> access হলে Python-এর attribute lookup mechanism কাজ করে।</li>
+<li>Class-এর MRO ধরে attribute খোঁজা হয়। পাওয়া object descriptor হলে তার type-এ <code>__get__</code> আছে কি না দেখা হয়।</li>
+<li>Data descriptor থাকলে সেটি instance dictionary-এর আগে priority পায়।</li>
+<li>অন্যথায় instance dictionary দেখা হয়; এরপর non-data descriptor বা সাধারণ class attribute পাওয়া যেতে পারে।</li>
+<li>Descriptor-এর <code>__get__</code> থাকলে প্রয়োজন অনুযায়ী সেটি call হয়।</li>
+</ol>
+<h3>Common confusion ও caveat</h3>
+<ul>
+<li><code>@property</code> descriptor-এর একটি built-in ব্যবহার; custom descriptor তার চেয়ে বেশি reusable এবং configurable হতে পারে।</li>
+<li>Descriptor class-এর attribute হিসেবে থাকতে হয়। শুধু instance-এর attribute হিসেবে descriptor object রাখলে সেই object সাধারণত descriptor protocol দিয়ে পরিচালিত হয় না।</li>
+<li><code>__set_name__</code> class creation-এর সময় স্বয়ংক্রিয়ভাবে call হয়। Class তৈরি হওয়ার পরে descriptor attribute হিসেবে assign করলে Python নিজে থেকে <code>__set_name__</code> call করে না; প্রয়োজন হলে manually call করতে হয়।</li>
+<li>Descriptor-এর state-এ instance-specific value রাখলে একাধিক instance-এর value ভুল করে shared হয়ে যেতে পারে। তাই সাধারণত instance storage ব্যবহার করা হয়। এই example-এর storage <code>instance.__dict__</code>-এর উপর নির্ভরশীল; target class-এ <code>__slots__</code> দিয়ে <code>__dict__</code> বাদ থাকলে আলাদা storage strategy লাগবে।</li>
+</ul>
+<div class="interview"><strong>Interview-ready answer:</strong> Descriptor হলো এমন object যার class-এ <code>__get__</code>, <code>__set__</code> বা <code>__delete__</code> থাকে। অন্য class-এর attribute হিসেবে ব্যবহৃত হলে এটি attribute access control করে। Data descriptor instance dictionary-এর আগে priority পায়, আর <code>property</code> descriptor protocol-এর উপর তৈরি।</div>
+</div></details><details class="question" id="q22"><summary><span class="num">22</span><span class="qtitle">What is the difference between __new__() and __init__()?</span><span class="chev" aria-hidden="true"></span></summary><div class="answer">
+<h3>মূল ধারণা</h3>
+<p><code>__new__()</code> এবং <code>__init__()</code> দুটোই object creation-এর সাথে যুক্ত, কিন্তু কাজ এক নয়। <code>__new__()</code> নতুন instance তৈরি করে এবং instance return করে। <code>__init__()</code> তৈরি হওয়া instance initialize করে; এটি নতুন instance return করে না।</p>
+<div class="callout"><strong>মনে রাখার সহজ নিয়ম:</strong> <code>__new__</code> = instance তৈরি/return, <code>__init__</code> = তৈরি হওয়া instance-এর initial state set করা।</div>
+<h3>Execution order</h3>
+<ol>
+<li><code>MyClass(...)</code> call হলে class-এর <code>__new__(cls, ...)</code> execute হয়।</li>
+<li><code>__new__</code> instance return করলে এবং সেটি <code>cls</code> বা তার subclass-এর instance হলে সেই instance-এর <code>__init__(...)</code> call হয়।</li>
+<li><code>__new__</code> যদি unrelated type-এর object return করে, তাহলে ওই object-এর জন্য <code>cls.__init__</code> call হয় না।</li>
+</ol>
+<h3>Practical Example</h3>
+<div class="codebox"><div class="codehead"><span>OBJECT CREATION ORDER</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class Account:
+    def __new__(cls, owner):
+        print(&quot;1. __new__ creates the instance&quot;)
+        instance = super().__new__(cls)
+        return instance
+
+    def __init__(self, owner):
+        print(&quot;2. __init__ initializes the instance&quot;)
+        self.owner = owner
+
+
+account = Account(&quot;Anik&quot;)
+print(account.owner)</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>1. __new__ creates the instance
+2. __init__ initializes the instance
+Anik</div>
+<p><code>super().__new__(cls)</code> এখানে base <code>object</code>-এর allocation behavior ব্যবহার করে instance তৈরি করছে। <code>__new__</code> সাধারণত override করার প্রয়োজন হয় না; custom object creation behavior দরকার হলেই এটি ব্যবহার করা হয়।</p>
+<h3>Immutable type subclassing-এ __new__ কেন দরকার?</h3>
+<p><code>str</code>, <code>int</code>, <code>tuple</code>-এর মতো immutable type-এর মূল value instance initialization-এর সময় পরিবর্তন করা যায় না। তাই subclass-এর value customize করতে <code>__new__</code>-এর সময় value তৈরি করতে হয়।</p>
+<div class="codebox"><div class="codehead"><span>SUBCLASSING AN IMMUTABLE TYPE</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class UpperString(str):
+    def __new__(cls, value):
+        normalized = value.upper()
+        return super().__new__(cls, normalized)
+
+
+word = UpperString(&quot;python&quot;)
+print(word)
+print(type(word).__name__)
+print(isinstance(word, str))</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>PYTHON
+UpperString
+True</div>
+<p>এখানে <code>str</code> immutable হওয়ায় <code>__new__</code> uppercase value দিয়ে <code>UpperString</code> instance তৈরি করছে। <code>__init__</code> দিয়ে পরে string-এর মূল content পরিবর্তন করা সম্ভব নয়।</p>
+<h3>__new__ এবং __init__-এর পার্থক্য</h3>
+<ul>
+<li><strong>প্রধান দায়িত্ব:</strong> <code>__new__</code> instance return করে; <code>__init__</code> state initialize করে।</li>
+<li><strong>প্রথম argument:</strong> <code>__new__</code>-এর প্রথম argument class (<code>cls</code>); <code>__init__</code>-এর প্রথম argument instance (<code>self</code>)।</li>
+<li><strong>Return:</strong> <code>__new__</code> instance return করে; <code>__init__</code> অবশ্যই <code>None</code> return করবে। অন্য value return করলে <code>TypeError</code> হয়।</li>
+<li><strong>Use case:</strong> <code>__new__</code> immutable subclassing, controlled instance creation বা caching-এর মতো advanced ক্ষেত্রে; <code>__init__</code> সাধারণ object initialization-এ।</li>
+</ul>
+<div class="warning"><strong>Common confusion:</strong> <code>__new__</code> static-method-এর মতো class-কে প্রথম argument হিসেবে পায়; আলাদা করে <code>@staticmethod</code> লিখতে হয় না। আর <code>__init__</code> object allocate করে না।</div>
+<div class="interview"><strong>Interview-ready answer:</strong> <code>__new__</code> class call-এর সময় instance তৈরি করে return করে, আর <code>__init__</code> সেই instance initialize করে। Immutable built-in type subclass করলে initial value নির্ধারণের জন্য <code>__new__</code> দরকার হতে পারে।</div>
+</div></details><details class="question" id="q23"><summary><span class="num">23</span><span class="qtitle">What is a Metaclass, and when should it be used?</span><span class="chev" aria-hidden="true"></span></summary><div class="answer">
+<h3>মূল ধারণা</h3>
+<p><strong>Metaclass</strong> হলো class তৈরির নিয়ম নিয়ন্ত্রণকারী class। সাধারণত object-এর class নির্ধারণ করে object কী ধরনের; একইভাবে কোনো class-এর metaclass নির্ধারণ করে class object কীভাবে তৈরি হবে। Python-এ default metaclass হলো <code>type</code>।</p>
+<div class="codebox"><div class="codehead"><span>CLASS, INSTANCE AND METACLASS</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class Employee:
+    pass
+
+employee = Employee()
+
+print(type(employee) is Employee)
+print(type(Employee) is type)
+print(type(type) is type)</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>True
+True
+True</div>
+<p><code>employee</code> হলো <code>Employee</code> class-এর instance। <code>Employee</code> নিজেই একটি object, এবং defaultভাবে সেটি <code>type</code>-এর instance। <code>type</code> নিজেও নিজের metaclass হিসেবে কাজ করে।</p>
+<h3>Class statement internally কী করে?</h3>
+<p><code>class Employee:</code> শুধু runtime-এ একটি নাম bind করে না; Python class object তৈরি করার জন্য একটি class-creation process চালায়। High-level flow:</p>
+<ol>
+<li>Metaclass নির্ধারণ হয়। Explicit <code>metaclass=...</code> না থাকলে base class-গুলোর metaclass বিবেচনা করে default <code>type</code> নেওয়া হয়।</li>
+<li>Class body execute হয়ে একটি namespace তৈরি করে। Custom metaclass চাইলে <code>__prepare__</code> দিয়ে namespace তৈরির পদ্ধতি customize করতে পারে।</li>
+<li>Metaclass-কে class name, bases এবং namespace দেওয়া হয়।</li>
+<li>Metaclass class object তৈরি করে; সাধারণ custom metaclass <code>type</code> inherit করে এবং <code>__new__</code>/<code>__init__</code> override করতে পারে।</li>
+<li>Class object তৈরি হওয়ার সময় descriptor-এর <code>__set_name__</code> এবং parent class-এর <code>__init_subclass__</code> hook-ও class creation lifecycle-এর অংশ হিসেবে কাজ করতে পারে।</li>
+</ol>
+<h3>Practical Example: automatic class registry</h3>
+<p>ধরা যাক, plugin system-এ প্রতিটি concrete plugin class তৈরি হওয়ার সাথে সাথে registry-তে রাখতে হবে। Metaclass দিয়ে class creation-এর সময় এই কাজ করা যায়।</p>
+<div class="codebox"><div class="codehead"><span>CUSTOM METACLASS</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class RegistryMeta(type):
+    registry = {}
+
+    def __new__(mcls, name, bases, namespace, **kwargs):
+        cls = super().__new__(mcls, name, bases, namespace, **kwargs)
+        if not namespace.get(&quot;ABSTRACT&quot;, False):
+            mcls.registry[name] = cls
+        return cls
+
+
+class Plugin(metaclass=RegistryMeta):
+    ABSTRACT = True
+
+
+class JsonPlugin(Plugin):
+    pass
+
+
+class CsvPlugin(Plugin):
+    pass
+
+
+print(sorted(RegistryMeta.registry))
+print(RegistryMeta.registry[&quot;JsonPlugin&quot;] is JsonPlugin)</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>[&#x27;CsvPlugin&#x27;, &#x27;JsonPlugin&#x27;]
+True</div>
+<p>Metaclass-এর <code>__new__</code> class object তৈরি হওয়ার সময় call হয়। এখানে base <code>Plugin</code>-কে <code>ABSTRACT = True</code> দিয়ে registry থেকে বাদ রাখা হয়েছে; পরের concrete subclass-গুলো registry-তে যোগ হয়েছে।</p>
+<h3>কখন Metaclass ব্যবহার করা যুক্তিযুক্ত?</h3>
+<ul>
+<li>একাধিক class তৈরির সময় একই ধরনের structural rule enforce করতে হলে।</li>
+<li>Class registration, class-level API generation বা framework-এর declarative syntax implement করতে হলে।</li>
+<li>Class তৈরি হওয়ার আগেই namespace/base class inspect বা transform করার প্রয়োজন হলে।</li>
+</ul>
+<h3>কখন এড়িয়ে চলা ভালো?</h3>
+<p>শুধু subclass validation বা registration দরকার হলে <code>__init_subclass__</code>, class decorator বা ordinary helper অনেক সময় সহজ। Metaclass inheritance-এ metaclass conflict তৈরি হতে পারে—বিশেষ করে ভিন্ন metaclass ব্যবহার করা একাধিক base class inherit করলে। তাই প্রয়োজন প্রমাণিত না হলে metaclass ব্যবহার না করাই ভালো।</p>
+<div class="warning"><strong>Common confusion:</strong> Metaclass প্রতিটি instance তৈরির সময় চলে না। এটি class object তৈরির সময় কাজ করে। Instance তৈরি হয় পরে, যেমন <code>JsonPlugin()</code>।</div>
+<div class="interview"><strong>Interview-ready answer:</strong> Metaclass হলো class-এর class। Python-এর default metaclass <code>type</code>। Custom metaclass class creation process customize করতে পারে—যেমন class registration বা structural validation। তবে সাধারণ subclass hook-এর কাজ হলে <code>__init_subclass__</code> বেশি সহজ হতে পারে।</div>
+</div></details><details class="question" id="q24"><summary><span class="num">24</span><span class="qtitle">What is __init_subclass__(), and how is it different from a metaclass?</span><span class="chev" aria-hidden="true"></span></summary><div class="answer">
+<h3>মূল ধারণা</h3>
+<p><code>__init_subclass__()</code> হলো base class-এর একটি class creation hook। কোনো class থেকে নতুন subclass তৈরি হলে parent class-এর এই hook স্বয়ংক্রিয়ভাবে call হয়। Subclass register করা, class-level configuration নেওয়া বা subclass-এর rule validate করার জন্য এটি ব্যবহার করা যায়।</p>
+<p>এটি metaclass নয়; ordinary base class method হিসেবেই define করা যায়। তাই metaclass-এর তুলনায় অনেক সাধারণ class customization সহজে করা সম্ভব।</p>
+<h3>Practical Example: plugin registration ও keyword configuration</h3>
+<div class="codebox"><div class="codehead"><span>INIT_SUBCLASS HOOK</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class Plugin:
+    registry = {}
+
+    def __init_subclass__(cls, *, plugin_name=None, **kwargs):
+        super().__init_subclass__(**kwargs)
+        if plugin_name is None:
+            raise TypeError(&quot;plugin_name is required&quot;)
+        cls.plugin_name = plugin_name
+        Plugin.registry[plugin_name] = cls
+
+
+class JsonPlugin(Plugin, plugin_name=&quot;json&quot;):
+    pass
+
+
+class CsvPlugin(Plugin, plugin_name=&quot;csv&quot;):
+    pass
+
+
+print(sorted(Plugin.registry))
+print(JsonPlugin.plugin_name)</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>[&#x27;csv&#x27;, &#x27;json&#x27;]
+json</div>
+<p>Subclass statement-এ দেওয়া <code>plugin_name="json"</code> class-creation keyword হিসেবে parent-এর <code>__init_subclass__</code>-এ পৌঁছায়। Hook সেটি consume করে; বাকি keyword থাকলে <code>super().__init_subclass__(**kwargs)</code> দিয়ে cooperative chain-এ পাঠানো হয়। এখানে <code>object.__init_subclass__</code> শেষ পর্যন্ত আর অতিরিক্ত keyword না পেয়ে কাজ শেষ করে।</p>
+<h3>কেন super() call গুরুত্বপূর্ণ?</h3>
+<p>একাধিক base class-এর প্রত্যেকটিতে <code>__init_subclass__</code> থাকতে পারে। সব hook যদি cooperativeভাবে <code>super()</code> call করে, MRO অনুযায়ী chain চলতে পারে। কোনো hook chain বন্ধ করে দিলে পরের base class-এর hook execute নাও হতে পারে।</p>
+<h3>Subclass validation-এর আরেকটি pattern</h3>
+<div class="codebox"><div class="codehead"><span>VALIDATE A SUBCLASS AT CREATION TIME</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class Serializer:
+    format_name = None
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        if cls is not Serializer and not cls.__dict__.get(&quot;format_name&quot;):
+            raise TypeError(&quot;Concrete serializer must define format_name&quot;)
+
+
+class JsonSerializer(Serializer):
+    format_name = &quot;json&quot;
+
+
+print(JsonSerializer.format_name)</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>json</div>
+<p>এই উদাহরণে subclass class object তৈরি হওয়ার সময় <code>cls.__dict__</code> দেখে class-টি নিজে <code>format_name</code> define করেছে কি না check করা হচ্ছে। শুধু inherited value থাকলে সেটি যথেষ্ট নয়। ফলে invalid subclass তৈরির সময়ই error পাওয়া যায়; instance তৈরি হওয়া পর্যন্ত অপেক্ষা করতে হয় না।</p>
+<h3>__init_subclass__ vs Metaclass</h3>
+<ul>
+<li><strong><code>__init_subclass__</code>:</strong> Parent class থেকে subclass তৈরি হলে hook চালায়; registration/configuration/validation-এর common কাজের জন্য সহজ।</li>
+<li><strong>Metaclass:</strong> Class object তৈরির আরও নিচের level-এর process নিয়ন্ত্রণ করতে পারে; namespace preparation বা class construction customize করার মতো কাজেও ব্যবহার হয়।</li>
+<li><strong>Complexity:</strong> সাধারণত hook দিয়ে কাজ হলে metaclass দরকার নেই।</li>
+</ul>
+<div class="warning"><strong>Common confusion:</strong> <code>__init_subclass__</code> instance initialization hook নয়। <code>obj = MyClass()</code> হলে এটি চলে না; <code>class Child(Parent):</code> class তৈরির সময় চলে।</div>
+<div class="interview"><strong>Interview-ready answer:</strong> <code>__init_subclass__</code> হলো base class-এর hook, যা subclass তৈরি হওয়ার সময় call হয়। এটি class registration, keyword configuration ও validation-এর জন্য ব্যবহার করা যায়। Multiple inheritance-এ cooperative behavior রাখতে <code>super().__init_subclass__(**kwargs)</code> call করা জরুরি।</div>
+</div></details><details class="question" id="q25"><summary><span class="num">25</span><span class="qtitle">Composition vs Inheritance: what is the difference?</span><span class="chev" aria-hidden="true"></span></summary><div class="answer">
+<h3>মূল ধারণা</h3>
+<p><strong>Inheritance</strong> দিয়ে একটি class অন্য class-এর behavior inherit করে—সাধারণত <em>is-a</em> relationship বোঝাতে। <strong>Composition</strong>-এ একটি object তার কাজের জন্য অন্য object-কে নিজের member হিসেবে রাখে—সাধারণত <em>has-a</em> relationship বোঝাতে। <strong>Delegation</strong> হলো নিজের কোনো কাজ অন্য object-কে দিয়ে করানো।</p>
+<p>উদাহরণ: <code>Car is a Vehicle</code> inheritance-এর সম্ভাব্য সম্পর্ক; কিন্তু <code>Car has an Engine</code> composition-এর সম্পর্ক।</p>
+<div class="callout"><strong>মূল পার্থক্য:</strong> Inheritance behavior reuse করে subtype relationship-এর মাধ্যমে; composition object-কে collaborator হিসেবে ব্যবহার করে behavior assemble করে।</div>
+<h3>Practical Example: composition + delegation</h3>
+<p>একটি ride service fare calculate করার জন্য আলাদা calculator object ব্যবহার করতে পারে। Service নিজে fare formula implement না করে collaborator-এর কাছে calculation delegate করে।</p>
+<div class="codebox"><div class="codehead"><span>COMPOSITION AND DELEGATION</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class StandardFareCalculator:
+    def calculate(self, distance_km):
+        return 50 + distance_km * 20
+
+
+class PremiumFareCalculator:
+    def calculate(self, distance_km):
+        return 100 + distance_km * 30
+
+
+class RideService:
+    def __init__(self, fare_calculator):
+        self.fare_calculator = fare_calculator
+
+    def quote(self, distance_km):
+        return self.fare_calculator.calculate(distance_km)
+
+
+standard_service = RideService(StandardFareCalculator())
+premium_service = RideService(PremiumFareCalculator())
+
+print(standard_service.quote(5))
+print(premium_service.quote(5))</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>150
+250</div>
+<p><code>RideService</code> calculator-এর concrete implementation-এর উত্তরাধিকার নিচ্ছে না। বরং calculator object ধরে রেখেছে এবং <code>quote()</code> call হলে <code>calculate()</code>-এ delegation করছে। তাই calculator implementation আলাদা object দিয়ে replace করা যায়। এখানে composition শব্দটি object composition অর্থে ব্যবহৃত; Python নিজে UML-style exclusive ownership বা collaborator-এর lifetime enforce করে না।</p>
+<h3>Composition-এর সুবিধা</h3>
+<ul>
+<li>Runtime-এ collaborator replace করা যায়; behavior পরিবর্তনের জন্য subclass তৈরি করা সবসময় লাগে না।</li>
+<li>দুটি class-এর মধ্যে tight inheritance dependency কমে।</li>
+<li>একই collaborator একাধিক class reuse করতে পারে।</li>
+<li>Unit test-এ fake/mock collaborator inject করে class আলাদাভাবে test করা যায়।</li>
+<li>একটি class একাধিক independent capability collaborator-এর মাধ্যমে পেতে পারে; inheritance tree জটিল হয় না।</li>
+</ul>
+<h3>তাহলে Inheritance কখন ব্যবহার করা উচিত?</h3>
+<ul>
+<li>যখন সত্যিকারের subtype relationship আছে এবং subclass base class-এর contract ঠিকভাবে maintain করে।</li>
+<li>যখন polymorphism-এর জন্য common interface/base behavior দরকার।</li>
+<li>যখন shared behavior inheritance hierarchy-তে natural ও stable।</li>
+</ul>
+<h3>Common confusion</h3>
+<ul>
+<li>Composition মানে inheritance সম্পূর্ণ নিষিদ্ধ নয়। একই design-এ inheritance ও composition একসাথে থাকতে পারে।</li>
+<li>শুধু code reuse-এর জন্য inheritance ব্যবহার করলে fragile base-class dependency তৈরি হতে পারে।</li>
+<li>Composition ব্যবহার করলেই automatic loose coupling হয় না; collaborator-এর interface ও dependency direction-ও গুরুত্বপূর্ণ।</li>
+<li>Delegation আর composition একই শব্দ নয়: composition object ownership/containment সম্পর্ক বোঝায়; delegation কাজ অন্য object-কে দিয়ে করানো বোঝায়।</li>
+</ul>
+<div class="interview"><strong>Interview-ready answer:</strong> Inheritance হলো <em>is-a</em> relationship এবং subclass base class-এর behavior inherit করে। Composition হলো <em>has-a</em> relationship, যেখানে একটি object অন্য object-কে collaborator হিসেবে ধরে। Delegation-এর মাধ্যমে সেই collaborator-এর কাছে কাজ পাঠানো হয়। Flexible ও testable design-এর জন্য composition অনেক ক্ষেত্রে ভালো পছন্দ।</div>
+</div></details><details class="question" id="q26"><summary><span class="num">26</span><span class="qtitle">What is a Callable Object in Python?</span><span class="chev" aria-hidden="true"></span></summary><div class="answer">
+<h3>মূল ধারণা</h3>
+<p>কোনো object-এর class-এ <code>__call__()</code> define থাকলে সেই object-কে function-এর মতো call করা যায়। একে <strong>callable instance</strong> বা <strong>callable object</strong> বলা হয়। Syntax হলো <code>obj(arguments)</code>।</p>
+<p>সাধারণ function-এর মতো input নেওয়ার পাশাপাশি callable object নিজের instance state ধরে রাখতে পারে। তাই configurable strategy, callback, policy object বা stateful operation তৈরি করতে এটি কাজে লাগে।</p>
+<h3>Practical Example: stateful calculator</h3>
+<div class="codebox"><div class="codehead"><span>IMPLEMENTING __call__</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class TaxCalculator:
+    def __init__(self, rate):
+        self.rate = rate
+
+    def __call__(self, amount):
+        return round(amount * self.rate, 2)
+
+
+vat_calculator = TaxCalculator(0.15)
+income_tax_calculator = TaxCalculator(0.10)
+
+print(vat_calculator(1000))
+print(income_tax_calculator(1000))
+print(callable(vat_calculator))</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>150.0
+100.0
+True</div>
+<p><code>vat_calculator</code> একটি object, যার <code>rate</code> state আছে। <code>vat_calculator(1000)</code> syntax-এ Python class-এর <code>__call__</code> method invoke করে। একই class থেকে আলাদা rate-এর callable object তৈরি করা যায়।</p>
+<h3>Internal working</h3>
+<p>High-levelভাবে <code>obj(...)</code> call করার সময় Python object-এর type-এ callable behavior খোঁজে এবং <code>__call__</code> execute করে। Special method lookup সাধারণত instance-এর arbitrary attribute assignment-এর উপর নির্ভর করে না; class-level special method গুরুত্বপূর্ণ।</p>
+<h3>Function vs Callable object</h3>
+<ul>
+<li><strong>Function:</strong> সাধারণত function object; closure বা default argument দিয়ে state ধরে রাখতে পারে।</li>
+<li><strong>Callable object:</strong> class instance; state, configuration এবং একাধিক related method একসাথে রাখতে পারে।</li>
+<li><strong>উভয়ই:</strong> call করা যায় এবং callback হিসেবে pass করা যায়, যদি প্রয়োজনীয় calling contract মিলে।</li>
+</ul>
+<h3>Common confusion ও caveat</h3>
+<ul>
+<li><code>callable(obj)</code> <code>True</code> হলে object-কে call করার মতো interface আছে; কিন্তু নির্দিষ্ট argument দিয়ে call অবশ্যই সফল হবে—এমন guarantee নয়। Signature mismatch বা method-এর ভেতরের exception হতে পারে।</li>
+<li><code>obj.__call__ = another_function</code> দিয়ে একটি instance-এর special call behavior সাধারণত replace করা যায় না; special method lookup class level-এ হয়।</li>
+<li>শুধু function হলেই সবসময় callable object-এর চেয়ে ভালো বা উল্টোটা নয়। State/configuration object-এর সাথে থাকা দরকার কি না, সেটিই design decision।</li>
+</ul>
+<div class="interview"><strong>Interview-ready answer:</strong> কোনো class-এ <code>__call__</code> define থাকলে তার instance-কে function-এর মতো call করা যায়। Callable object নিজের state/configuration ধরে রাখতে পারে, তাই strategy বা callback pattern-এ উপকারী। <code>callable()</code> callability check করে, কিন্তু argument compatibility guarantee করে না।</div>
+</div></details><details class="question" id="q27"><summary><span class="num">27</span><span class="qtitle">How do class-based Context Managers work?</span><span class="chev" aria-hidden="true"></span></summary><div class="answer">
+<h3>মূল ধারণা</h3>
+<p><strong>Context Manager</strong> এমন object, যা কোনো operation-এর আগে setup এবং operation শেষে cleanup পরিচালনা করে। Python-এর <code>with</code> statement context manager ব্যবহার করে। Class-based context manager তৈরি করতে সাধারণত <code>__enter__()</code> এবং <code>__exit__()</code> implement করা হয়।</p>
+<p>File, lock, database transaction, temporary resource বা অন্য কোনো resource-এর lifecycle নিরাপদে manage করতে এটি ব্যবহার করা হয়।</p>
+<h3>দুটি method কী করে?</h3>
+<ul>
+<li><code>__enter__()</code>: <code>with</code> block শুরু হওয়ার সময় call হয়। এর return value <code>as</code>-এর variable-এ bind হয়।</li>
+<li><code>__exit__(exc_type, exc_value, traceback)</code>: block শেষ হলে—normal exit বা exception—call হয়। Exception না থাকলে তিনটি argument-ই <code>None</code>।</li>
+<li><code>__exit__</code> truthy value return করলে block-এর exception suppress হয়। <code>False</code> বা <code>None</code> return করলে exception propagate করে।</li>
+</ul>
+<h3>Practical Example: cleanup নিশ্চিত করা</h3>
+<div class="codebox"><div class="codehead"><span>CLASS-BASED CONTEXT MANAGER</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class ManagedResource:
+    def __enter__(self):
+        print(&quot;Resource acquired&quot;)
+        return self
+
+    def work(self):
+        print(&quot;Working with resource&quot;)
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is None:
+            print(&quot;Block finished normally&quot;)
+        else:
+            print(f&quot;Handling cleanup for {exc_type.__name__}&quot;)
+        print(&quot;Resource released&quot;)
+        return False
+
+
+try:
+    with ManagedResource() as resource:
+        resource.work()
+        raise ValueError(&quot;Something went wrong&quot;)
+except ValueError:
+    print(&quot;Exception propagated&quot;)</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>Resource acquired
+Working with resource
+Handling cleanup for ValueError
+Resource released
+Exception propagated</div>
+<p><code>__exit__</code> exception-এর type পেয়ে cleanup চালায়, কিন্তু <code>False</code> return করায় <code>ValueError</code> suppress হয় না। তাই <code>with</code> block-এর বাইরে <code>except</code> সেটি catch করে।</p>
+<h3>Exception suppress করা</h3>
+<p>কিছু context manager নির্দিষ্ট exception ইচ্ছাকৃতভাবে handle করে suppress করতে পারে। তবে indiscriminately সব exception suppress করা বিপজ্জনক, কারণ এতে bug লুকিয়ে যেতে পারে।</p>
+<div class="codebox"><div class="codehead"><span>SUPPRESS ONLY A SPECIFIC EXCEPTION</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class IgnoreValueError:
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        return exc_type is ValueError
+
+
+with IgnoreValueError():
+    raise ValueError(&quot;This one is suppressed&quot;)
+
+print(&quot;Program continues&quot;)</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>Program continues</div>
+<h3>Internal flow এবং গুরুত্বপূর্ণ caveat</h3>
+<ol>
+<li>Python <code>__enter__()</code> call করে।</li>
+<li>এর return value <code>as</code>-এর target-এ bind হয়।</li>
+<li>এরপর block execute হয়।</li>
+<li>Block normal শেষ হলে <code>__exit__(None, None, None)</code> call হয়। Exception হলে exception details দিয়ে <code>__exit__</code> call হয়।</li>
+<li><code>__exit__</code> truthy return করলে exception suppress হয়; অন্যথায় propagate করে।</li>
+</ol>
+<ul>
+<li><code>__enter__</code> নিজেই exception raise করলে সাধারণত ওই context manager-এর <code>__exit__</code> call হয় না, কারণ context successfully entered হয়নি।</li>
+<li>একাধিক context manager nested হলে exit/cleanup reverse order-এ হয়।</li>
+<li>Context manager cleanup-এর জন্য; এটি নিজে transaction rollback বা resource safety guarantee করে না—সেই behavior <code>__exit__</code>-এ implement করতে হয়।</li>
+<li>Generator-based context manager বানাতে <code>contextlib.contextmanager</code> ব্যবহার করা যায়; সেটি class-based protocol-এর alternative।</li>
+</ul>
+<div class="interview"><strong>Interview-ready answer:</strong> Class-based context manager-এ <code>__enter__</code> setup করে এবং <code>__exit__</code> cleanup করে। <code>with</code> block exception হলেও <code>__exit__</code> call করে। <code>__exit__</code> truthy return করলে exception suppress হয়; সাধারণত <code>False</code>/<code>None</code> return করলে exception propagate করে।</div>
+</div></details><details class="question" id="q28"><summary><span class="num">28</span><span class="qtitle">What are the advanced features of Python dataclasses?</span><span class="chev" aria-hidden="true"></span></summary><div class="answer">
+<h3>মূল ধারণা</h3>
+<p><code>dataclasses</code> module-এর <code>@dataclass</code> decorator data-focused class-এর জন্য repetitive method generate করে। Default configuration-এ এটি সাধারণত <code>__init__</code>, <code>__repr__</code> এবং <code>__eq__</code> তৈরি করে। Field declaration type annotation দিয়ে করা হয়।</p>
+<p>Advanced usage-এ <code>field(default_factory=...)</code>, <code>__post_init__</code>, <code>frozen=True</code>, <code>slots=True</code> এবং <code>kw_only=True</code> গুরুত্বপূর্ণ। এই page-এর dataclass example-গুলো Python 3.10+ target করে; <code>slots=True</code> ও <code>kw_only=True</code> Python 3.10-এ যুক্ত হয়েছে।</p>
+<h3>Mutable default-এর সমস্যা: default_factory</h3>
+<p>List/dict-এর মতো mutable default সরাসরি field-এ দেওয়া উচিত নয়। <code>default_factory</code> প্রতিটি instance-এর জন্য আলাদা value তৈরি করে।</p>
+<div class="codebox"><div class="codehead"><span>DEFAULT_FACTORY AND POST_INIT</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>from dataclasses import dataclass, field
+
+
+@dataclass
+class Order:
+    order_id: int
+    items: list[str] = field(default_factory=list)
+
+    def __post_init__(self):
+        if self.order_id &lt;= 0:
+            raise ValueError(&quot;order_id must be positive&quot;)
+
+
+first = Order(101)
+second = Order(102)
+first.items.append(&quot;Keyboard&quot;)
+
+print(first.items)
+print(second.items)
+print(first == second)</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>[&#x27;Keyboard&#x27;]
+[]
+False</div>
+<p><code>default_factory=list</code> প্রতিটি নতুন <code>Order</code>-এর জন্য নতুন list তৈরি করে। Generated <code>__init__</code> শেষ হওয়ার পরে <code>__post_init__</code> call হয়; validation বা derived field setup সেখানে করা যায়। এখানে <code>order_id</code> আলাদা হওয়ায় generated equality result <code>False</code>।</p>
+<h3>frozen এবং slots</h3>
+<div class="codebox"><div class="codehead"><span>FROZEN + SLOTS</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>from dataclasses import dataclass, field, FrozenInstanceError
+
+
+@dataclass(frozen=True, slots=True)
+class Product:
+    name: str
+    tags: list[str] = field(default_factory=list)
+
+
+product = Product(&quot;Keyboard&quot;)
+product.tags.append(&quot;office&quot;)
+print(product.tags)
+
+try:
+    product.name = &quot;Mouse&quot;
+except FrozenInstanceError:
+    print(&quot;name cannot be reassigned&quot;)</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>[&#x27;office&#x27;]
+name cannot be reassigned</div>
+<ul>
+<li><code>frozen=True</code> field reassignment আটকায় এবং generated frozen dataclass-এ assignment করলে <code>FrozenInstanceError</code> হয়।</li>
+<li><code>frozen=True</code> deep immutability দেয় না। উপরের উদাহরণে <code>product.tags.append(...)</code> কাজ করে, কারণ list object নিজে mutable।</li>
+<li><code>slots=True</code> instance-এর জন্য slot-based attribute storage তৈরি করে; সাধারণত arbitrary নতুন instance attribute যোগ করা যায় না এবং memory usage কমতে পারে।</li>
+<li><code>slots=True</code> ব্যবহার করলে dataclass decorator original class-এর বদলে নতুন class return করে। Inheritance, weak reference এবং <code>super()</code>-এর কিছু caveat থাকতে পারে; Python version ও base class design অনুযায়ী যাচাই জরুরি।</li>
+</ul>
+<h3>আরও দরকারি dataclass options</h3>
+<ul>
+<li><code>kw_only=True</code>: field-গুলোকে keyword-only constructor argument করে; positional argument ভুল কমায়।</li>
+<li><code>compare=False</code>: generated equality/order comparison থেকে field বাদ দেয়।</li>
+<li><code>repr=False</code>: generated repr-এ field বাদ দেয়।</li>
+<li><code>init=False</code>: generated constructor-এ field include করে না।</li>
+<li><code>order=True</code>: comparison methods (<code>__lt__</code>, <code>__le__</code>, <code>__gt__</code>, <code>__ge__</code>) generate করে; field order অনুযায়ী comparison হয়।</li>
+</ul>
+<h3>Hashing-এর গুরুত্বপূর্ণ নিয়ম</h3>
+<p>Default <code>eq=True</code> এবং <code>frozen=False</code> হলে dataclass সাধারণত <code>__hash__ = None</code> করে, ফলে instance unhashable হয়। <code>eq=True</code> এবং <code>frozen=True</code> হলে সাধারণত hash generate হয়। <code>eq=False</code> হলে dataclass নিজে equality/hash behavior replace করে না। Hashable object-এর hash নির্ধারণে ব্যবহৃত state object-এর lifetime-এ পরিবর্তিত হওয়া উচিত নয়।</p>
+<div class="warning"><strong>Common confusion:</strong> Dataclass field annotation নিজে runtime type validation করে না। <code>price: float</code> লিখলেই runtime-এ অন্য type assign করা বন্ধ হয় না। Validation আলাদাভাবে implement করতে হয়।</div>
+<div class="interview"><strong>Interview-ready answer:</strong> <code>@dataclass</code> data container class-এর boilerplate method generate করে। Mutable default-এর জন্য <code>default_factory</code>, post-construction validation-এর জন্য <code>__post_init__</code>, assignment restriction-এর জন্য <code>frozen=True</code> এবং slot-based storage-এর জন্য <code>slots=True</code> ব্যবহার করা যায়। Type annotation নিজে runtime validation নয়।</div>
+</div></details><details class="question" id="q29"><summary><span class="num">29</span><span class="qtitle">How do __eq__() and __hash__() work together?</span><span class="chev" aria-hidden="true"></span></summary><div class="answer">
+<h3>মূল ধারণা</h3>
+<p>Python-এ <code>==</code> value equality check করে; custom class-এ সাধারণত <code>__eq__()</code> method দিয়ে এই behavior define করা হয়। <code>is</code> object identity check করে—দুটি reference একই object-কে নির্দেশ করছে কি না।</p>
+<p><code>dict</code> key এবং <code>set</code> element হিসেবে ব্যবহারযোগ্য object-এর equality ও hashing-এর মধ্যে একটি contract থাকতে হয়।</p>
+<h3>Equality vs Identity</h3>
+<div class="codebox"><div class="codehead"><span>== VS is</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class User:
+    def __init__(self, user_id):
+        self.user_id = user_id
+
+    def __eq__(self, other):
+        if not isinstance(other, User):
+            return NotImplemented
+        return self.user_id == other.user_id
+
+
+first = User(7)
+second = User(7)
+
+print(first == second)
+print(first is second)</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>True
+False</div>
+<p>দুটি আলাদা instance-এর <code>user_id</code> সমান বলে <code>==</code> True; কিন্তু memory identity এক নয় বলে <code>is</code> False। Unsupported type-এর সাথে comparison হলে <code>NotImplemented</code> return করা Python-এর comparison protocol-এর সঠিক pattern; এতে Python অন্য operand-এর reflected comparison চেষ্টা করার সুযোগ পায়।</p>
+<h3>Hash contract</h3>
+<ul>
+<li>যদি <code>a == b</code> হয়, তাহলে অবশ্যই <code>hash(a) == hash(b)</code> হতে হবে।</li>
+<li>উল্টো নিয়ম বাধ্যতামূলক নয়: hash সমান হলেই object equal হবে এমন নয়। একে hash collision বলা হয়।</li>
+<li>একটি object hashable হতে হলে তার hash value object-এর lifetime-এ স্থির থাকতে হবে এবং equality behavior-এর সাথে consistent হতে হবে।</li>
+<li>Mutable field-এর উপর equality/hash নির্ভর করলে object dict/set-এ রাখার পর সেই field mutate করা বিপজ্জনক।</li>
+</ul>
+<h3>Custom __eq__ লিখলে __hash__ কী হয়?</h3>
+<p>একটি class <code>__eq__</code> define করে কিন্তু <code>__hash__</code> define না করলে Python সাধারণত class-টিকে unhashable করে—class-এর <code>__hash__</code> হয় <code>None</code>। কারণ mutable বা equality-based object-এর জন্য identity-based default hash রেখে দিলে contract ভেঙে যেতে পারে।</p>
+<div class="codebox"><div class="codehead"><span>DEFINE A CONSISTENT HASH</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>class UserKey:
+    def __init__(self, user_id):
+        self.user_id = user_id
+
+    def __eq__(self, other):
+        if not isinstance(other, UserKey):
+            return NotImplemented
+        return self.user_id == other.user_id
+
+    def __hash__(self):
+        return hash(self.user_id)
+
+
+first = UserKey(7)
+second = UserKey(7)
+
+print(first == second)
+print(hash(first) == hash(second))
+print(len({first, second}))</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>True
+True
+1</div>
+<p>দুটি object-এর equality ও hash দুটোই <code>user_id</code>-এর উপর নির্ভর করছে। তাই একই ID হলে set তাদের একই logical key হিসেবে ধরে। এই class-এ <code>user_id</code> mutable রাখা হয়েছে শুধু caveat বোঝাতে: set-এ insert করার পর <code>user_id</code> বদলালে object-টি ভুল hash bucket-এ থেকে যেতে পারে। Production design-এ hash/equality-তে ব্যবহৃত state immutable রাখা উচিত।</p>
+<h3>Practical rules</h3>
+<ul>
+<li>Identity দরকার হলে <code>is</code>; logical value comparison দরকার হলে <code>==</code>।</li>
+<li>Custom <code>__eq__</code> লিখলে hashability দরকার কি না নির্ধারণ করতে হবে। Hashable হলে একই logical fields দিয়ে <code>__eq__</code> ও <code>__hash__</code> implement করতে হবে।</li>
+<li>Hashable object-এর equality/hash-এ ব্যবহৃত state mutate করা যাবে না—অন্তত dict/set-এ থাকা অবস্থায় নয়।</li>
+<li>Immutable value object-এর জন্য <code>@dataclass(frozen=True)</code> উপযোগী হতে পারে; dataclass-এর hash-generation rules বুঝে ব্যবহার করতে হবে।</li>
+</ul>
+<div class="warning"><strong>Common confusion:</strong> <code>hash(a) == hash(b)</code> থেকে <code>a == b</code> conclude করা যায় না। শুধু equal object-এর hash equal হওয়া বাধ্যতামূলক; unequal object-এর hash আলাদা হওয়া বাধ্যতামূলক নয়।</div>
+<div class="interview"><strong>Interview-ready answer:</strong> <code>__eq__</code> logical equality define করে এবং <code>__hash__</code> hash-based collection-এ object-এর অবস্থান নির্ধারণে ব্যবহৃত হয়। Contract হলো equal object-এর hash অবশ্যই equal হবে। Custom <code>__eq__</code> লিখে <code>__hash__</code> না দিলে Python সাধারণত object-কে unhashable করে।</div>
+</div></details><details class="question" id="q30"><summary><span class="num">30</span><span class="qtitle">What is the difference between Shallow Copy and Deep Copy?</span><span class="chev" aria-hidden="true"></span></summary><div class="answer">
+<h3>মূল ধারণা</h3>
+<p>Python-এ assignment, shallow copy এবং deep copy এক জিনিস নয়। Assignment নতুন object তৈরি করে না; শুধু আরেকটি name একই object-কে reference করে। <code>copy.copy()</code> outer object-এর shallow copy করে। <code>copy.deepcopy()</code> nested object-সহ recursive copy করার চেষ্টা করে।</p>
+<h3>Assignment vs Shallow Copy vs Deep Copy</h3>
+<div class="codebox"><div class="codehead"><span>COPY BEHAVIOR</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>import copy
+
+original = {&quot;items&quot;: [{&quot;name&quot;: &quot;Book&quot;, &quot;qty&quot;: 1}]}
+alias = original
+shallow = copy.copy(original)
+deep = copy.deepcopy(original)
+
+shallow[&quot;items&quot;][0][&quot;qty&quot;] = 5
+
+print(alias is original)
+print(shallow is original)
+print(shallow[&quot;items&quot;] is original[&quot;items&quot;])
+print(deep[&quot;items&quot;] is original[&quot;items&quot;])
+print(original[&quot;items&quot;][0][&quot;qty&quot;])
+print(deep[&quot;items&quot;][0][&quot;qty&quot;])</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>True
+False
+True
+False
+5
+1</div>
+<p><code>alias</code> একই dictionary-র আরেকটি reference। <code>shallow</code> নতুন outer dictionary, কিন্তু nested <code>items</code> list একই object। তাই shallow copy-এর nested dictionary mutate করলে original-এও পরিবর্তন দেখা যায়। <code>deep</code>-এর nested list আলাদা, তাই সেখানে original-এর nested value বদলায়নি।</p>
+<h3>Internal working</h3>
+<ul>
+<li><strong>Assignment:</strong> reference copy হয়; object copy হয় না।</li>
+<li><strong>Shallow copy:</strong> নতুন outer container তৈরি হয়, কিন্তু তার ভেতরের referenced object-গুলো সাধারণত shared থাকে।</li>
+<li><strong>Deep copy:</strong> nested object recursively copy করার চেষ্টা করে। Cycle এবং shared-reference structure সামলাতে internal memo dictionary ব্যবহার করে, যাতে একই object বারবার copy না হয় এবং recursive cycle-এ infinite recursion না হয়।</li>
+</ul>
+<h3>Custom copy behavior</h3>
+<p>কোনো custom class-এর copy behavior নিয়ন্ত্রণ করতে <code>__copy__()</code> এবং <code>__deepcopy__(memo)</code> implement করা যায়। নিচের উদাহরণে deep copy-এর সময় nested <code>items</code> আলাদা করে copy করা হয়েছে।</p>
+<div class="codebox"><div class="codehead"><span>CUSTOM __deepcopy__</span><button class="copy" type="button" aria-label="Copy code">Copy code</button></div><pre><code>import copy
+
+
+class Cart:
+    def __init__(self, items):
+        self.items = items
+
+    def __deepcopy__(self, memo):
+        cls = type(self)
+        copied = cls.__new__(cls)
+        memo[id(self)] = copied
+        copied.items = copy.deepcopy(self.items, memo)
+        return copied
+
+
+cart = Cart([{&quot;sku&quot;: &quot;A1&quot;}])
+cloned = copy.deepcopy(cart)
+cloned.items[0][&quot;sku&quot;] = &quot;B2&quot;
+
+print(cart.items[0][&quot;sku&quot;])
+print(cloned.items[0][&quot;sku&quot;])
+print(cart is cloned)</code></pre></div><div class="output"><div class="outlabel">EXPECTED OUTPUT</div>A1
+B2
+False</div>
+<p><code>memo[id(self)] = copied</code> recursive copy শুরু করার আগেই destination object memo-তে রাখে। এটি cycle থাকলে recursion থামাতে এবং shared reference preserve করতে গুরুত্বপূর্ণ। <code>__deepcopy__</code>-তে nested value copy করার সময় একই <code>memo</code> pass করা উচিত।</p>
+<h3>কোন ক্ষেত্রে deep copy পুরোপুরি deep নয়?</h3>
+<ul>
+<li>সব Python object copy করা যায় না। File handle, socket, thread lock-এর মতো resource-এর copy অর্থপূর্ণ নাও হতে পারে বা operation fail করতে পারে।</li>
+<li>কিছু immutable/atomic object copy না করে একই object reuse করা হতে পারে।</li>
+<li>Class নিজে <code>__copy__</code>/<code>__deepcopy__</code> define করে copy behavior customize করতে পারে।</li>
+<li>Deep copy বড় object graph-এ expensive হতে পারে এবং external resource-এর lifecycle ভুলভাবে duplicate করার ঝুঁকি থাকে।</li>
+<li>Copy করার বদলে immutable object, factory method বা explicit clone method design অনেক সময় বেশি নিরাপদ।</li>
+</ul>
+<div class="warning"><strong>Common confusion:</strong> <code>new_obj = old_obj</code> কোনো copy নয়। আর shallow copy outer object আলাদা করলেও nested mutable object আলাদা করে না।</div>
+<div class="interview"><strong>Interview-ready answer:</strong> Assignment একই object-এর আরেকটি reference তৈরি করে। Shallow copy outer object copy করে কিন্তু nested reference share করতে পারে। Deep copy nested object recursively copy করার চেষ্টা করে এবং cycle/shared reference handle করতে memo ব্যবহার করে। Custom behavior-এর জন্য <code>__copy__</code> ও <code>__deepcopy__</code> implement করা যায়।</div>
+</div></details>
+  <section class="revision">
+    <h2>Quick Revision — 21 থেকে 30</h2>
+    <ul>
+      <li><strong>21 · Descriptor:</strong> Attribute read/write/delete-এর behavior control করে; data descriptor instance dictionary-এর আগে priority পায়।</li>
+      <li><strong>22 · __new__ vs __init__:</strong> <code>__new__</code> instance তৈরি করে return করে; <code>__init__</code> instance initialize করে।</li>
+      <li><strong>23 · Metaclass:</strong> Class তৈরির process customize করে; default metaclass <code>type</code>।</li>
+      <li><strong>24 · __init_subclass__:</strong> Subclass তৈরি হওয়ার সময় parent class-এর hook call হয়।</li>
+      <li><strong>25 · Composition:</strong> Object collaborator ধরে রাখে; delegation দিয়ে তার কাছে কাজ পাঠায়।</li>
+      <li><strong>26 · Callable object:</strong> <code>__call__</code> থাকলে instance-কে function-এর মতো call করা যায়।</li>
+      <li><strong>27 · Context Manager:</strong> <code>__enter__</code> setup এবং <code>__exit__</code> cleanup/exception handling করে।</li>
+      <li><strong>28 · Dataclass:</strong> Boilerplate method generate করে; <code>default_factory</code>, <code>frozen</code>, <code>slots</code> গুরুত্বপূর্ণ option।</li>
+      <li><strong>29 · Equality & Hash:</strong> Equal object-এর hash equal হতে হবে; reverse rule বাধ্যতামূলক নয়।</li>
+      <li><strong>30 · Copy:</strong> Assignment reference share করে; shallow copy outer object copy করে; deep copy nested object recursively copy করার চেষ্টা করে।</li>
+    </ul>
+    <div class="sequence"><span>Descriptors</span><span>Object Creation</span><span>Class Creation</span><span>Composition</span><span>Callable Objects</span><span>Resource Lifecycle</span><span>Data Models</span><span>Equality & Hashing</span><span>Copy Semantics</span></div>
+  </section>
+  <section class="revision" aria-labelledby="official-sources">
+    <h2 id="official-sources">Official Python References</h2>
+    <p>Internal behavior ও API details আরও পড়ার জন্য Python-এর official documentation:</p>
+    <ul>
+      <li><a href="https://docs.python.org/3/howto/descriptor.html" target="_blank" rel="noopener noreferrer">Descriptor Guide</a> — descriptor protocol, data/non-data descriptor এবং lookup precedence।</li>
+      <li><a href="https://docs.python.org/3/reference/datamodel.html" target="_blank" rel="noopener noreferrer">Python Data Model</a> — object creation, special methods, metaclass এবং class creation hooks।</li>
+      <li><a href="https://docs.python.org/3/library/dataclasses.html" target="_blank" rel="noopener noreferrer">dataclasses</a> — generated methods, frozen, slots, field options ও hash rules।</li>
+      <li><a href="https://docs.python.org/3/library/copy.html" target="_blank" rel="noopener noreferrer">copy</a> — shallow/deep copy, memo এবং custom copy hooks।</li>
+      <li><a href="https://docs.python.org/3/library/contextlib.html" target="_blank" rel="noopener noreferrer">contextlib</a> — context manager utilities ও generator-based context manager।</li>
+    </ul>
+  </section>
+</main>
+<footer class="container">Advanced Python OOP Interview Preparation · Questions 21–30 · Standalone HTML</footer>
+<script>
+(function(){
+  const questions = Array.from(document.querySelectorAll('.question'));
+  const toggleAll = document.getElementById('toggleAll');
+  const collapseAll = document.getElementById('collapseAll');
+  toggleAll.addEventListener('click', function(){
+    const shouldOpen = questions.some(q => !q.open);
+    questions.forEach(q => { q.open = shouldOpen; });
+    toggleAll.textContent = shouldOpen ? 'সব উত্তর বন্ধ করুন' : 'সব উত্তর খুলুন';
+    toggleAll.setAttribute('aria-expanded', String(shouldOpen));
+  });
+  collapseAll.addEventListener('click', function(){
+    questions.forEach(q => { q.open = false; });
+    toggleAll.textContent = 'সব উত্তর খুলুন';
+    toggleAll.setAttribute('aria-expanded', 'false');
+  });
+  document.querySelectorAll('.copy').forEach(button => {
+    button.addEventListener('click', async function(){
+      const code = button.closest('.codebox').querySelector('pre code').innerText;
+      const original = button.textContent;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(code);
+        } else {
+          const area = document.createElement('textarea');
+          area.value = code;
+          area.setAttribute('readonly', '');
+          area.style.position = 'fixed';
+          area.style.opacity = '0';
+          document.body.appendChild(area);
+          area.select();
+          const copied = document.execCommand('copy');
+          area.remove();
+          if (!copied) throw new Error('Clipboard copy failed');
+        }
+        button.textContent = 'Copied';
+        button.classList.add('copied');
+      } catch (error) {
+        button.textContent = 'Copy failed';
+      }
+      window.setTimeout(() => {
+        button.textContent = original;
+        button.classList.remove('copied');
+      }, 1600);
+    });
+  });
+})();
+</script>
+</body>
+</html>
